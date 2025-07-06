@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Material List by Department</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+        <h1 class="text-3xl font-bold mb-6 text-center">Material List by Department</h1>
+        <div class="flex mb-6">
+            <input id="materialInput" type="text" placeholder="Add material" class="flex-grow p-3 border border-gray-300 rounded-l-2xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="departmentSelect" class="p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="ESC">ESC</option>
+                <option value="Power">Power</option>
+                <option value="CSE">CSE</option>
+            </select>
+            <button id="addButton" class="bg-blue-500 text-white p-3 rounded-r-2xl ml-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <ul id="materialList" class="space-y-4">
+            <!-- Material items will be added here -->
+        </ul>
+    </div>
+
+  
+     <script src="/Script/AddMatrial.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddDoctor</title>
+    <link rel="stylesheet" href="/css/addDoctor.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <style>
+        .input-field {
+            background-color: #e0f0ff;
+            color: #6c757d;
+            border: none;
+            border-radius: 5rem;
+            padding: 0.5rem;
+            width: 100%;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        .btn-done {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 0.5rem 2rem;
+            width: 50%;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-done:hover {
+            transform: scale(1.05);
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body class="bg-white flex justify-center items-center min-h-screen relative">
+    <div class="absolute top-4 right-20 flex items-center">
+        <span class="text-gray-600 mr-2">
+            welcome Admine
+        </span>
+        <img alt="Admin profile picture" class="rounded-full" height="30"
+            src="/images/eman.png"
+            width="30" />
+    </div>
+    <div class="w-full max-w-md">
+        <form class="p-4">
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Doctor's Name:
+                </label>
+                <input class="input-field" placeholder="Name of the Doctor" type="text" id="name" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Doctor's Email:
+                </label>
+                <input class="input-field" placeholder="Email of the Doctor" type="email" id="d-email" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Department:
+                </label>
+                <input class="input-field" placeholder="Name of The Department" type="text" id="d-department" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Specialization:
+                </label>
+                <input class="input-field" placeholder="Name of the Specialization" type="text" id="d-specialization" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    profile picture
+                </label>
+                </label>
+                <div class="mb-4">
+
+                    <input class="input-field" placeholder="Upload Doctor Photo Here" type="file" id="d-profile-pic" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Doctor's Number:
+                </label>
+                <input class="input-field" placeholder="Number of the Doctor" type="text" id="d-number" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Office Number:
+                </label>
+                <input class="input-field" placeholder="Office Number" type="text" id="d-office-number" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-blue-600 font-bold mb-2">
+                    Years of Experience:
+                </label>
+                <input class="input-field" placeholder="Number of Experience" type="text" id="d-years-of-exp" />
+            </div>
+            <div class="flex justify-center">
+                <button class="btn-done" id="send">
+                    Done
+                </button>
+            </div>
+        </form>
+    </div>
+     <script src="/Script/addDoctor.js"></script>
+</body>
+
+</html>

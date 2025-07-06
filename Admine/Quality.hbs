@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول المواد الدراسية الحديث - جامعة الزقازيق</title>
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    
+    <!-- Google Fonts - Cairo for Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom CSS -->
+    {{!-- <link rel="stylesheet" href="static/css/styles.css"> --}}
+    <link rel="stylesheet" href="/css/quality.css">
+</head>
+<body>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="darkModeToggle">
+            <input type="checkbox" id="darkModeToggle" />
+            <span class="slider round">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </span>
+        </label>
+    </div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="/images/ZagLogo.png" alt="شعار جامعة الزقازيق" class="logo">
+                </div>
+                <div class="title-container">
+                    <h1 class="main-title">كلية الهندسة - جامعة الزقازيق</h1>
+                    <h2 class="department-title" id="departmentTitleDisplay">هندسة الاتصالات</h2>
+                </div>
+                <div class="date-container">
+                    <div class="date-badge">تاريخ: <span id="currentDate">16/08/2023</span></div>
+                    <div class="form-number-container">
+                        <select id="modelNumberSelect" class="form-select">
+                            <option value="3" selected>3</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter and Search Controls -->
+            <div class="controls-section">
+                <div class="search-filters">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="بحث..." />
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div class="department-selector">
+                        <select id="departmentSelect" class="form-select wide-select">
+                            <option value="هندسة الاتصالات" selected>هندسة الاتصالات</option>
+                            <option value="هندسة الحاسبات">هندسة الحاسبات</option>
+                            <option value="هندسة القوى الكهربية">هندسة القوى الكهربية</option>
+                        </select>
+                    </div>
+                   
+                </div>
+            </div>
+            
+            <div class="document-heading">
+                <h2 class="document-title">خطة وضع الامتحان والتصحيح</h2>
+            </div>
+            <div class="year-badge">2025/2024</div>
+            <div class="selectors-row">
+                <div class="selector">
+                    <select id="yearSelect" class="form-select">
+                        <option value="2025/2024" selected>2025/2024</option>
+                        <option value="2024/2023">2024/2023</option>
+                        <option value="2023/2022">2023/2022</option>
+                    </select>
+                </div>
+                <div class="selector">
+                    <select id="semesterSelect" class="form-select">
+                        <option value="الفصل الدراسي الأول" selected>الفصل الدراسي الأول</option>
+                        <option value="الفصل الدراسي الثاني">الفصل الدراسي الثاني</option>
+                    </select>
+                </div>
+            </div>
+            <div class="separator"></div>
+        </header>
+        
+        <!-- Main Table Section -->
+        <main class="main-content">
+            <div class="table-loading" id="tableLoading">
+                <div class="spinner"></div>
+                <p>جاري تحميل البيانات...</p>
+            </div>
+            
+            <div class="table-responsive" id="pdfContent">
+                <table class="main-table">
+                    <thead>
+                        <tr>
+                            <th width="5%" class="sortable" data-sort="id">م <i class="fas fa-sort"></i></th>
+                            <th width="10%" class="sortable" data-sort="level">الفرقة <i class="fas fa-sort"></i></th>
+                            <th width="15%" class="sortable" data-sort="subject">المادة الدراسية <i class="fas fa-sort"></i></th>
+                            <th width="20%">لجنة الممتحنين</th>
+                            <th width="30%">
+                                لجنة التصحيح
+                                <div class="subtitle">توقيع كل اثنين ومراجعة من ثالث</div>
+                            </th>
+                            <th width="15%">الأستاذ المسؤول</th>
+                            <!-- <th width="5%">حالة</th> -->
+                        </tr>
+                    </thead>
+                    <tbody id="mainTableBody">
+                        <!-- Dynamic content will be loaded here -->
+                        <tr class="loading-row">
+                            <td colspan="7" class="text-center">
+                                <div class="shimmer"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div class="pagination-controls">
+                <button id="prevPage" class="btn btn-pagination" disabled>
+                    <i class="fas fa-chevron-right"></i> السابق
+                </button>
+                <div id="pageIndicator" class="page-indicator">صفحة <span id="currentPage">1</span> من <span id="totalPages">1</span></div>
+                <button id="nextPage" class="btn btn-pagination">
+                    التالي <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="addRowBtn" class="btn btn-add">
+                    <i class="fas fa-plus"></i> إضافة صف جديد
+                </button>
+                <button id="refreshBtn" class="btn btn-refresh">
+                    <i class="fas fa-sync-alt"></i> تحديث البيانات
+                </button>
+                <button id="printBtn" class="btn btn-print">
+                    <i class="fas fa-print"></i> طباعة الجدول
+                </button>
+                <button id="downloadPdfBtn" class="btn btn-download">
+                    <i class="fas fa-file-pdf"></i> تحميل PDF
+                </button>
+            </div>
+        </main>
+        
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="signatures">
+                <div class="signature-block">
+                    <h3>أ.د. رئيس القسم العلمي</h3>
+                    <div class="signature-space"></div>
+                </div>
+                <div class="signature-block">
+                    <h3>المنسق الأكاديمي</h3>
+                    <div class="signature-space"></div>
+                </div>
+                <div class="signature-block">
+                    <h3>وكيل الكلية لشؤون التعليم والطلاب</h3>
+                    <div class="signature-space"></div>
+                </div>
+                <div class="signature-block">
+                    <h3>يعتمد، عميد الكلية</h3>
+                    <div class="signature-space"></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Professor Selection Modal -->
+    <div class="modal" id="professorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>اختيار الأساتذة</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="search-container modal-search">
+                    <input type="text" id="professorSearchInput" class="search-input" placeholder="بحث عن أستاذ..." />
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="professor-selection">
+                    <select id="professorSelect" class="modal-select">
+                        <option selected disabled>اختر أستاذ</option>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                    <div id="selectedProfessors" class="selected-professors">
+                        <!-- Selected professors will be shown here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addProfessorBtn" class="btn btn-add"><i class="fas fa-plus"></i> إضافة</button>
+                <button id="saveProfessorsBtn" class="btn btn-download"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Selection Modal -->
+    <div class="modal" id="subjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>اختيار المادة الدراسية</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="search-container modal-search">
+                    <input type="text" id="subjectSearchInput" class="search-input" placeholder="بحث عن مادة..." />
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="subject-selection">
+                    <select id="subjectSelect" class="modal-select">
+                        <option selected disabled>اختر المادة</option>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSubjectBtn" class="btn btn-download"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Level Selection Modal -->
+    <div class="modal" id="levelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>اختيار الفرقة الدراسية</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="level-selection">
+                    <select id="levelSelect" class="modal-select">
+                        <option selected disabled>اختر الفرقة</option>
+                        <option value="إعدادي">إعدادي</option>
+                        <option value="الأولى">الأولى</option>
+                        <option value="الثانية">الثانية</option>
+                        <option value="الثالثة">الثالثة</option>
+                        <option value="الرابعة">الرابعة</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveLevelBtn" class="btn btn-download"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Selection Modal -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تعديل الحالة</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="status-selection">
+                    <select id="statusSelect" class="modal-select">
+                        <option selected disabled>اختر الحالة</option>
+                        <option value="open">مفتوح 🔵</option>
+                        <option value="closed">مغلق 🔴</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveStatusBtn" class="btn btn-download"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="modal-header">
+                <h3>تم بنجاح</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body text-center">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 id="successMessage">تم التحميل بنجاح</h3>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <h3>تأكيد الحذف</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body text-center">
+                <div class="warning-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p>هل أنت متأكد من حذف هذا الصف؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDeleteBtn" class="btn btn-cancel"><i class="fas fa-times"></i> إلغاء</button>
+                <button id="confirmDeleteBtn" class="btn btn-delete"><i class="fas fa-trash"></i> حذف</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom JS -->
+    {{!-- <script src="static/js/script.js"></script> --}}
+     <script src="/Script/quality.js"></script>
+</body>
+</html>

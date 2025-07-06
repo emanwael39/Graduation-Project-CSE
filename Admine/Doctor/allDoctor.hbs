@@ -1,0 +1,25 @@
+<html>
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="/css/viewAllDoctor.css">
+    <title>Doctor Profiles</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+    <div class="background"></div>
+    <h1>The List Of All Doctors</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Input name" onkeyup="searchProfiles()">
+        <button onclick="searchProfiles()">Search</button>
+    </div>
+    <div id="profileContainer" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+        <!-- Profile cards will be generated here -->
+    </div>
+
+  
+    <script src="/Script/allDoctor.js"></script>
+</body>
+</html>

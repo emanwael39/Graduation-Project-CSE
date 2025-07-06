@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض الفرق الدراسية</title>
+    <script defer src="script.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+        .team-container { margin: 20px auto; width: 80%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <h2>عرض بيانات الفرق</h2>
+    <div id="tables-container"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("tables-container");
+    const url = window.location.href;
+const params = new URLSearchParams(new URL(url).search);
+const department =params.get("sub")
+
+    try {
+        const response = await fetch("http://localhost:3000/Admin/Doctor/See" ,{
+             method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            department, 
+           
+        })
+        });
+        const teamsData = await response.json();
+
+        Object.entries(teamsData).forEach(([team, members]) => {
+            const teamDiv = document.createElement("div");
+            teamDiv.classList.add("team-container");
+
+            teamDiv.innerHTML = `<h3>${team}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Doctor Name</th>
+                            <th>Subject </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${members.map(member => `
+                            <tr>
+                                <td>${member.selectedDoctor}</td>
+                                <td>${member.selectedMaterials.join(", ")}</td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>`;
+
+            container.appendChild(teamDiv);
+        });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+});
+
+    </script>
+</body>
+</html>

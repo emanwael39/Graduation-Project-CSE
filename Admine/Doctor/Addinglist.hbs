@@ -1,0 +1,114 @@
+<html>
+
+<head>
+    <title>Tailwind App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .styled-table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 18px;
+            text-align: left;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .styled-table th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:hover {
+            background-color: #ddd;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-roboto">
+    <div class="container mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <!-- Year Input -->
+            <div>
+                <label for="year" class="block text-lg font-medium text-gray-700">Enter Year</label>
+                <input type="number" id="year"
+                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm year"
+                    min="2025" max="2060" placeholder="e.g., 2025">
+            </div>
+
+            <div>
+                <label for="team" class="block text-lg font-medium text-gray-700">Choose Team</label>
+                <select id="team"
+                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm team">
+                    <option value="First Team">First Team</option>
+                    <option value="Second Team">Second Team</option>
+                    <option value="Third Team">Third Team</option>
+                    <option value="Fourth Team">Fourth Team</option>
+                </select>
+            </div>
+            <div>
+                <label for="term" class="block text-lg font-medium text-gray-700">Enter Term</label>
+                <input type="text" id="term"
+                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm term"
+                    placeholder="e.g., First Term or Second Term">
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <!-- Doctor Selection -->
+            <label for="doctor" class="block text-lg font-medium text-gray-700">Select Doctor</label>
+            <select id="doctor"
+                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm doctorSelect">
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <!-- Department Input -->
+            <label for="department" class="block text-lg font-medium text-gray-700">Department</label>
+            <input type="text" id="department"
+                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm department"
+                placeholder="e.g., CSE, ESC, Power" readonly>
+        </div>
+
+        <div class="mb-4">
+            <!-- Material Selection -->
+            <label class="block text-lg font-medium text-gray-700">Select Materials</label>
+            <div class="mt-2 space-y-2">
+
+            </div>
+        </div>
+
+        <div class="flex justify-between">
+            <!-- New Button -->
+            <button
+                class="bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 next">
+                Next
+            </button>
+            <!-- Finish Button -->
+            <button id="finish-btn"
+                class="bg-green-500 text-white py-2 px-4 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Finish
+            </button>
+        </div>
+    </div>
+
+    <script src="/Script/Addinglist.js"></script>
+</body>
+
+</html>

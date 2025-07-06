@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Lists</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position the tooltip above the text */
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="text-center w-full max-w-4xl">
+        <div id="dateContainer" class="text-lg font-medium mb-4"></div>
+        <h2 class="text-3xl font-bold mb-8">Interactive Lists</h2>
+        <div class="space-y-4 mb-8">
+            <div class="flex items-center justify-between bg-blue-100 p-4 rounded shadow-lg w-11/12 mx-auto">
+                <span class="text-lg font-medium">Power</span>
+                <button id="btn1" class="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-700 transition duration-300 w-9/12">Action</button>
+                <div class="flex space-x-2">
+                    <div class="tooltip">
+                        <i  onclick="window.location.href='http://localhost:3000/Admine/Doctor/See?sub=Power';" class="fas fa-eye text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">View</span>
+                    </div>
+                    <div class="tooltip">
+                        <i  onclick="window.location.href='http://localhost:3000/Admine/Doctor/DownloadList?sub=Power';" class="fas fa-download text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Download</span>
+                    </div>
+                    <div class="tooltip">
+                        <i  onclick="window.location.href='http://localhost:3000/Admine/Doctor/AddCourse?sub=Power';"class="fas fa-plus text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Add Course</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between bg-green-100 p-4 rounded shadow-lg w-11/12 mx-auto">
+                <span class="text-lg font-medium">CSE</span>
+                <button id="btn2" class="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-700 transition duration-300 w-9/12">Action</button>
+                <div class="flex space-x-2">
+                    <div class="tooltip">
+                        <i  onclick="window.location.href='http://localhost:3000/Admine/Doctor/See?sub=CSE';" class="fas fa-eye text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">View</span>
+                    </div>
+                    <div class="tooltip">
+                        <i onclick="window.location.href='http://localhost:3000/Admine/Doctor/DownloadList?sub=CSE';" class="fas fa-download text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Download</span>
+                    </div>
+                    <div class="tooltip">
+                        <i onclick="window.location.href='http://localhost:3000/Admine/Doctor/AddCourse?sub=CSE';" class="fas fa-plus text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Add Course</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between bg-red-100 p-4 rounded shadow-lg w-11/12 mx-auto">
+                <span class="text-lg font-medium">ECS</span>
+                <button id="btn3" class="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-700 transition duration-300 w-9/12">Action</button>
+                <div class="flex space-x-2">
+                    <div class="tooltip">
+                        <i onclick="window.location.href='http://localhost:3000/Admine/Doctor/See?sub=ESC';" class="fas fa-eye text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">View</span>
+                    </div>
+                    <div class="tooltip">
+                        <i onclick="window.location.href='http://localhost:3000/Admine/Doctor/DownloadList?sub=ESC';" class="fas fa-download text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Download</span>
+                    </div>
+                    <div class="tooltip">
+                        <i onclick="window.location.href='http://localhost:3000/Admine/Doctor/AddCourse?sub=ESC';" class="fas fa-plus text-gray-600 hover:text-gray-800 cursor-pointer"></i>
+                        <span class="tooltiptext">Add Course</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2 class="text-2xl font-semibold mb-4">All Lists</h2>
+        <div id="listContainer" class="space-y-4"></div>
+    </div>
+
+    <script>
+       
+
+        function showList(title, items) {
+            const container = document.getElementById('listContainer');
+            container.innerHTML = `
+                <div class="fade-in">
+                    <h3 class="text-xl font-medium">${title} List</h3>
+                    <ul class="list-disc list-inside">
+                        ${items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function displayDate() {
+            const dateContainer = document.getElementById('dateContainer');
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateContainer.textContent = today.toLocaleDateString(undefined, options);
+        }
+
+        displayDate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+{{!-- <html>
+
+<head>
+    <title>Study Year Term Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 font-roboto">
+    <div class="container mx-auto p-4">
+        <div class="bg-white p-6 rounded shadow-md mb-6">
+            <h1 class="text-3xl font-bold text-center mb-4">Study Year Term Calculator</h1>
+            <div id="term-info" class="text-lg text-center"></div>
+            <div id="warning" class="text-red-500 text-center mt-4"></div>
+        </div>
+        <div class="flex justify-center">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded mx-2 power">Power</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded mx-2 cse">CSE</button>
+            <button class="bg-red-500 text-white px-4 py-2 rounded mx-2 ecs">ECS</button>
+        </div>
+    </div>
+
+    <script>
+        function getCurrentTerm() {
+            const now = new Date();
+            const month = now.getMonth() + 1; // getMonth() is zero-based
+            const year = now.getFullYear();
+            let term, remainingMonths;
+
+            if (month >= 10 || month <= 1) {
+                term = 'First Term';
+                remainingMonths = month >= 10 ? 12 - month + 1 : 1 - month;
+            } else if (month >= 1 && month <= 7) {
+                term = 'Second Term';
+                remainingMonths = 7 - month;
+            }
+
+            return { term, remainingMonths, year };
+        }
+
+        function displayTermInfo() {
+            const { term, remainingMonths, year } = getCurrentTerm();
+            const termInfoDiv = document.getElementById('term-info');
+            const warningDiv = document.getElementById('warning');
+            document.querySelector(".power").addEventListener("click", () => {
+                window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=Power`
+            })
+            document.querySelector(".cse").addEventListener("click", () => {
+                window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=CSE`
+            })
+            document.querySelector(".ecs").addEventListener("click", () => {
+                window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=ESC`
+            })
+            termInfoDiv.innerHTML = `
+                <p>Year: ${year}</p>
+                <p>Current Term: ${term}</p>
+                <p>Remaining Months in this Term: ${remainingMonths}</p>
+            `;
+            warningDiv.innerHTML = `
+                <p>Warning: The list will be removed after this period.</p>
+            `;
+        }
+
+        displayTermInfo();
+
+    </script>
+</body>
+
+</html> --}}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Year Term Calculator</title>
+    <link rel="stylesheet" href="/cssCalculator/style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="all.min.css">
+    <link rel="stylesheet" href="/cssCalculator/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/cssCalculator/bootstrap-grid.min.css.map">
+    <link rel="stylesheet" href="/cssCalculator/bootstrap.min.css">
+    <link rel="stylesheet" href="/cssCalculator/bootstrap.min.css.map">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="http://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="calculator">
+        <h3 class="text" style="font-family:Roboto ;  color: #2262C6;">Study Year Term Calculator</h3>
+
+        <input type="text" class="input-box  inpyear" style="font-family:Roboto ;  color: #706F6F; " 
+            disabled> <br>
+        <input type="text" class="input-box my-2 inpterm" style="font-family:Roboto ;  color: #706F6F; "
+           disabled> <br>
+        <input type="text" class="input-box my-2 inprmain" style="font-family:Roboto ;  color: #706F6F; "
+             disabled> <br>
+
+        <p class="warning" style="font-family:Roboto ; color: #F0394E; "> WARNING: the list will be REMOVED after this
+            period</p>
+
+        <div class="d-flex justify-content-center">
+            <button class="btn btn- btn-custom  btn1 power"
+                style="font-family:Roboto ;  color: #FFFFFF; background-color: #86AAE2; border-radius: 10px; margin-left: 50px; ">POWER</button>
+            <button class="btn btn- btn-custom btn2 cse"
+                style="font-family:Roboto ;  color: #FFFFFF; background-color: #6F86AC;  border-radius: 10px;">CSE</button>
+            <button class="btn btn- btn-custom btn3 ecs"
+                style="font-family:Roboto ;  color: #FFFFFF;  background-color: #0F2D5C; border-radius: 10px; margin-right: 50px; ">ECE</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.querySelector(".power").addEventListener("click", () => {
+            window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=Power`
+        })
+        document.querySelector(".cse").addEventListener("click", () => {
+            window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=CSE`
+        })
+        document.querySelector(".ecs").addEventListener("click", () => {
+            window.location.href = `http://localhost:3000/Admine/Doctor/Addinglist?Year=${year}&f/s=${term}&field=ESC`
+        })
+          function getCurrentTerm() {
+            const now = new Date();
+            const month = now.getMonth() + 1; // getMonth() is zero-based
+            const year = now.getFullYear();
+            let term, remainingMonths;
+
+            if (month >= 10 || month <= 1) {
+                term = 'First Term';
+                remainingMonths = month >= 10 ? 12 - month + 1 : 1 - month;
+            } else if (month >= 1 && month <= 7) {
+                term = 'Second Term';
+                remainingMonths = 7 - month;
+            }
+
+            return { term, remainingMonths, year };
+        }
+        const { term, remainingMonths, year } = getCurrentTerm();
+        document.querySelector(".inpyear").value= `Year : ${year}`
+        document.querySelector(".inpterm").value= `current term : ${term}`
+        document.querySelector(".inprmain").value= `Remaining months in the term : ${remainingMonths}`
+
+    </script>
+
+
+</body>
+
+</html>

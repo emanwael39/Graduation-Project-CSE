@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-enter {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: all 0.7s ease-out;
+        }
+
+        .card-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(-20px) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .social-link:hover {
+            transform: scale(1.1) rotate(12deg);
+        }
+
+        .team-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1);
+        }
+
+        .department-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3);
+        }
+
+        .department-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .online-indicator {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .floating-shape {
+            animation: floatShape 6s ease-in-out infinite;
+        }
+
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <!-- Header -->
+    <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-700 py-20">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold text-white mb-6 animate-fade-in">
+                Meet Our Amazing Team
+            </h1>
+            <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+                Passionate professionals dedicated to creating exceptional experiences 
+                and driving innovation in everything we do.
+            </p>
+            <div class="flex items-center justify-center gap-2 text-blue-100">
+                <svg class="w-5 h-5 text-red-400 online-indicator" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span>Built with love by our incredible team</span>
+            </div>
+        </div>
+        
+        <!-- Floating shapes -->
+        <div class="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl floating-shape"></div>
+        <div class="absolute bottom-20 right-20 w-24 h-24 bg-purple-400/20 rounded-full blur-xl floating-shape" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Department Filter -->
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Departments</h2>
+            <div class="flex flex-wrap justify-center gap-4" id="departmentFilter">
+                <button class="department-btn active px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-white text-gray-700 hover:bg-blue-50 border border-gray-200" data-department="All">
+                    All
+                </button>
+                <button class="department-btn px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-white text-gray-700 hover:bg-blue-50 border border-gray-200" data-department="Engineering">
+                    Web Engineering
+                </button>
+                <button class="department-btn px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-white text-gray-700 hover:bg-blue-50 border border-gray-200" data-department="Design">
+                    UI/UX Design
+                </button>
+                <button class="department-btn px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-white text-gray-700 hover:bg-blue-50 border border-gray-200" data-department="Infrastructure">
+                    Mobile Engineering
+                </button>
+                
+            </div>
+        </div>
+
+        <!-- Team Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="teamGrid">
+            <!-- Team cards will be dynamically generated here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            
+            <p class="text-gray-400 mb-6">
+                © CSE 2025 " Superiours team " . All rights reserved.
+            </p>
+            
+        </div>
+    </div>
+
+    <script>
+        // Team members data
+        const teamMembers = [
+            {
+                id: 1,
+                name: "Eman Wael Fathy",
+                position: "Lead Frontend Engineer",
+                department: "Engineering",
+                bio: "Passionate about creating beautiful, accessible user experiences. Leading our frontend architecture with React and modern web technologies.",
+                image: "/assets/images/eman.png",
+                email: "emanwael39@gmail.com",
+                github: "https://github.com/emanwael39",
+                linkedin: "https://linkedin.com/in/emanwael39",
+                portfolio: "https://chipper-taiyaki-621ef9.netlify.app/",
+                skills: ["React", "TypeScript", "Node.js", "Tailwind CSS","Javascript", "HTML", "CSS", "Git", "Agile","MongoDB","Express.js","MySQL", "Bootstrap"],
+                achievements: ["Tech Lead of the Year 2023", "Open Source Contributor"]
+            },
+            {
+                id: 2,
+                name: "Marcus Rodriguez",
+                position: "Senior Backend Engineer",
+                department: "Engineering",
+                bio: "Building scalable systems that power millions of users. Expert in distributed systems and cloud architecture.",
+                image: "https://images.pexels.com/photos/1270076/pexels-photo-1270076.jpeg?auto=compress&cs=tinysrgb&w=400",
+                email: "marcus.rodriguez@company.com",
+                github: "https://github.com/marcusrodriguez",
+                linkedin: "https://linkedin.com/in/marcusrodriguez",
+                portfolio: "https://marcusdev.io",
+                location: "Austin, TX",
+                joinDate: "2020-07-22",
+                skills: ["Python", "Go", "AWS", "Kubernetes"],
+                achievements: ["Architecture Excellence Award", "Mentor of the Year"]
+            },
+            {
+                id: 3,
+                name: "Emily Johnson",
+                position: "Head of Product Design",
+                department: "Design",
+                bio: "Creating user-centered designs that solve real problems. Leading design systems and user research initiatives.",
+                image: "https://images.pexels.com/photos/3748221/pexels-photo-3748221.jpeg?auto=compress&cs=tinysrgb&w=400",
+                email: "emily.johnson@company.com",
+                github: "https://github.com/emilyjohnson",
+                linkedin: "https://linkedin.com/in/emilyjohnson",
+                portfolio: "https://emilydesigns.com",
+                location: "New York, NY",
+                joinDate: "2019-11-08",
+                skills: ["Figma", "Adobe CC", "UX Research", "Design Systems"],
+                achievements: ["Design Innovation Award", "UX Excellence Recognition"]
+            },
+            {
+                id: 4,
+                name: "David Kim",
+                position: "DevOps Engineer",
+                department: "Infrastructure",
+                bio: "Automating everything and ensuring 99.9% uptime. Passionate about infrastructure as code and continuous deployment.",
+                image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=400",
+                email: "david.kim@company.com",
+                github: "https://github.com/davidkim",
+                linkedin: "https://linkedin.com/in/davidkim",
+                portfolio: "https://davidkim.tech",
+                location: "Seattle, WA",
+                joinDate: "2020-01-10",
+                skills: ["Docker", "Terraform", "Jenkins", "Monitoring"],
+                achievements: ["Infrastructure Hero 2023", "Security Champion"]
+            },
+            {
+                id: 5,
+                name: "Priya Patel",
+                position: "Data Scientist",
+                department: "Analytics",
+                bio: "Turning data into insights that drive business decisions. Specializing in machine learning and predictive analytics.",
+                image: "https://images.pexels.com/photos/3781338/pexels-photo-3781338.jpeg?auto=compress&cs=tinysrgb&w=400",
+                email: "priya.patel@company.com",
+                github: "https://github.com/priyapatel",
+                linkedin: "https://linkedin.com/in/priyapatel",
+                portfolio: "https://priyadata.science",
+                location: "Boston, MA",
+                joinDate: "2021-09-03",
+                skills: ["Python", "R", "TensorFlow", "SQL"],
+                achievements: ["ML Innovation Award", "Research Publication"]
+            },
+            {
+                id: 6,
+                name: "Alex Thompson",
+                position: "Mobile Development Lead",
+                department: "Engineering",
+                bio: "Building native mobile experiences that users love. Expert in iOS and Android development with Flutter.",
+                image: "https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg?auto=compress&cs=tinysrgb&w=400",
+                email: "alex.thompson@company.com",
+                github: "https://github.com/alexthompson",
+                linkedin: "https://linkedin.com/in/alexthompson",
+                portfolio: "https://alexmobile.dev",
+                location: "Los Angeles, CA",
+                joinDate: "2022-05-12",
+                skills: ["Flutter", "Swift", "Kotlin", "React Native"],
+                achievements: ["Mobile Excellence Award", "App Store Feature"]
+            }
+        ];
+
+        let selectedDepartment = 'All';
+
+        // Create team card HTML
+        function createTeamCard(member, index) {
+            const joinDate = new Date(member.joinDate).toLocaleDateString('en-US', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+
+            return `
+                <div class="team-card card-enter group relative bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-700" 
+                     data-department="${member.department}" 
+                     data-index="${index}"
+                     onmouseenter="addFloatingParticles(this)"
+                     onmouseleave="removeFloatingParticles(this)">
+                    
+                    <!-- Gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <!-- Profile Section -->
+                    <div class="relative p-8 text-center">
+                        <div class="relative inline-block">
+                            <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-white shadow-xl transform transition-all duration-500 group-hover:ring-blue-500 group-hover:scale-110">
+                                <img src="${member.image}" alt="${member.name}" class="profile-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            
+                            <!-- Online status indicator -->
+                            <div class="absolute bottom-6 right-4 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg online-indicator"></div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                            ${member.name}
+                        </h3>
+                        
+                        <p class="text-lg font-semibold text-blue-600 mb-1">${member.position}</p>
+                        
+
+                        
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6">${member.bio}</p>
+
+                        <!-- Skills -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-900 mb-3">Skills</h4>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                ${member.skills.map(skill => `
+                                    <span class="skill-tag px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full transform transition-all duration-300 hover:scale-105 hover:bg-blue-200">
+                                        ${skill}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                       
+
+                        <!-- Social Links -->
+                        <div class="flex justify-center gap-4">
+                            <a href="mailto:${member.email}" class="social-link p-3 bg-gray-100 rounded-full hover:bg-blue-500 hover:text-white transition-all duration-300 transform">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </a>
+                            <a href="${member.github}" target="_blank" rel="noopener noreferrer" class="social-link p-3 bg-gray-100 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300 transform">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                            <a href="${member.linkedin}" target="_blank" rel="noopener noreferrer" class="social-link p-3 bg-gray-100 rounded-full hover:bg-blue-700 hover:text-white transition-all duration-300 transform">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                            </a>
+                            <a href="${member.portfolio}" target="_blank" rel="noopener noreferrer" class="social-link p-3 bg-gray-100 rounded-full hover:bg-purple-600 hover:text-white transition-all duration-300 transform">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add floating particles on hover
+        function addFloatingParticles(card) {
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.animationDuration = (2 + Math.random() * 2) + 's';
+                card.appendChild(particle);
+            }
+        }
+
+        // Remove floating particles
+        function removeFloatingParticles(card) {
+            const particles = card.querySelectorAll('.floating-particle');
+            particles.forEach(particle => particle.remove());
+        }
+
+        // Filter team members
+        function filterTeamMembers(department) {
+            selectedDepartment = department;
+            
+            // Update active button
+            document.querySelectorAll('.department-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.department === department) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Filter and display cards
+            const cards = document.querySelectorAll('.team-card');
+            cards.forEach((card, index) => {
+                const cardDepartment = card.dataset.department;
+                if (department === 'All' || cardDepartment === department) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.classList.add('card-visible');
+                    }, index * 150);
+                } else {
+                    card.classList.remove('card-visible');
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Initialize the page
+        function init() {
+            const teamGrid = document.getElementById('teamGrid');
+            const departmentFilter = document.getElementById('departmentFilter');
+
+            // Create team cards
+            teamMembers.forEach((member, index) => {
+                teamGrid.innerHTML += createTeamCard(member, index);
+            });
+
+            // Add staggered animation
+            setTimeout(() => {
+                document.querySelectorAll('.team-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('card-visible');
+                    }, index * 150);
+                });
+            }, 100);
+
+            // Add department filter event listeners
+            departmentFilter.addEventListener('click', (e) => {
+                if (e.target.classList.contains('department-btn')) {
+                    filterTeamMembers(e.target.dataset.department);
+                }
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
