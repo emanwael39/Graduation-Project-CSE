@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile</title>
+    <link rel="stylesheet" href="/CSSPROFILE/all.min.css">
+    <link rel="stylesheet" href="/CSSPROFILE/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/CSSPROFILE/bootstrap-grid.min.css.map">
+    <link rel="stylesheet" href="/CSSPROFILE/bootstrap.min.css">
+    <link rel="stylesheet" href="/CSSPROFILE/bootstrap.min.css.map">
+    <link rel="stylesheet" href="/CSSPROFILE/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <style>
+body {
+      background-color: #f4f4f5;  
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+.profile-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #edf7ff;  /* Pure white (for content area) */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);   /* Blue-tinted shadow (ties to your accent) */
+    border: 1px solid #d0dce9;  /* Light border to separate from background */
+}
+        
+        .profile-card {
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        #doctor-img {
+            height: 250px;
+            width: 250px;
+            border-radius: 50%;
+            border: 6px solid rgb(34, 98, 198);
+            box-shadow: 0 6px 15px rgba(34, 98, 198, 0.2);
+            object-fit: cover;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        #doctor-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(34, 98, 198, 0.3);
+        }
+        
+        #doctor-name {
+            color: rgb(34, 98, 198);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 15px 0 5px;
+        }
+        
+        #doctor-email {
+            color: #6c757d;
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+        
+        .text3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: rgb(34, 98, 198);
+            margin-bottom: 15px;
+            padding: 12px 20px;
+            background-color: rgba(34, 98, 198, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid rgb(34, 98, 198);
+        }
+        
+        .custom-margin {
+            margin-bottom: 25px;
+        }
+        
+        #doctor-phone {
+            font-size: 1.3rem;
+            color: rgb(34, 98, 198);
+            font-weight: 600;
+            padding: 15px;
+            background-color: rgba(34, 98, 198, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .circle {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            #doctor-img {
+                height: 200px;
+                width: 200px;
+            }
+            
+            #doctor-name {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="profile-card text-center col-lg-8 col-sm-12 fs-5 custom-small-text">
+                <div class="circle"></div>
+                <img id="doctor-img" alt="Doctor Image" />
+                <h3 id="doctor-name" class="text"></h3>
+                <h3 id="doctor-email" class="text2"></h3>
+            </div>
+        </div>
+
+        <div class="row text-start">
+            <div class="col-lg-2"></div>
+            <div class="custom-margin col-lg-4 col-sm-12 col-md-6">
+                <h3 id="doctor-department" class="text3"></h3>
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="custom-margin col-lg-4 col-sm-12 col-md-6">
+                <h3 id="doctor-specialization" class="text3"></h3>
+            </div>
+            <div class="col-lg-2"></div>
+            <div class="custom-margin col-lg-4 col-sm-12 col-md-6">
+                <h3 id="doctor-office" class="text3"></h3>
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="custom-margin col-lg-4 col-sm-12 col-md-6">
+                <h3 id="doctor-experience" class="text3"></h3>
+            </div>
+            <div class="col-lg-12 text-center col-sm-12">
+                <h3 id="doctor-phone" class="doctor"></h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Script/doctorWorks/profile.js"></script>
+</body>
+
+</html>

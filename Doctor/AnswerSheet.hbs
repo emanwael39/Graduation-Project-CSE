@@ -1,0 +1,848 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>ORM - Answer Sheet Processor</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+        background-size: 400% 400%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        animation: gradientBG 15s ease infinite;
+      }
+
+      @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      /* Navigation Bar - Updated */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(30, 64, 175, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: center; /* Changed to center */
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .navbar-nav {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-item {
+        margin: 0 1.5rem; /* Adjusted margin */
+      }
+
+      .nav-link {
+        color: #1e40af;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+      }
+
+      .nav-link:hover {
+        color: #1e40af;
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.4);
+        color: #1e40af;
+      }
+
+      /* Floating particles */
+      .particle {
+        position: fixed;
+        width: 4px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: float 15s infinite linear;
+        z-index: 1;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) translateX(0px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) translateX(100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+        padding-top: 6rem;
+        animation: containerFadeIn 1s ease-out;
+        position: relative;
+        z-index: 10;
+      }
+
+      @keyframes containerFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #1e40af;
+        text-align: center;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        letter-spacing: -0.5px;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #1e3a8a;
+        text-align: center;
+        max-width: 600px;
+        margin-bottom: 3rem;
+        line-height: 1.6;
+        animation: textSlideIn 1s ease-out 0.3s both;
+        font-weight: 500;
+      }
+
+      @keyframes textSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .upload-area {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(20px);
+        border: 2px dashed rgba(30, 64, 175, 0.4);
+        border-radius: 20px;
+        padding: 3.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        animation: uploadAreaSlideUp 1s ease-out 0.6s both;
+        box-shadow: 
+          0 8px 32px rgba(30, 64, 175, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes uploadAreaSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .upload-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+      }
+
+      .upload-area:hover::before {
+        left: 100%;
+      }
+
+      .upload-area:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(30, 64, 175, 0.7);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 
+          0 20px 40px rgba(30, 64, 175, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.3),
+          0 0 50px rgba(255, 255, 255, 0.2);
+      }
+
+      .upload-area.dragover {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+        transform: scale(1.05);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1.05); }
+        50% { transform: scale(1.08); }
+      }
+
+      #pdf {
+        display: none;
+      }
+
+      label[for="pdf"] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        color: #1e40af;
+        font-size: 1.3rem;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+        font-weight: 600;
+      }
+
+      label[for="pdf"]:hover {
+        transform: translateY(-2px);
+        color: #1e3a8a;
+      }
+
+      .upload-icon {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #1e40af;
+        animation: iconFloat 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+
+      @keyframes iconFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+      }
+
+      .upload-icon:hover {
+        transform: scale(1.1) rotate(10deg);
+        color: #1e3a8a;
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+      }
+
+      .bro {
+        color: #3b82f6;
+        font-weight: 700;
+        text-decoration: underline;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .bro::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(45deg, #3b82f6, #1e40af);
+        transition: width 0.3s ease;
+      }
+
+      .bro:hover::after {
+        width: 100%;
+      }
+
+      .btn1 {
+        background: linear-gradient(45deg, #1e40af, #3b82f6, #60a5fa);
+        background-size: 200% 200%;
+        color: white;
+        border: none;
+        padding: 1.2rem 3rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+        animation: buttonGradient 3s ease infinite;
+        letter-spacing: 0.5px;
+      }
+
+      @keyframes buttonGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+
+      .btn1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .btn1:hover::before {
+        left: 100%;
+      }
+
+      .btn1:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+      }
+
+      .btn1:active {
+        transform: translateY(-1px) scale(1.02);
+      }
+
+      /* File selected state */
+      .file-selected .upload-area {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.15);
+        animation: successPulse 2s ease-in-out;
+      }
+
+      @keyframes successPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+        50% { box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+      }
+
+      /* Additional Sections */
+      .section {
+        padding: 6rem 2rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .section-title {
+        font-size: 2.8rem;
+        color: #1e40af;
+        text-align: center;
+        margin-bottom: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.1);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 15px 30px rgba(30, 64, 175, 0.2);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        color: #1e40af;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        color: #1e40af;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .feature-desc {
+        color: #1e3a8a;
+        text-align: center;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      /* How It Works Section */
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+        counter-reset: step-counter;
+      }
+
+      .step {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2.5rem;
+        position: relative;
+        padding-left: 5.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .step:hover {
+        transform: translateX(10px);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 15px 30px rgba(30, 64, 175, 0.2);
+      }
+
+      .step::before {
+        counter-increment: step-counter;
+        content: counter(step-counter);
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3.5rem;
+        height: 3.5rem;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.3rem;
+        box-shadow: 0 5px 15px rgba(30, 64, 175, 0.3);
+      }
+
+      .step-title {
+        font-size: 1.4rem;
+        color: #1e40af;
+        margin-bottom: 0.8rem;
+        font-weight: 700;
+      }
+
+      .step-desc {
+        color: #1e3a8a;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      /* Footer */
+      footer {
+        background: rgba(30, 64, 175, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 3rem 2rem;
+        text-align: center;
+        color: #1e3a8a;
+        position: relative;
+        z-index: 10;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-link {
+        color: #1e40af;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .footer-link:hover {
+        color: #3b82f6;
+        text-decoration: underline;
+      }
+
+      /* Media Queries for Responsiveness */
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 0.8rem 1rem;
+        }
+        
+        .nav-item {
+          margin: 0 0.8rem;
+        }
+        
+        .nav-link {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+        }
+        
+        p {
+          font-size: 1rem;
+        }
+        
+        .upload-area {
+          padding: 2rem;
+        }
+        
+        .upload-icon {
+          width: 70px;
+          height: 70px;
+        }
+        
+        label[for="pdf"] {
+          font-size: 1.1rem;
+        }
+        
+        .btn1 {
+          padding: 1rem 2rem;
+          font-size: 1rem;
+        }
+        
+        .section-title {
+          font-size: 2.2rem;
+        }
+        
+        .feature-title {
+          font-size: 1.3rem;
+        }
+        
+        .step-title {
+          font-size: 1.2rem;
+        }
+        
+        .footer-links {
+          flex-wrap: wrap;
+          gap: 1.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .navbar-nav {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        
+        .nav-item {
+          margin: 0.3rem;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .upload-area {
+          padding: 1.5rem;
+        }
+        
+        .features {
+          grid-template-columns: 1fr;
+        }
+        
+        .step {
+          padding-left: 4.5rem;
+        }
+        
+        .step::before {
+          width: 3rem;
+          height: 3rem;
+          left: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar - Updated -->
+    <nav class="navbar">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+        <li class="nav-item"><a href="#features" class="nav-link">Features</a></li>
+        <li class="nav-item"><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        {{!-- <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li> --}}
+      </ul>
+    </nav>
+
+    <!-- Floating particles for background effect -->
+    <div class="particles-container">
+      <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+      <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+      <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+      <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+      <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+      <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+      <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+      <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+      <div class="particle" style="left: 90%; animation-delay: 16s;"></div>
+    </div>
+
+    <!-- Main Upload Section -->
+    <div class="container">
+      <h1>Answer Sheet Processor</h1>
+      <p>Upload your answer sheets and let our advanced system process them instantly. Get accurate results in seconds.</p>
+      
+      <div class="upload-area" id="drop-area">
+        <label for="pdf">
+          <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          Drag & Drop your file here<br>
+          <span class="bro">or click to browse</span>
+        </label>
+        <input type="file" id="pdf" accept=".pdf" />
+        <button class="btn1" id="upload-btn">Process Now</button>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+      <h2 class="section-title">What Makes Us Stand Out</h2>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Lightning Fast</h3>
+          <p class="feature-desc">Process hundreds of answer sheets in minutes, not hours. Save valuable time with our optimized algorithms.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Highly Accurate</h3>
+          <p class="feature-desc">Our advanced system ensures 99.9% accuracy in reading and processing answer sheets, minimizing errors.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Detailed Analytics</h3>
+          <p class="feature-desc">Get comprehensive reports and analytics to understand performance patterns and improve assessment quality.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section" id="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <h3 class="step-title">Upload Your Answer Sheets</h3>
+          <p class="step-desc">Simply drag and drop your PDF files containing answer sheets into our secure upload area.</p>
+        </div>
+        
+        <div class="step">
+          <h3 class="step-title">Upload student Papers</h3>
+          <p class="step-desc">Our system algorithms scan and process each answer sheet with high precision and accuracy.</p>
+        </div>
+        
+        <div class="step">
+          <h3 class="step-title">Review Results</h3>
+          <p class="step-desc">Access detailed results instantly. View individual scores, class averages, and performance analytics.</p>
+        </div>
+        
+        <div class="step">
+          <h3 class="step-title">Export & Share</h3>
+          <p class="step-desc">Download results in various formats or share them directly with stakeholders through our secure platform.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    {{!-- <footer id="contact">
+      <div class="footer-links">
+        <a href="#" class="footer-link">About Us</a>
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Contact Support</a>
+      </div>
+      <p>&copy; 2025 ORM . All rights reserved.</p>
+    </footer> --}}
+
+    <script>
+      // Add file selection visual feedback
+      const fileInput = document.getElementById('pdf');
+      const uploadArea = document.getElementById('drop-area');
+      const container = document.querySelector('.container');
+      
+      fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+          container.classList.add('file-selected');
+        } else {
+          container.classList.remove('file-selected');
+        }
+      });
+      
+      // Add drag and drop functionality
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        uploadArea.classList.add('dragover');
+      }
+      
+      function unhighlight() {
+        uploadArea.classList.remove('dragover');
+      }
+      
+      uploadArea.addEventListener('drop', handleDrop, false);
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        
+        if (fileInput.files.length > 0) {
+          container.classList.add('file-selected');
+        }
+      }
+      
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+              });
+              
+              // Update active link
+              document.querySelectorAll('.nav-link').forEach(navLink => {
+                navLink.classList.remove('active');
+              });
+              this.classList.add('active');
+            }
+          }
+        });
+      });
+      
+      // Add scroll event listener to update active nav link
+      window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        let currentSection = '';
+        
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 100;
+          const sectionHeight = section.clientHeight;
+          
+          if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+            currentSection = '#' + section.getAttribute('id');
+          }
+        });
+        
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === currentSection) {
+            link.classList.add('active');
+          }
+        });
+      });
+      
+      // Upload button functionality
+      document.getElementById('upload-btn').addEventListener('click', function() {
+        if (fileInput.files.length > 0) {
+          // Here you would typically handle the file upload to your server
+          alert('Processing file: ' + fileInput.files[0].name);
+          // In a real application, you would use fetch or XMLHttpRequest to send the file to your server
+        } else {
+          alert('Please select a file to upload first!');
+        }
+      });
+
+      // Generate more particles dynamically
+      function createParticles() {
+        const particlesContainer = document.querySelector('.particles-container');
+        for (let i = 0; i < 15; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 20 + 's';
+          particle.style.width = (Math.random() * 6 + 2) + 'px';
+          particle.style.height = particle.style.width;
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Call the function when the page loads
+      window.addEventListener('load', createParticles);
+    </script>
+    <script src="/Script/doctorWorks/AnswerSheet.js"></script>
+  </body>
+</html>

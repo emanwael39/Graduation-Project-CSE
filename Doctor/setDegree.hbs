@@ -1,0 +1,362 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Degree Values</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Grades Available Banner */
+        .grades-banner {
+            background: linear-gradient(45deg, #3b82f6, #1e40af);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .grades-banner h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grades-banner p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .grades-banner i {
+            margin-right: 10px;
+            font-size: 2rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Parent Container */
+        .parent {
+            display: flex;
+            justify-content: center;
+            margin: 2rem auto;
+            max-width: 1200px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .div1, .div2 {
+            flex: 1;
+            margin: 0 1rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .div1:hover, .div2:hover {
+            transform: translateY(-5px);
+        }
+
+        .div1 img, .div2 img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+
+        /* Form Container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(30, 64, 175, 0.3);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+        }
+
+        input[type="number"]::placeholder,
+        input[type="text"]::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Button Styles */
+        .Button {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .Button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .parent {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .div1, .div2 {
+                margin: 1rem 0;
+                max-width: 500px;
+            }
+            
+            .grades-banner h3 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .div1, .div2 {
+                max-width: 100%;
+            }
+            
+            .grades-banner h3 {
+                font-size: 1.3rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .Button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <!-- Grades Available Banner -->
+    <div class="grades-banner">
+        <h3><i class="fas fa-trophy"></i> Grades Are Now Available!</h3>
+        <p>Final results have been processed and are ready for viewing</p>
+    </div>
+
+    <div class="parent">
+        <div class="div1"> 
+            <script type="text/javascript" style="display:none">
+                //<![CDATA[
+                window.__mirage2 = {petok:"JDNXv4Niogn7W8uHbfes8bt_gU05dIRKTH4veLQMtUQ-1800-0.0.1.1"};
+                //]]>
+            </script>
+            <img alt="" width="100%" data-cfsrc="/images/imag.png" style="display:none;visibility:hidden;"><noscript><img src="/images/imag.png" alt="" width="100%"></noscript>
+        </div>
+
+        <div class="div2">
+            <img alt="" width="100%" data-cfsrc="/images/image.png" style="display:none;visibility:hidden;"><noscript><img src="/images/image.png" alt="" width="100%"></noscript>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>The correction has been completed successfully.</h2>
+            <form>
+                <div class="form-group">
+                    <label for="inp1">Degree per Question:</label>
+                    <input type="number" step="1" id="inp1" placeholder="Enter degree per Question">
+                </div>
+                <div class="form-group">
+                    <label for="inp2">PDF Student Name:</label>
+                    <input type="text" id="inp2" placeholder="Enter Student Name">
+                </div>
+                <button type="button" class="Button">Show Results of Student</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Your existing JavaScript can be added here
+            // It will work with all the original classes and IDs
+        });
+    </script>
+    <script src="/Script/doctorWorks/setDegree.js"></script>
+</body>
+</html>

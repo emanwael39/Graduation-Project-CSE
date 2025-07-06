@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="/css/createBubblesheet.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Create Bubble Sheet</title>
+
+  <style>
+    .send {
+      display: inline-block;
+      padding: 10px 30px;
+      font-size: 16px;
+      color: white;
+      background-color: #4f5af7;
+      /* اللون الأزرق الفاتح */
+      border: none;
+      border-radius: 30px;
+      /* حواف دائرية */
+      text-align: center;
+      cursor: pointer;
+      width: 200px;
+      /* عرض الزر */
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      /* تأثير التغيير */
+      margin: 15px auto;
+      /* توسيط الزر في الصفحة */
+      display: block;
+    }
+
+    .send:hover {
+      background-color: #032ce5;
+      /* لون أزرق داكن عند التأثير */
+      transform: scale(1.05);
+      /* تكبير الزر عند المرور عليه */
+    }
+
+    .send:focus {
+      outline: none;
+      /* إزالة حدود الزر عند التحديد */
+    }
+  </style>
+
+</head>
+
+<body>
+  <div>
+    <form>
+      <label>Create Bubble Sheet.</label>
+      <input type="text" placeholder="Enter the Department" class="input1" />
+      <input type="text" placeholder="Enter the Course Name" class="input2" />
+      <input type="text" placeholder="Enter the Course Code" class="input3" />
+      <input type="text" placeholder="Enter the Course Level" class="input4" />
+      <input type="text" placeholder="Enter the Semester" class="input5" />
+      <input type="text" placeholder="Enter the Instructor Name" class="input6" />
+      <input type="date" placeholder="mm/dd/yyyy" class="input7" />
+      <input type="text" placeholder="Enter the Time" class="input8" />
+      <input type="number" placeholder="Enter the Full Mark" class="input9" />
+      <input type="text" placeholder="Final or Midterm" class="input10" />
+      <input type="number" max="90" min="1" placeholder="Number of Questions" class="input11" />
+      <input type="text" min="1" max="30" value="The Number of Questions of Columns is 30" class="form-control input12"
+        placeholder="Enter The Number of Questions of Columns" readonly />
+      <button class="send">Done</button>
+    </form>
+  </div>
+  <script src="/Script/doctorWorks/createBubbleSheet.js"></script>
+</body>
+
+</html>

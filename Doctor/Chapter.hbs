@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Manager</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F3F4F6;
+            color: #1E293B;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #3B82F6;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input {
+            background: #E5E7EB;
+            color: #1E293B;
+            border: 1px solid #D1D5DB;
+        }
+
+        button {
+            background: #3B82F6;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563EB;
+            transform: scale(1.05);
+        }
+
+        .chapter-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .chapter-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #DBEAFE;
+            margin-top: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            opacity: 0;
+            transform: translateY(-10px);
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #F9FAFB;
+            border-radius: 10px;
+            border: 2px dashed #3B82F6;
+            text-align: center;
+            transition: 0.3s ease-in-out;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .buttons button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .manual-btn {
+            background: #34D399;
+            color: white;
+        }
+
+        .manual-btn:hover {
+            background: #059669;
+            transform: scale(1.1);
+        }
+
+        .ai-btn {
+            background: #FACC15;
+            color: #1E293B;
+        }
+
+        .ai-btn:hover {
+            background: #EAB308;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Chapter Manager</h2>
+        <input type="number" id="chapterCount" placeholder="Enter number of chapters">
+        <button onclick="generateChapters()">Generate Chapters</button>
+
+        <ul id="chapterList" class="chapter-list"></ul>
+
+        <div id="uploadBox" class="upload-box">
+            <h3 id="uploadTitle">Upload Chapter</h3>
+            <input type="file" id="fileInput" accept="application/pdf">
+            <button onclick="processUpload()">Upload</button>
+        </div>
+    </div>
+
+   
+    {{!-- <script>
+        let selectedChapter = "";
+
+        document.addEventListener("DOMContentLoaded", fetchChapters);
+
+        function generateChapters() {
+            const count = document.getElementById('chapterCount').value;
+            const list = document.getElementById('chapterList');
+            list.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                let li = document.createElement('li');
+                li.textContent = `Chapter ${i}`;
+                li.onclick = function () {
+                    selectedChapter = `Chapter ${i}`;
+                    document.getElementById('uploadTitle').textContent = `Upload ${selectedChapter}`;
+                    document.getElementById('uploadBox').style.display = "block";
+                };
+                list.appendChild(li);
+            }
+        }
+
+        function fetchChapters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseName = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+
+            fetch('http://localhost:3000/Doctor/Chapters', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idDoctor, course: courseName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const list = document.getElementById('chapterList');
+                        list.innerHTML = '';
+
+                        data.pdfFiles.forEach((fileName, index) => {
+                            let li = document.createElement('li');
+                            li.innerHTML = `Chapter ${index + 1}: ${fileName}`;
+
+                            let btnContainer = document.createElement('div');
+                            btnContainer.classList.add('buttons');
+
+                            let manualBtn = document.createElement('button');
+                             const urlParams = new URLSearchParams(window.location.search);
+                            const courseName = urlParams.get('course');
+                            const idDoctor = urlParams.get('id');
+                            manualBtn.innerHTML = "✍";
+                            manualBtn.classList.add("manual-btn");
+                            manualBtn.title = "Add Questions Manually";
+                            manualBtn.onclick = function () {
+                                window.location.href = `http://localhost:3000/Doctor/manualQuestion?course=${courseName}&id=${idDoctor}`;
+                            };
+
+                            let aiBtn = document.createElement('button');
+                           
+
+                            aiBtn.innerHTML = "🤖";
+                            aiBtn.classList.add("ai-btn");
+                            aiBtn.title = "Generate AI Questions";
+                            aiBtn.onclick = function () {
+                                window.location.href = `http://localhost:3000/Doctor/QuestionAi?course=${courseName}&id=${idDoctor}`;
+                            };
+
+                            btnContainer.appendChild(manualBtn);
+                            btnContainer.appendChild(aiBtn);
+                            li.appendChild(btnContainer);
+
+                            list.appendChild(li);
+                        });
+                    }
+                })
+                .catch(error => console.error("Error fetching chapters:", error));
+        }
+
+        function processUpload() {
+            let fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select a file.");
+                return;
+            }
+
+            let fileName = fileInput.files[0].name;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseName = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+
+            let file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('pdf', file);
+            formData.append('idDoctor', idDoctor);
+            formData.append('course', courseName);
+
+            fetch('http://localhost:3000/Doctor/Chapter', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    fetchChapters(); // تحديث القائمة بعد الرفع مباشرة
+                });
+
+            document.getElementById('uploadBox').style.display = "none";
+        }
+    </script> --}}
+    <script>
+    let selectedChapter = "";
+
+    document.addEventListener("DOMContentLoaded", fetchChapters);
+
+    function generateChapters() {
+        const count = document.getElementById('chapterCount').value;
+        const list = document.getElementById('chapterList');
+        list.innerHTML = '';
+
+        for (let i = 1; i <= count; i++) {
+            let li = document.createElement('li');
+            li.textContent = `Chapter ${i}`;
+            li.onclick = function () {
+                selectedChapter = `Chapter ${i}`;
+                document.getElementById('uploadTitle').textContent = `Upload ${selectedChapter}`;
+                document.getElementById('uploadBox').style.display = "block";
+            };
+            list.appendChild(li);
+        }
+    }
+
+    function fetchChapters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+
+        fetch('http://localhost:3000/Doctor/Chapters', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idDoctor, course: courseName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const list = document.getElementById('chapterList');
+                list.innerHTML = '';
+
+                data.pdfFiles.forEach((fileName, index) => {
+                    let li = document.createElement('li');
+                    li.innerHTML = `Chapter ${index + 1}: ${fileName}`;
+
+                    let btnContainer = document.createElement('div');
+                    btnContainer.classList.add('buttons');
+
+                    let manualBtn = document.createElement('button');
+                    manualBtn.innerHTML = "✍";
+                    manualBtn.classList.add("manual-btn");
+                    manualBtn.title = "Add Questions Manually";
+                    manualBtn.onclick = function () {
+                        window.location.href = `http://localhost:3000/Doctor/manualQuestion?course=${courseName}&id=${idDoctor}&file=${encodeURIComponent(fileName)}`;
+                    };
+
+                    let aiBtn = document.createElement('button');
+                    aiBtn.innerHTML = "🤖";
+                    aiBtn.classList.add("ai-btn");
+                    aiBtn.title = "Generate AI Questions";
+                    aiBtn.onclick = function () {
+                        window.location.href = `http://localhost:3000/Doctor/QuestionAi?course=${courseName}&id=${idDoctor}&file=${encodeURIComponent(fileName)}`;
+                    };
+
+                    btnContainer.appendChild(manualBtn);
+                    btnContainer.appendChild(aiBtn);
+                    li.appendChild(btnContainer);
+
+                    list.appendChild(li);
+                });
+            }
+        })
+        .catch(error => console.error("Error fetching chapters:", error));
+    }
+
+    function processUpload() {
+        let fileInput = document.getElementById('fileInput');
+        if (fileInput.files.length === 0) {
+            alert("Please select a file.");
+            return;
+        }
+
+        let fileName = fileInput.files[0].name;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+
+        let file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('pdf', file);
+        formData.append('idDoctor', idDoctor);
+        formData.append('course', courseName);
+
+        fetch('http://localhost:3000/Doctor/Chapter', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then((data) => {
+            console.log(data);
+            fetchChapters(); // تحديث القائمة بعد الرفع مباشرة
+        });
+
+        document.getElementById('uploadBox').style.display = "none";
+    }
+</script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Manual Questions</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f9ff;
+            color: #0056b3;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.3);
+            text-align: left;
+        }
+        h1 {
+            color: #004080;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .section {
+            margin-top: 30px;
+        }
+        .question {
+            background: #e6f2ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 6px solid #0056b3;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .question:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 255, 0.2);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #d9ecff;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .correct {
+            background: #c3f0c3;
+            font-weight: bold;
+            border-left: 5px solid green;
+        }
+        li:hover {
+            background: #b3d9ff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Questions</h1>
+        <div class="section">
+            <h2>Essay Questions</h2>
+            <div id="essay-questions"></div>
+        </div>
+        <div class="section">
+            <h2>MCQ Questions</h2>
+            <div id="mcq-questions"></div>
+        </div>
+        <div class="section">
+            <h2>Multi-Choice Questions</h2>
+            <div id="multi-questions"></div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const course = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+        const file = urlParams.get('file');
+
+        fetch('http://localhost:3000/Doctor/showAllManualQuestion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idDoctor, course, file })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const essayContainer = document.getElementById("essay-questions");
+            const mcqContainer = document.getElementById("mcq-questions");
+            const multiContainer = document.getElementById("multi-questions");
+            
+            data.forEach(q => {
+                let html = `<div class='question'><strong>Type:</strong> ${q.type || "Multi-Choice"} <br> <strong>Question:</strong> ${q.question || q.paragraph}</div>`;
+                
+                if (q.choices) {
+                    html += "<ul>" + q.choices.map(choice => {
+                        let isCorrect = q.correctAnswer === choice ? 'correct' : '';
+                        return `<li class='${isCorrect}'>${choice}</li>`;
+                    }).join('') + "</ul>";
+                }
+                
+                if (q.type === "Essay") {
+                    essayContainer.innerHTML += html;
+                } else if (q.type === "MCQ") {
+                    mcqContainer.innerHTML += html;
+                } else if (q.type === "Multi-Choice") {
+                    multiContainer.innerHTML += html;
+                }
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

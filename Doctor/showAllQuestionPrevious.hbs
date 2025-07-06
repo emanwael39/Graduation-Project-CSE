@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #0d47a1;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #0d47a1;
+        }
+        .question-box {
+            background: #bbdefb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .question-box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #64b5f6;
+            background-color: #e3f2fd;
+            font-size: 1rem;
+        }
+        section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        h2 {
+            color: #0d47a1;
+            border-bottom: 2px solid #0d47a1;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .written-question {
+            background: #e1f5fe;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border-left: 5px solid #0d47a1;
+            font-size: 1.1rem;
+            color: #01579b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exam Questions</h1>
+    <div class="container">
+        <div id="multiple-choice-questions"></div>
+        <section id="written-questions">
+            <h2>Written Questions</h2>
+        </section>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const year = urlParams.get('year');
+
+        fetch('http://localhost:3000/Doctor/showAllQuestionPrevious', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseName: courseName, year: year })
+        })
+        .then(response => response.json())
+        .then((data) => {
+            console.log(data);
+            displayMultipleChoiceQuestions(data.multiple_choice_questions);
+            displayWrittenQuestions(data.essay_questions);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+        function displayMultipleChoiceQuestions(questions) {
+            const container = document.getElementById('multiple-choice-questions');
+            container.innerHTML = '<h2>Multiple Choice Questions</h2>';
+            let count = 1;
+            for (const key in questions) {
+                const questionData = questions[key];
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question-box');
+
+                questionDiv.innerHTML = `
+                    <p><b>${count}.</b> ${questionData.question}</p>
+                    <select>
+                        ${Object.entries(questionData.options).map(([key, value]) => `<option value="${key}">${key}: ${value}</option>`).join('')}
+                    </select>
+                `;
+                container.appendChild(questionDiv);
+                count++;
+            }
+        }
+
+        function displayWrittenQuestions(questions) {
+            const container = document.getElementById('written-questions');
+            let questionNumber = 0;
+            let questionText = '';
+
+            for (const key in questions) {
+                const text = questions[key];
+
+                if (/^\d+\./.test(text)) { 
+                    if (questionText) {
+                        addWrittenQuestion(container, ++questionNumber, questionText);
+                    }
+                    questionText = text;
+                } else {
+                    questionText += ` ${text}`;
+                }
+            }
+
+            if (questionText) {
+                addWrittenQuestion(container, ++questionNumber, questionText);
+            }
+        }
+
+        function addWrittenQuestion(container, number, text) {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('written-question');
+            questionDiv.innerHTML = `<b>${number}.</b> ${text}`;
+            container.appendChild(questionDiv);
+        }
+    </script>
+</body>
+</html>

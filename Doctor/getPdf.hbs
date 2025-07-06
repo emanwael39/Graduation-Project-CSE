@@ -1,0 +1,164 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Download</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+       body, html {
+            height: 100%;
+            margin: 0; 
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #7709e4, #5b0296, #1787e4, #d5a8fc);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: white;
+            text-align: center;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        } 
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%; 
+        }
+        .text {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .success-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s forwards;
+        }
+        .success-container img {
+            width: 150px;
+            height: 150px;
+            animation: bounceIn 1s forwards;
+        }
+        .success-container p {
+            margin-top: 20px;
+            font-size: 18px;
+            max-width: 600px;
+            opacity: 0;
+            animation: slideIn 1s forwards;
+            animation-delay: 1s;
+        }
+        .svg-container {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 10;
+        }
+        .circle-progress {
+            fill: none;
+            stroke: white;
+            stroke-width: 10;
+            stroke-dasharray: 251.2; /* 2 * π * 40 (radius) */
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+        .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+      <div class="container text-center" id="loading-container">
+        <div class="svg-container">
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" class="circle-bg"/>
+                <circle cx="50" cy="50" r="40" class="circle-progress" id="circle-progress"/>
+            </svg>
+            <div class="percentage" id="percentage">0%</div>
+        </div>
+        <div class="text">Please wait while the PDF is being downloaded.</div>
+    </div>
+    <div class="container text-center success-container" id="success-container">
+        <img src="https://s3-alpha-sig.figma.com/img/74c0/51b2/4a9f4caff8ec585108c7fdcf8d4c2935?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=lsH7x6~ZIvggeIbv4MPRHKVSkPUnOu0o2dJTOo9LIGVBBJF6AuGVeMXBSxVBpwn56aigPnBlDA7tnko0yUt9XtBTZEHggO9b748G0uKER7tNoEO365AD0WOJJRycn7KHAjg2G6f~9jwa5~nK7cURCBqEmoaelQnJk77tsphcp~RKDgHuJuuThYvwDcFmVjmpfE9QBP4KblBojZYhT-kzfGOwGX2ufir6RDgu9AsDCc99Qt1JOHoYCvcsuQazlpAaneJruAFA9THoBoWVADTB2LNa21Qk-3S7UAYX~h0ouwL2C8DFkd4IMLbE0f-YiQQMEKMvP4LtQvx0xu~-4YnbeA__" alt="Download complete icon" class="img-fluid">
+        <p>The five models have been successfully downloaded, along with the PDF of the model answers for the bubble sheet.</p>
+    </div>
+    <script>
+        // Simulate download completion after 5 seconds
+        let percentageElement = document.getElementById('percentage');
+        let loadingContainer = document.getElementById('loading-container');
+        let successContainer = document.getElementById('success-container');
+        let circleProgress = document.getElementById('circle-progress');
+        let duration = 11000; 
+        let startTime = null;
+
+        function updatePercentage(timestamp) {
+            if (!startTime) startTime = timestamp;
+            let elapsed = timestamp - startTime;
+            let percentage = Math.min((elapsed / duration) * 100, 100);
+            percentageElement.textContent = Math.floor(percentage) + '%';
+            let offset = 251.2 - (251.2 * (percentage / 100));
+            circleProgress.style.strokeDashoffset = offset;
+
+            if (elapsed < duration) {
+                requestAnimationFrame(updatePercentage);
+            } else {
+                loadingContainer.style.display = 'none';
+                successContainer.style.display = 'flex';
+            }
+        }
+
+        requestAnimationFrame(updatePercentage);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/Script/doctorWorks/getPdf.js"></script>
+</body>
+</html>

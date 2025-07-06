@@ -1,0 +1,583 @@
+{{!-- 
+
+<html>
+
+<head>
+      <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Upload Scanned Student Paper
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-30px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('https://s3-alpha-sig.figma.com/img/bb45/7286/891e1a98319a9d6ca3edaa75f93a3ba7?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=napuznKXlbR5TkaCxhyOmLS33OAASzpijTKvcNQk4gwmyqRtclTi-X~KuFcr6dpxmjIxkYU92LXTW4DNMjAax5eKCMisEC3js5ugo0iDV348cISbOIJ9dHEyWG2rYs4Yon~gtpxrHnUNRsgQ71YiZRcs5R7oazKoR0CBh0q6hch4b2hhOcnPjMmjdkUubVaspNx5HRs2yumCx~KrErLREeqf7FO43WqOPcat-dWW-LYeGyXSfcveoURYLGqs05NuHmlJ67DTAetVDEKJ8CpbXBOP4Oz~YTqzyFEL3ZH0tWdYT-Pft6Qg8HnuQmWwsFRShneRKi7Hn7msUAoTRKeR2g__') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            line-height: 75px;
+            font-size: 64px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .upload-box {
+            position: relative;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .upload-box img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .upload-box p {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .upload-box a {
+            color: #00f2fe;
+            text-decoration: none;
+        }
+
+        .upload-box a:hover {
+            text-decoration: underline;
+        }
+
+        .upload-button {
+            background-color: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-button:hover {
+            background-color: #333;
+        }
+
+        .upload-box::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        .upload-box::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+          input[type="file"] {
+            display: inline-block;
+            background-color: #add8e6; /* اللون اللبني */
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            background-color: #87cefa; /* تغيير اللون عند التمرير */
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            Upload Scanned Student Paper
+        </h1>
+        <p>
+            Please upload the scanned student paper in PDF format. Ensure that the images in the PDF are sized at
+            870x600 for accurate results processing. This will help ensure the accuracy of the outcomes.
+        </p>
+        <div class="upload-box">
+            <img alt="Upload icon" height="50"
+                src="https://s3-alpha-sig.figma.com/img/79a3/f47a/af497287705e06fd3dc8f887d01fe711?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Gue9B2p03cx1222CP434xz6uzZNPtCeptE0xYs0rlEyMI1WhySJAoBA9DQiAZKl0cdhT5GCNL3SEhSlJycodqVI~OJE479erCrBuJPrOdG6hBN-ghczJKGQkNq9cWdJZqh5Y~95MwBGsZ7qEjxvqsusCW3RYXNbXQNzW-FhrblDlmgq3Oxw7oWamAt5xzC1PNGbnCQCYJpB3JuPg4kIqbfxtWeC17HKWPGvXPWdcZtOStqirBnXuAtdrNLWCWuP45S9RfBFWB9PWkGdRRzdJDNtXA4bZKemKeK28KBqsJOb3rqAAUbdLVqqTH3gu8tDM5QT76AfwMPdAL7y7-nkhag__"
+                width="50" />
+            <p>
+                Drop scanner to upload
+                <br />
+                or
+               
+                     <input id="pdf" type="file" accept="application/pdf" name="Browser"  >
+                    
+                
+            </p>
+            <button type="button" class="upload-button" id="btn1">
+                Upload
+            </button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/Script/doctorWorks/uploadBubbelSheets.js"></script>
+</body>
+
+</html> --}}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Scanned Student Paper</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #1e3a8a;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Upload Box */
+        .upload-box {
+            position: relative;
+            border: 2px dashed rgba(30, 64, 175, 0.5);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .upload-box:hover {
+            border-color: rgba(30, 64, 175, 0.8);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+
+        /* Scanning Animation */
+        .scanning-animation {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scanner-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .document-placeholder {
+            width: 80%;
+            height: 70%;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* File Input */
+        input[type="file"] {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(30, 64, 175, 0.3);
+            color: #1e40af;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        input[type="file"]:hover {
+            background-color: rgba(30, 64, 175, 0.2);
+            color: #1e3a8a;
+        }
+
+        /* Upload Button */
+        .upload-button {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+            margin-top: 1rem;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .upload-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .upload-box {
+                padding: 2rem;
+            }
+            
+            .scanning-animation {
+                width: 250px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .upload-box {
+                padding: 1.5rem;
+            }
+            
+            .scanning-animation {
+                width: 200px;
+                height: 150px;
+            }
+            
+            input[type="file"] {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .upload-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <div class="container">
+        <h1>Upload Scanned Student Paper</h1>
+        <p>
+            Please upload the scanned student paper in PDF format. Ensure that the images in the PDF are sized at
+            870x600 for accurate results processing. This will help ensure the accuracy of the outcomes.
+        </p>
+        <div class="upload-box" id="drop-area">
+            <!-- Scanning Animation -->
+            <div class="scanning-animation">
+                <div class="scanner-light"></div>
+                <div class="document-placeholder">
+                    <i class="fas fa-file-pdf" style="font-size: 2rem; color: #ef4444; margin-right: 10px;"></i>
+                    Student Paper
+                </div>
+            </div>
+            
+            <p>
+                Drop scanner to upload
+                <br />
+                or
+                <input id="pdf" type="file" accept="application/pdf" name="Browser">
+            </p>
+            <button type="button" class="upload-button" id="btn1">
+                Upload
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add drag and drop functionality
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('pdf');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('dragover');
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Your existing JavaScript can be added here
+            // It will work with all the original classes and IDs
+        });
+    </script>
+    <script src="/Script/doctorWorks/uploadBubbelSheets.js"></script>
+</body>
+</html>

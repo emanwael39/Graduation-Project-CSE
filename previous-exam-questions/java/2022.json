@@ -1,0 +1,386 @@
+{
+    "multiple_choice_questions": {
+        "question_1": {
+            "question": "How many transistors are needed if the memory is DRAM?",
+            "options": {
+                "A": "4nk",
+                "B": "6nk",
+                "C": "nk",
+                "D": "zero"
+            }
+        },
+        "question_2": {
+            "question": "How many transistors are needed if the memory is SRAM?",
+            "options": {
+                "A": "4nk",
+                "B": "zero",
+                "C": "6nk",
+                "D": "nk"
+            }
+        },
+        "question_3": {
+            "question": "In isolated I/O, how many address lines are needed to support x memory locations and y I/O devices?",
+            "options": {
+                "A": "log2(x + y)",
+                "B": "log2(y)",
+                "C": "log2(x)",
+                "D": "log2(max(x, y))"
+            }
+        },
+        "question_4": {
+            "question": "Four layers of carry-save adders could partially add . . . . . .",
+            "options": {
+                "A": "4 numbers",
+                "B": "6 numbers",
+                "C": "5 numbers",
+                "D": "8 numbers"
+            }
+        },
+        "question_5": {
+            "question": "Which of the following could be used to find partial sums and carries in the carry-save adder?",
+            "options": {
+                "A": "Full adder",
+                "B": "Half adder",
+                "C": "Carry-lookahead adder",
+                "D": "Carry-ripple adder"
+            }
+        },
+        "question_6": {
+            "question": "What should registers A, B, and C contain initially?",
+            "options": {
+                "A": "A=sign bit of C, B=Multiplicand, C=Multiplier",
+                "B": "A=0000, B=Multiplicand, C=Multiplier",
+                "C": "A=Multiplier, B=Multiplicand, C=0000",
+                "D": "A=sign bit of B, B=Multiplier, C=Multiplicand"
+            }
+        },
+        "question_7": {
+            "question": "After initialization, how many clock pulses are required to complete the multiplication?",
+            "options": {
+                "A": "5",
+                "B": "2",
+                "C": "4",
+                "D": "3"
+            }
+        },
+        "question_8": {
+            "question": "Finally, where to find the multiplication results?",
+            "options": {
+                "A": "Register C",
+                "B": "Register C (to left) and A (to right)",
+                "C": "Register A (to left) and C (to right)",
+                "D": "Register A"
+            }
+        },
+        "question_9": {
+            "question": "Which of the following is NOT true about computer I/O?",
+            "options": {
+                "A": "An interrupt-request line is part of the control bus.",
+                "B": "An I/O module must operate at both device and memory/CPU speeds.",
+                "C": "In programmed I/O, there is one-to-one mapping between I/O instructions and I/O commands.",
+                "D": "A selector channel handles only I/O devices that have the same data rate."
+            }
+        },
+        "question_10": {
+            "question": "Restoring division algorithm:",
+            "options": {
+                "A": "1101, 1000",
+                "B": "0001, 1100",
+                "C": "0000, 1001",
+                "D": "0000, 1110"
+            }
+        },
+        "question_11": {
+            "question": "Non-restoring division algorithm:",
+            "options": {
+                "A": "1110, 1100",
+                "B": "1110, 1001",
+                "C": "1011, 1100",
+                "D": "1101, 111"
+            }
+        },
+        "question_12": {
+            "question": "How long is the Hamming distance?",
+            "options": {
+                "A": "10",
+                "B": "5",
+                "C": "4",
+                "D": "3"
+            }
+        },
+        "question_13": {
+            "question": "How many error bits can be detected in this code?",
+            "options": {
+                "A": "2",
+                "B": "4",
+                "C": "3",
+                "D": "9"
+            }
+        },
+        "question_14": {
+            "question": "How many error bits can be corrected in this code?",
+            "options": {
+                "A": "1",
+                "B": "3",
+                "C": "8",
+                "D": "2"
+            }
+        },
+        "question_15": {
+            "question": "The ARM high performance multiplier can perform a 32-bit multiplication in . . . . . .",
+            "options": {
+                "A": "32 cycles",
+                "B": "5 cycles",
+                "C": "16 cycles",
+                "D": "8 cycles"
+            }
+        },
+        "question_16": {
+            "question": "The address bus of a computer has 16 address lines, A15-0. If the address assigned to one device is 3C5D, and the address decoder for that device ignores lines A8 and A9, what are all the addresses to which this device will respond?",
+            "options": {
+                "A": "All the other answers are correct",
+                "B": "3D5D",
+                "C": "3C5D",
+                "D": "3E5D"
+            }
+        },
+        "question_17": {
+            "question": "Convert the number 1 1111111 00110 to decimal:",
+            "options": {
+                "A": "sNaN",
+                "B": "−1.1905 × 2^127",
+                "C": "−1.1905 × 2^64",
+                "D": "Inf"
+            }
+        },
+        "question_18": {
+            "question": "Represent the decimal number −0.83739 × 2^−62 using this format:",
+            "options": {
+                "A": "1 0000000 11010",
+                "B": "1 1111111 11011",
+                "C": "1 1000000 11010",
+                "D": "0 0000000 01010"
+            }
+        },
+        "question_19": {
+            "question": "Which of the following indicates an invalid operation exception?",
+            "options": {
+                "A": "Inf",
+                "B": "qNaN",
+                "C": "zero",
+                "D": "sNaN"
+            }
+        },
+        "question_20": {
+            "question": "SRAMs are . . . . . . than DRAMs.",
+            "options": {
+                "A": "cheaper, simpler, and denser",
+                "B": "more expensive, more complex, and faster",
+                "C": "more expensive, more complex, and denser",
+                "D": "cheaper, more complex, and denser"
+            }
+        },
+        "question_21": {
+            "question": "Assume that three devices A, B, and C use a daisy chain technique to handle interrupts. Device A is the closest to the CPU, and C is the farthest. If B and C request interrupts simultaneously, whose ISR will be executed first?",
+            "options": {
+                "A": "C",
+                "B": "B",
+                "C": "Randomly any one",
+                "D": "A"
+            }
+        },
+        "question_22": {
+            "question": "The return address from the interrupt-service routine is stored on the . . . . . . . . .",
+            "options": {
+                "A": "Cache",
+                "B": "Stack",
+                "C": "ROM",
+                "D": "Registers"
+            }
+        },
+        "question_23": {
+            "question": "According to the IEEE single-precision standard, what is the decimal value of C1E00000?",
+            "options": {
+                "A": "–14",
+                "B": "–26",
+                "C": "–28",
+                "D": "–59"
+            }
+        },
+        "question_24": {
+            "question": "When adding two numbers in 4-bit two’s complement representation, the result is 1000 with overflow. What is the addition result in decimal?",
+            "options": {
+                "A": "-8",
+                "B": "We cannot tell",
+                "C": "+8",
+                "D": "zero"
+            }
+        },
+        "question_25": {
+            "question": "When using the Booth’s algorithm, the multiplier, 110101001, will be represented as:",
+            "options": {
+                "A": "00+1-1+1-10+10",
+                "B": "0-1+1-1+1-100-1",
+                "C": "0-1+1-1+1-10+10",
+                "D": "0-1+1-1+1-10+1-1"
+            }
+        },
+        "question_26": {
+            "question": "If Booth’s algorithm is used to multiply 8-bit numbers, which of the following multipliers would result in the worst multiplication efficiency?",
+            "options": {
+                "A": "1111 1111",
+                "B": "0000 0000",
+                "C": "0101 0101",
+                "D": "Multiplier does not affect efficiency"
+            }
+        },
+        "question_27": {
+            "question": "Which of the following is NOT needed by a DMA controller to perform an I/O transfer?",
+            "options": {
+                "A": "Type of operation",
+                "B": "Address of interrupt-service routine",
+                "C": "Starting address of block in memory",
+                "D": "Number of words"
+            }
+        },
+        "question_28": {
+            "question": "When two floating-point numbers are added, the two significands have to be aligned. This is done by shifting the smaller number to the right (increasing its exponent). Why it is not done by shifting the larger number to the left (decreasing its exponent)?",
+            "options": {
+                "A": "When the larger number is shifted to left, any lost bits are of relatively small significance.",
+                "B": "When the smaller number is shifted to right, any lost bits are of relatively large significance.",
+                "C": "When the smaller number is shifted to right, any lost bits are of relatively small significance.",
+                "D": "When the larger number is shifted to right, any lost bits are of relatively large significance."
+            }
+        },
+        "question_29": {
+            "question": "Consider the Booth’s algorithm, what will be the value of registers A, Q, and Q − 1 at the end of the third cycle? Suppose that their initial values are A = 0000, Q = 0011, Q − 1 = 0",
+            "options": {
+                "A": "0010, 1010, 0",
+                "B": "0101, 0100, 1",
+                "C": "1100, 0011, 0",
+                "D": "0001, 0101, 0"
+            }
+        },
+        "question_30": {
+            "question": "For n bits ripple-carry adder, S_n−1 is available after . . . gate delays and C_n is available after . . . gate delays.",
+            "options": {
+                "A": "2n, 2n+1",
+                "B": "2n-1, 2n",
+                "C": "2n+1, 2n",
+                "D": "2n, 2n-1"
+            }
+        },
+        "question_31": {
+            "question": "Which of the following is NOT a property of a memory cell?",
+            "options": {
+                "A": "Its state can be set",
+                "B": "No correct answer",
+                "C": "It has exactly one stable state",
+                "D": "Its state can be sensed"
+            }
+        },
+        "question_32": {
+            "question": "Which of these techniques is able to execute I/O instructions?",
+            "options": {
+                "A": "Interrupts",
+                "B": "I/O channels",
+                "C": "Programmed I/O",
+                "D": "DMA"
+            }
+        },
+        "question_33": {
+            "question": "Given a program written using 16-bit thumb instructions and 32-bit ARM instructions. What the percentage of memory storage using by thumb as compared to ARM for the same program?",
+            "options": {
+                "A": "Around 50%",
+                "B": "Less than 50%",
+                "C": "More than 50%",
+                "D": "Around 100%"
+            }
+        },
+        "question_34": {
+            "question": "Which of the following types of memory is used for cache memory?",
+            "options": {
+                "A": "SRAM",
+                "B": "DRAM",
+                "C": "SDD",
+                "D": "ROM"
+            }
+        },
+        "question_35": {
+            "question": "The sign of the remainder is the same as the sign of . . . . . . . . .",
+            "options": {
+                "A": "Always positive",
+                "B": "The dividend",
+                "C": "The divisor",
+                "D": "The divisor × the dividend"
+            }
+        },
+        "question_36": {
+            "question": "The sign of the quotient is the same as the sign of . . . . . . . . .",
+            "options": {
+                "A": "The divisor × the dividend",
+                "B": "The dividend",
+                "C": "The divisor",
+                "D": "Always positive"
+            }
+        },
+        "question_37": {
+            "question": "Consider a DMA controller with a transparent mode. The input device produces x bytes of data every second. Each byte takes one bus cycle to be transferred to the memory. The bus speed is y cycles/s. The CPU uses the bus z% of the time. What is the maximum value of x?",
+            "options": {
+                "A": "(y-z)/100",
+                "B": "y(1-z/100)",
+                "C": "No correct answer",
+                "D": "y-z/100"
+            }
+        },
+        "question_38": {
+            "question": "Which of the following is (are) a function(s) of an I/O module?",
+            "options": {
+                "A": "Data buffering",
+                "B": "Error detection",
+                "C": "Control and timing",
+                "D": "All the other answers are correct"
+            }
+        },
+        "question_39": {
+            "question": "Using modified Booth’s algorithm, a 32-bit multiplication can be completed in . . . . . .",
+            "options": {
+                "A": "8 cycles",
+                "B": "16 cycles",
+                "C": "5 cycles",
+                "D": "32 cycles"
+            }
+        },
+        "question_40": {
+            "question": "The interrupt-request line is a part of the . . . . . .",
+            "options": {
+                "A": "Control bus",
+                "B": "Data bus",
+                "C": "Special interrupt bus",
+                "D": "Address bus  \n\n**أسئلة مقالية:**"
+            }
+        }
+    },
+    "essay_questions": {
+        "written_1": "1. Design a 4M × 16bits memory using 256k × 1bit memory chips. Clearly show the number of chips and all connections including to/from the data and address pins.",
+        "written_2": "2. Given the following thumb code:",
+        "written_3": "```",
+        "written_4": "CODE16",
+        "written_5": "LDR r0, [r3]",
+        "written_6": "LSL r4, r0, #4",
+        "written_7": "SUB r1, r4, r0",
+        "written_8": "BCC cont1",
+        "written_9": "MOV r1, r0",
+        "written_10": "cont1",
+        "written_11": "LSL r4, r1, #2",
+        "written_12": "ADD r2, r1, r4",
+        "written_13": "BCC cont2",
+        "written_14": "MOV r2, r1",
+        "written_15": "cont2",
+        "written_16": "STR r2, [r3]",
+        "written_17": "```",
+        "written_18": "Convert it to the ARM instruction set using the minimum number of instructions utilizing the full power of ARM32.",
+        "written_19": "3. Calculate the Hamming word used to store the data word 1001 0100 0000 0111 for single error correction. Show that the code will correctly identify an error in data bit 7. Show how to modify the Hamming word for double error detection."
+    },
+    "paragraph_questions": {}
+}

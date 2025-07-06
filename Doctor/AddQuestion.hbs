@@ -1,0 +1,233 @@
+{{!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .question-info {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .form-group input:disabled {
+            background-color: #e9ecef;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons button {
+            padding: 12px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .buttons .finish {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .buttons .next {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .alert {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .question-list {
+            margin-top: 20px;
+        }
+        .question-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .answers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .answer {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Questions to Your Exam</h1>
+
+        <!-- Input for PDF Name -->
+        <div class="form-group">
+            <label for="pdf-name">PDF Name:</label>
+            <input type="text" id="pdf-name" name="pdf-name" class="border-gray-300" placeholder="Enter PDF name">
+        </div>
+
+        <div class="question-info" id="question-info">
+            Question 1
+        </div>
+
+        <div class="form-group">
+            <label for="question">Question:</label>
+            <input type="text" id="question" name="question" class="border-gray-300">
+        </div>
+        <div class="form-group">
+            <label for="answer1">Answer 1:</label>
+            <input type="text" id="answer1" name="answer1" class="border-gray-300">
+        </div>
+        <div class="form-group">
+            <label for="answer2">Answer 2:</label>
+            <input type="text" id="answer2" name="answer2" class="border-gray-300">
+        </div>
+        <div class="form-group">
+            <label for="answer3">Answer 3:</label>
+            <input type="text" id="answer3" name="answer3" class="border-gray-300">
+        </div>
+        <div class="form-group">
+            <label for="answer4">Answer 4:</label>
+            <input type="text" id="answer4" name="answer4" class="border-gray-300">
+        </div>
+        <div class="form-group">
+            <label for="correct-answer">Correct Answer:</label>
+            <input type="text" id="correct-answer" name="correct-answer" class="border-gray-300">
+        </div>
+         <div class="form-group">
+            <label for="image">Upload Image for question:</label>
+            <input type="file" id="image" name="image" accept="image/*" class="border-gray-300">
+        </div>
+        <div class="alert" id="alert" style="display:none;">
+            The correct answer is not one of the options!
+        </div>
+        <div class="buttons">
+            <button class="f">Finish</button>
+            <button class="next">Next</button> 
+             <button class="Check">Check</button> 
+        </div>
+        <div class="question-list" id="question-list">
+            <!-- Questions will be appended here -->
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="checkAnswer">Check Your Answer</label>
+        <input type="text" id="checkAnswer" name="answer4" class="border-gray-300" readonly>
+    </div>
+
+    <script src="/Script/doctorWorks/AddQuestion.js"></script>
+</body>
+</html> --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question For Exam</title>
+    <link rel="stylesheet" href="/css/AddQuestion.css">
+   
+</head>
+<body>
+   <div class="form-container">
+        <!-- Question number -->
+        <div class="question-info" id="question-info">Question 1</div>
+
+        <div class="form-title">Add The Question of Exam</div>
+        <form>
+            <div class="input-group">
+                <input type="text" id="pdf-name" placeholder="Enter PDF Name" required>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="question"  placeholder="Enter The Question" required>
+            </div>
+
+            <div class="answers-group">
+                <input type="text" id="answer1" placeholder="Answer 1" required>
+                <input type="text" id="answer2" placeholder="Answer 2" required>
+                <input type="text" id="answer3" placeholder="Answer 3" required>
+                <input type="text" id="answer4" placeholder="Answer 4" required>
+            </div>
+
+            <div class="correct-answer-group">
+                <input type="text" id="correct-answer" placeholder="Correct Answer" required>
+            </div>
+
+            <div class="file-upload">
+                <p>Upload Image for this Question:</p>
+                <div class="file-input-wrapper">
+                    <!-- تأكد من أن الـ id في الـ input يتطابق مع الـ for في الـ label -->
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <label for="image">Choose File</label> <!-- تم تغيير for ليتطابق مع id -->
+                    <span class="file-name">No File Chosen</span>
+                </div>
+            </div>
+
+            <div class="check-group">
+                <input type="text" id="checkAnswer"  placeholder="Check" readonly>
+            </div> 
+
+            <div class="button-group">
+                <button type="button" class="btn finish" id="finish">Finish</button>
+                <button type="button" class="btn next" id="next-btn">Next</button>
+                <button type="button" class="btn check" id="check">Check</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('image').addEventListener('change', function () {
+            const fileName = this.files[0] ? this.files[0].name : 'No File Chosen';
+            document.querySelector('.file-name').textContent = fileName;
+        });
+    </script>
+    <script src="/Script/doctorWorks/AddQuestion.js"></script>
+</body>
+</html>
+
+

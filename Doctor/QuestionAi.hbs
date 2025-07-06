@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Question Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 80%;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeIn 0.5s forwards ease-in-out;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Generate AI-Based Questions</h2>
+        <div class="d-flex flex-column align-items-center gap-3">
+            <!-- MCQ Section -->
+            <div class="card p-3 w-100">
+                <h5 class="text-center">MCQ Questions</h5>
+                <input type="number" class="form-control mb-2" id="mcqCount" placeholder="Number of questions">
+                <select class="form-select mb-3" id="mcqDifficulty">
+                    <option selected value="">Difficulty Level</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <!-- Essay Section -->
+            <div class="card p-3 w-100">
+                <h5 class="text-center">Essay Questions</h5>
+                <input type="number" class="form-control mb-2" id="essayCount" placeholder="Number of questions">
+                <select class="form-select mb-2" id="essayDifficulty">
+                    <option selected value="">Difficulty Level</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <select class="form-select mb-3" id="essayType">
+                    <option selected value="">Type</option>
+                    <option value="text">Text-based</option>
+                    <option value="numeric">Numeric-based</option>
+                    <option value="both">Both</option>
+                </select>
+            </div>
+            <!-- Multi-Choice Section -->
+            <div class="card p-3 w-100">
+                <h5 class="text-center">Multiple Choice</h5>
+                <input type="number" class="form-control mb-2" id="multiCount" placeholder="Number of questions">
+                <select class="form-select mb-3" id="multiDifficulty">
+                    <option selected value="">Difficulty Level</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-success w-100 mt-4" onclick="generateExam()">Generate Exam</button>
+    </div>
+
+    <script>
+        function generateExam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseName = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+            const file = urlParams.get('file');
+
+            let mcqCount = document.getElementById("mcqCount").value;
+            let mcqDifficulty = document.getElementById("mcqDifficulty").value;
+            let essayCount = document.getElementById("essayCount").value;
+            let essayDifficulty = document.getElementById("essayDifficulty").value;
+            let essayType = document.getElementById("essayType").value;
+            let multiCount = document.getElementById("multiCount").value;
+            let multiDifficulty = document.getElementById("multiDifficulty").value;
+
+            let formData = new URLSearchParams();
+            if (mcqCount) formData.append("mcqCount", mcqCount);
+            if (mcqDifficulty) formData.append("mcqDifficulty", mcqDifficulty); 
+            if (essayCount) formData.append("essayCount", essayCount);
+            if (essayDifficulty) formData.append("essayDifficulty", essayDifficulty);
+            if (essayType) formData.append("essayType", essayType);
+            if (multiCount) formData.append("multiCount", multiCount);
+            if (multiDifficulty) formData.append("multiDifficulty", multiDifficulty);
+            formData.append("courseName", courseName);
+            formData.append("idDoctor", idDoctor);
+            formData.append("file", file);
+
+            // إنشاء عنصر الانتظار وإضافته قبل تنفيذ الطلب
+            let loader = document.createElement("div");
+            loader.innerHTML = `
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Generating questions, please wait...</p>
+        </div>
+    `;
+            document.body.appendChild(loader);
+
+            // إضافة ستايل CSS مباشرًا
+            let style = document.createElement("style");
+            style.innerHTML = `
+        .loading-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 74, 173, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 74, 173, 0.4);
+            text-align: center;
+            z-index: 1000;
+        }
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(0, 74, 173, 0.3);
+            border-top: 6px solid #004aad;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loading-text {
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #004aad;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    `;
+            document.head.appendChild(style);
+
+            fetch("http://localhost:3000/Doctor/QuestionAi", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData.toString()
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    // إزالة اللودينج بعد اكتمال الطلب
+                    document.body.removeChild(loader);
+
+                    if (data.message === 'Exam generated successfully') {
+                        alert(data.message);
+                        window.location.href = `http://localhost:3000/Doctor/showAiQuestion?course=${courseName}&id=${idDoctor}&file=${file}`;
+                    }
+                })
+                .catch(error => {
+                    document.body.removeChild(loader); // إزالة اللودينج في حالة الخطأ أيضًا
+                    console.error("Error:", error);
+                    alert("An error occurred while generating the exam.");
+                });
+        }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

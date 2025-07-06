@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Manually</title>
+    <!-- Bootstrap for better UI components -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        aside {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            font-size: 18px;
+            color: #aaa;
+            margin-top: 50px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .active-card {
+            display: block;
+        }
+
+        .math-editor textarea,
+        .math-editor input {
+            width: 100%;
+            min-height: 50px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Symbol Palette */
+        .symbol-palette {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .symbol-palette-active {
+            right: 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 12px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tab-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .symbol-category {
+            padding: 10px;
+            display: none;
+        }
+
+        .symbol-form {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .symbol-form input {
+            margin-bottom: 10px;
+        }
+
+        .symbol-btn {
+            padding: 8px 12px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            display: inline-block;
+            transition: transform 0.1s;
+        }
+
+        .symbol-btn:active {
+            transform: scale(0.95);
+            background-color: #d1e7ff;
+        }
+
+        .matrix-input-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .matrix-input-grid {
+            display: grid;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .matrix-input-cell {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            background-color: #0056b3;
+        }
+
+        /* Quick symbol buttons */
+        .quick-symbols {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .quick-symbol-btn {
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.1s;
+        }
+
+        .quick-symbol-btn:active {
+            transform: scale(0.95);
+            background-color: #d1e7ff;
+        }
+
+        /* Math symbol spacing */
+        .math-symbol {
+            margin: 0 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <h2 class="text-center mb-4"> Question Manually</h2>
+        <button class="btn" onclick="showSection('mcq')">Multiple Choice</button>
+        <button class="btn" onclick="showSection('essay')">Essay Question</button>
+        <button class="btn" onclick="showSection('multichoice')">Multi-Choice</button>
+        <button class="btnShow btn">Show All Question</button>
+    </aside>
+    <main>
+        <div id="placeholder" class="placeholder-text">
+            <i class="fas fa-arrow-left"></i> Select a question type to begin
+        </div>
+        <!-- MCQ Section -->
+        <div id="mcq" class="card">
+            <h3>Multiple Choice Question</h3>
+            <div class="math-editor">
+                <label class="form-label">Question:</label>
+                <textarea id="mcq-question" class="form-control"
+                    placeholder="Enter your question here (use buttons below for math expressions)" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Option 1:</label>
+                <input type="text" id="mcq-option1" class="form-control" placeholder="Enter option 1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Option 2:</label>
+                <input type="text" id="mcq-option2" class="form-control" placeholder="Enter option 2">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Option 3:</label>
+                <input type="text" id="mcq-option3" class="form-control" placeholder="Enter option 3">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Option 4:</label>
+                <input type="text" id="mcq-option4" class="form-control" placeholder="Enter option 4">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Correct Answer (enter option number 1-4):</label>
+                <input type="text" id="mcq-correct" class="form-control" placeholder="Enter correct option number">
+            </div>
+            <div class="quick-symbols">
+                <button class="quick-symbol-btn" onclick="insertSymbol('√')">√</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('⁄')">a⁄b</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('α')">α</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('β')">β</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('γ')">γ</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('π')">π</button>
+
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn" onclick="toggleSymbolPalette()">More Math Symbols</button>
+                <button class="btn btn-success" value="MCQ" onclick="addQuestion(this.value)">Add Question</button>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary" onclick="askAI('MCQ')">Ask AI</button>
+                <div id="mcq-result" style="display:none;"></div>
+            </div>
+        </div>
+        <!-- Essay Section -->
+        <div id="essay" class="card">
+            <h3>Essay Question</h3>
+            <div class="math-editor">
+                <label class="form-label">Question:</label>
+                <textarea id="essay-question" class="form-control"
+                    placeholder="Enter your essay question here (use buttons below for math expressions)"
+                    rows="5"></textarea>
+            </div>
+            <div class="quick-symbols">
+                <button class="quick-symbol-btn" onclick="insertSymbol('√')">√</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('a⁄b')">a⁄b</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('α')">α</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('β')">β</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('γ')">γ</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('π')">π</button>
+
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn" onclick="toggleSymbolPalette()">More Math Symbols</button>
+                <button class="btn btn-success" value="Essay" onclick="addQuestion(this.value)">Add Question</button>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary" onclick="askAI('Essay')">Ask AI</button>
+                <div id="essay-result" style="display:none;"></div>
+            </div>
+        </div>
+        <!-- Multi-Choice Section -->
+        <div id="multichoice" class="card">
+            <h3>Multi-Choice Question</h3>
+            <div class="math-editor">
+                <label class="form-label">Paragraph/Context:</label>
+                <textarea id="multi-question" class="form-control"
+                    placeholder="Enter the paragraph or context for multiple questions (use buttons below for math expressions)"
+                    rows="4"></textarea>
+            </div>
+            <div class="quick-symbols">
+                <button class="quick-symbol-btn" onclick="insertSymbol('√')">√</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('ⁿ')">xⁿ</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('⁄')">a⁄b</button> <!-- رمز الكسر الأفقي -->
+                <button class="quick-symbol-btn" onclick="insertSymbol('α')">α</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('β')">β</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('γ')">γ</button>
+                <button class="quick-symbol-btn" onclick="insertSymbol('π')">π</button>
+
+            </div>
+            <div id="multi-questions-container">
+                <!-- Sub-questions will be added here -->
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn" onclick="addMultiQuestion()">Add Sub-Question</button>
+                <button class="btn" onclick="toggleSymbolPalette()">More Math Symbols</button>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-success" value="Multi-Choice" onclick="addQuestion(this.value)">Add All
+                    Questions</button>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary" onclick="askAI('Multi-Choice')">Ask AI</button>
+                <div id="multi-result" style="display:none;"></div>
+            </div>
+        </div>
+        <!-- Floating Action Button -->
+        <div class="fab" onclick="toggleSymbolPalette()">
+            <i class="fas fa-square-root-alt"></i>
+        </div>
+        <!-- Symbol Palette -->
+        <div id="symbol-palette" class="symbol-palette">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showSymbolTab('basic')">Basic</button>
+                <button class="tab-btn" onclick="showSymbolTab('algebra')">Algebra</button>
+                <button class="tab-btn" onclick="showSymbolTab('calculus')">Calculus</button>
+                <button class="tab-btn" onclick="showSymbolTab('geometry')">Geometry</button>
+                <button class="tab-btn" onclick="showSymbolTab('matrix')">Matrix</button>
+            </div>
+            <!-- Basic Symbols -->
+            <div id="basic-symbols" class="symbol-category">
+                <h5>Basic Operations</h5>
+                <div class="symbol-form">
+                    <div class="quick-symbols">
+                        <button class="symbol-btn" onclick="insertSymbol('+')">+ Add</button>
+                        <button class="symbol-btn" onclick="insertSymbol('-')">- Subtract</button>
+                        <button class="symbol-btn" onclick="insertSymbol('×')">× Multiply</button>
+                        <button class="symbol-btn" onclick="insertSymbol('÷')">÷ Divide</button>
+                        <button class="symbol-btn" onclick="insertSymbol('=')">= Equals</button>
+                        <button class="symbol-btn" onclick="insertSymbol('≠')">≠ Not Equal</button>
+                        <button class="symbol-btn" onclick="insertSymbol('<')">&lt; Less Than</button>
+                        <button class="symbol-btn" onclick="insertSymbol('>')">&gt; Greater Than</button>
+                        <button class="symbol-btn" onclick="insertSymbol('±')">± Plus/Minus</button>
+                        <button class="symbol-btn" onclick="insertSymbol('·')">· Dot</button>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Algebra Symbols -->
+            <div id="algebra-symbols" class="symbol-category" style="display:none;">
+                <h5>Algebra</h5>
+                <div class="symbol-form">
+                    <div class="quick-symbols">
+                        <button class="symbol-btn" onclick="insertSymbol('x<sup>2</sup>')">x² Exponent</button>
+                        <button class="symbol-btn" onclick="insertSymbol('√ ', '')">√ Square Root</button>
+                        <button class="symbol-btn" onclick="insertSymbol('a⁄b', '⁄')">a/b Fraction</button>
+                        <button class="symbol-btn" onclick="insertSymbol('|x|', 'x')">|x| Absolute</button>
+                        <button class="symbol-btn" onclick="insertSymbol('(x)', 'x')">(x) Parentheses</button>
+                        <button class="symbol-btn" onclick="insertSymbol('[x]', 'x')">[x] Brackets</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∞', '')">∞ Infinity</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∑ ', '')">∑ Sum</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∏ ', '')">∏ Product</button>
+                        <!-- دوال مثلثية -->
+                        <button class="symbol-btn" onclick="insertSymbol('sin')">sin</button>
+                        <button class="symbol-btn" onclick="insertSymbol('cos')">cos</button>
+                        <button class="symbol-btn" onclick="insertSymbol('tan')">tan</button>
+
+                        <!-- دوال مثلثية عكسية -->
+                        <button class="symbol-btn" onclick="insertSymbol('sin⁻¹')">sin⁻¹</button>
+                        <button class="symbol-btn" onclick="insertSymbol('cos⁻¹')">cos⁻¹</button>
+                        <button class="symbol-btn" onclick="insertSymbol('tan⁻¹')">tan⁻¹</button>
+
+                        <!-- دوال مثلثية هايبروليك -->
+                        <button class="symbol-btn" onclick="insertSymbol('sinh')">sinh</button>
+                        <button class="symbol-btn" onclick="insertSymbol('cosh')">cosh</button>
+                        <button class="symbol-btn" onclick="insertSymbol('tanh')">tanh</button>
+
+                        <!-- دوال عكسية للهايبروليك -->
+                        <button class="symbol-btn" onclick="insertSymbol('sinh⁻¹')">sinh⁻¹</button>
+                        <button class="symbol-btn" onclick="insertSymbol('cosh⁻¹')">cosh⁻¹</button>
+                        <button class="symbol-btn" onclick="insertSymbol('tanh⁻¹')">tanh⁻¹</button>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Calculus Symbols -->
+            <div id="calculus-symbols" class="symbol-category" style="display:none;">
+                <h5>Calculus</h5>
+                <div class="symbol-form">
+                    <div class="quick-symbols">
+                        <button class="symbol-btn" onclick="insertSymbol('d/dx', 'x')">d/dx Derivative</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∂/∂x ', 'x')">∂ Partial</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∫  dx', ' ')">∫ Integral</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∫ 𝑎→𝑏  dx', 'a')">∫ Definite</button>
+                        <button class="symbol-btn" onclick="insertSymbol('lim x→ ', 'x')">lim Limit</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∑ ', '')">∑ Sum</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∏ ', '')">∏ Product</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∇', '')">∇ Nabla</button>
+                        <button class="symbol-btn" onclick="insertSymbol('Δ', '')">Δ Delta</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Geometry Symbols -->
+            <div id="geometry-symbols" class="symbol-category" style="display:none;">
+                <h5>Geometry</h5>
+                <div class="symbol-form">
+                    <div class="quick-symbols">
+                        <button class="symbol-btn" onclick="insertSymbol('∠ ', '')">∠ Angle</button>
+                        <button class="symbol-btn" onclick="insertSymbol('△ ', '')">△ Triangle</button>
+                        <button class="symbol-btn" onclick="insertSymbol('π', '')">π Pi</button>
+                        <button class="symbol-btn" onclick="insertSymbol('°', '')">° Degree</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∥ ', '')">∥ Parallel</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊥ ', '')">⊥ Perpendicular</button>
+                        <button class="symbol-btn" onclick="insertSymbol('≅ ', '')">≅ Congruent</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∼ ', '')">∼ Similar</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊙ ', '')">⊙ Circle</button>
+                        <button class="symbol-btn" onclick="insertSymbol('□ ', '')">□ Square</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∈', '')">∈ Element of</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∉', '')">∉ Not element</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∅', '')">∅ Empty set</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∪', '')">∪ Union</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∩', '')">∩ Intersection</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊂', '')">⊂ Subset</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊃', '')">⊃ Superset</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊆', '')">⊆ Subset or equal</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊇', '')">⊇ Superset or equal</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∧', '')">∧ AND</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∨', '')">∨ OR</button>
+                        <button class="symbol-btn" onclick="insertSymbol('¬', '')">¬ NOT</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊕', '')">⊕ XOR</button>
+                        <button class="symbol-btn" onclick="insertSymbol('→', '')">→ Implies</button>
+                        <button class="symbol-btn" onclick="insertSymbol('↔', '')">↔ Iff</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊤', '')">⊤ True</button>
+                        <button class="symbol-btn" onclick="insertSymbol('⊥', '')">⊥ False</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∀', '')">∀ For all</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∃', '')">∃ There exists</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∴', '')">∴ Therefore</button>
+                        <button class="symbol-btn" onclick="insertSymbol('∵', '')">∵ Because</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Matrix Section -->
+            <div id="matrix-symbols" class="symbol-category" style="display:none;">
+                {{!-- <h5>Matrix Tools</h5>
+                <div class="matrix-input-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Rows:</label>
+                            <input type="number" id="matrix-rows" class="form-control" min="1" max="5" value="2"
+                                onchange="updateMatrixGrid()">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Columns:</label>
+                            <input type="number" id="matrix-cols" class="form-control" min="1" max="5" value="2"
+                                onchange="updateMatrixGrid()">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label>Matrix Type:</label>
+                        <select id="matrix-type" class="form-control">
+                            <option value="bmatrix">Bracketed Matrix [ ]</option>
+                            <option value="pmatrix">Parenthesized Matrix ( )</option>
+                            <option value="vmatrix">Determinant | |</option>
+                            <option value="Bmatrix">Braces Matrix { }</option>
+                        </select>
+                    </div>
+                    <div class="mt-3">
+                        <label>Matrix Values:</label>
+                        <div id="matrix-input-grid" class="matrix-input-grid">
+                            <!-- Matrix cells will be generated here -->
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-3" onclick="insertMatrix()">Insert Matrix</button>
+                </div> --}}
+                <h2
+                    style="font-family: Arial, sans-serif; color: #333; text-align: center; font-size: 1.8em; margin-bottom: 20px;">
+                    You can create a matrix with any dimension and all types of matrices, then take a picture and
+                    include it in your exam.
+                </h2>
+                <button style="
+  background-color: #dc3545; /* لون أحمر */
+  color: white; /* نص أبيض */
+  border: none; /* بدون حدود */
+  padding: 15px 30px; /* مساحة داخلية */
+  font-size: 1.2em; /* حجم الخط */
+  font-weight: bold; /* خط غامق */
+  border-radius: 8px; /* زوايا مستديرة */
+  cursor: pointer; /* مؤشر يد */
+  transition: background-color 0.3s ease; /* تأثير انتقال */
+" onclick="window.open('http://localhost:3000/Doctor/matrix', '_blank')">
+                    Make Matrix Picture
+                </button>
+            </div>
+            <div class="mt-3 p-3">
+                <button class="btn btn-danger" onclick="hideSymbolPalette()">Close</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.querySelector('.btnShow').addEventListener('click', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseName = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+            const file = urlParams.get('file');
+            window.location.href = `http://localhost:3000/Doctor/showAllManualQuestion?course=${courseName}&id=${idDoctor}&file=${file}`
+        })
+
+
+
+
+
+
+
+        // Track active text field
+        let activeTextField = null;
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up event listeners for all text inputs
+            document.querySelectorAll('textarea, input[type="text"]').forEach(input => {
+                input.addEventListener('focus', function () {
+                    activeTextField = this;
+                });
+            });
+
+            // Initialize matrix grid
+            updateMatrixGrid();
+
+            // Initialize MathJax typesetting
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    packages: { '[+]': ['ams', 'boldsymbol'] }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                },
+                startup: {
+                    typeset: false
+                }
+            };
+        });
+        function insertMatrix() {
+            if (!activeTextField) {
+                alert("Please focus on a text field first!");
+                return;
+            }
+
+            const rows = parseInt(document.getElementById('matrix-rows').value);
+            const cols = parseInt(document.getElementById('matrix-cols').value);
+            const matrixType = document.getElementById('matrix-type').value;
+            const cells = document.querySelectorAll('.matrix-input-cell');
+
+            // جمع المصفوفة
+            const matrix = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    const index = i * cols + j;
+                    row.push(cells[index].value || cells[index].placeholder);
+                }
+                matrix.push(row);
+            }
+
+            // بناء LaTeX
+            let matrixLatex = `\\[\\begin{${matrixType}}\n`;
+            for (let i = 0; i < rows; i++) {
+                matrixLatex += matrix[i].join(' & ');
+                if (i < rows - 1) matrixLatex += ' \\\\ ';
+            }
+            matrixLatex += `\\end{${matrixType}}\\]`;
+
+            // كتابة LaTeX في الـ input بلون أحمر
+            activeTextField.value += matrixLatex;
+            activeTextField.style.color = 'red';
+
+            // إنشاء عنصر جديد للعرض
+            const span = document.createElement('span');
+            span.className = 'rendered-matrix';
+            span.innerHTML = matrixLatex;
+
+            // إنشاء أو الحصول على الـ output div
+            let output = document.getElementById('matrix-output');
+            if (!output) {
+                output = document.createElement('div');
+                output.id = 'matrix-output';
+                output.style.marginTop = '20px';
+                output.style.padding = '10px';
+                output.style.border = '2px solid #007bff';
+                output.style.borderRadius = '10px';
+                output.style.backgroundColor = '#f5faff';
+                document.body.appendChild(output);
+            }
+
+            // إضافة المصفوفة داخل div فرعي
+            const wrapper = document.createElement('div');
+            wrapper.style.marginBottom = '15px';
+            wrapper.appendChild(span);
+            output.appendChild(wrapper);
+
+            // تشغيل MathJax
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([span]).then(() => {
+                    console.log('Matrix rendered successfully.');
+                }).catch((err) => console.error('MathJax render error:', err));
+            } else {
+                console.warn("MathJax is not loaded or incompatible version!");
+            }
+
+            // حفظ البيانات
+            const matrixData = {
+                type: matrixType,
+                rows: rows,
+                cols: cols,
+                values: matrix,
+                latex: matrixLatex
+            };
+            console.log("Matrix data stored:", matrixData);
+        }
+
+
+        // Update matrix input grid based on rows and cols
+        function updateMatrixGrid() {
+            const rows = parseInt(document.getElementById('matrix-rows').value);
+            const cols = parseInt(document.getElementById('matrix-cols').value);
+            const grid = document.getElementById('matrix-input-grid');
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('input');
+                    cell.type = 'text';
+                    cell.className = 'matrix-input-cell form-control';
+                    cell.placeholder = `${i + 1},${j + 1}`;
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+
+
+        // Show the selected section
+        function showSection(section) {
+            document.getElementById('placeholder').style.display = 'none';
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active-card');
+            });
+            document.getElementById(section).classList.add('active-card');
+        }
+
+        // Toggle symbol palette visibility
+        function toggleSymbolPalette() {
+            const palette = document.getElementById('symbol-palette');
+            if (palette.style.right === '0px') {
+                hideSymbolPalette();
+            } else {
+                palette.style.right = '0px';
+                showSymbolTab('basic');
+            }
+        }
+
+        // Hide symbol palette
+        function hideSymbolPalette() {
+            document.getElementById('symbol-palette').style.right = '-400px';
+        }
+
+        // Show specific symbol tab
+        function showSymbolTab(tabName) {
+            // Hide all symbol categories
+            document.querySelectorAll('.symbol-category').forEach(cat => {
+                cat.style.display = 'none';
+            });
+            // Show selected category
+            document.getElementById(`${tabName}-symbols`).style.display = 'block';
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Insert symbol with proper spacin\ يمكنك تعيينه إلى أي عنصر HTML آخر حسب الحاجة
+
+
+        function insertSymbol(symbol) {
+            // تأكد من أن النص المفتوح هو عنصر
+            if (!activeTextField) {
+                alert("Please focus on a text field first!");
+                return;
+            }
+
+            const startPos = activeTextField.selectionStart;
+            const endPos = activeTextField.selectionEnd;
+            const currentValue = activeTextField.value;
+
+
+
+
+
+
+
+            // إذا كان الرمز هو x<sup>2</sup>، نعرض مربع حوار لتعديل الأس
+            if (symbol === 'x<sup>2</sup>') {
+                let newExponent = prompt('Edit the exponent value:', '2');
+                if (newExponent !== null) {
+                    const updatedText = `x^${newExponent}`;
+                    activeTextField.value = currentValue.substring(0, startPos) + updatedText + currentValue.substring(endPos);
+                    activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedText.length;
+                    activeTextField.focus();
+                }
+            } else if (symbol === '∫  dx') {
+                // تحديد درجة التكامل
+                let degree = parseInt(prompt("Enter the number of integrals:", "1"));
+                if (isNaN(degree) || degree < 1) return;
+
+                // نسأل إذا كان في حدود
+                let hasBounds = confirm("Do you want to add bounds for each integral?");
+                let integralsText = "";
+
+                for (let i = 0; i < degree; i++) {
+                    if (hasBounds) {
+                        let lower = prompt(`Enter lower limit for ∫ #${i + 1}:`, "a");
+                        let upper = prompt(`Enter upper limit for ∫ #${i + 1}:`, "b");
+
+                        // تمثيل البلوك: حد علوي - رمز التكامل - حد سفلي
+                        integralsText += toSup(upper) + "∫" + toSub(lower) + " ";
+                    } else {
+                        integralsText += "∫ ";
+                    }
+                }
+
+                integralsText = integralsText.trim() + " dx";
+
+                const finalText = `${integralsText}`;
+                activeTextField.value = currentValue.substring(0, startPos) + finalText + currentValue.substring(endPos);
+                activeTextField.selectionStart = activeTextField.selectionEnd = startPos + finalText.length;
+                activeTextField.focus();
+            } else if (symbol === 'd/dx') {
+                let degree = prompt("Enter the degree of differentiation (e.g., 1 for d/dx, 2 for d³/dx³, etc.):", "1");
+                degree = parseInt(degree);
+                if (isNaN(degree) || degree < 1) return;
+
+                // بنحط الرقم بصيغة superscript
+                const superscriptNumbers = {
+                    "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
+                    "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹"
+                };
+
+                function toSuperscript(num) {
+                    return num.toString().split("").map(d => superscriptNumbers[d] || d).join("");
+                }
+
+                let finalText = "";
+
+                if (degree === 1) {
+                    finalText = "d/dx";
+                } else {
+                    const sup = toSuperscript(degree);
+                    finalText = `d${sup}/dx${sup}`;
+                }
+
+                // نضيف مسافة قبل وبعد علشان مفيش كلمة تلزق فيه
+                finalText = ` ${finalText} `;
+
+                activeTextField.value = currentValue.substring(0, startPos) + finalText + currentValue.substring(endPos);
+                activeTextField.selectionStart = activeTextField.selectionEnd = startPos + finalText.length;
+                activeTextField.focus();
+            }
+
+
+
+
+            else {
+                // لو مش تكامل أو x^2، نضيف الرمز زي ما هو
+                const newValue = currentValue.substring(0, startPos) + symbol + currentValue.substring(endPos);
+                activeTextField.value = newValue;
+                activeTextField.selectionStart = activeTextField.selectionEnd = startPos + symbol.length;
+                activeTextField.focus();
+            }
+
+            // تفعيل حدث input للمستمعين
+            const event = new Event('input', { bubbles: true, cancelable: true });
+            activeTextField.dispatchEvent(event);
+        }
+
+        // لتحويل الأرقام والحروف إلى شكل Superscript
+        function toSup(text) {
+            const map = {
+                '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+                '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+                'a': 'ᵃ', 'b': 'ᵇ', 'c': 'ᶜ', 'd': 'ᵈ', 'e': 'ᵉ',
+                'f': 'ᶠ', 'g': 'ᵍ', 'h': 'ʰ', 'i': 'ⁱ', 'j': 'ʲ',
+                'k': 'ᵏ', 'l': 'ˡ', 'm': 'ᵐ', 'n': 'ⁿ', 'o': 'ᵒ',
+                'p': 'ᵖ', 'r': 'ʳ', 's': 'ˢ', 't': 'ᵗ', 'u': 'ᵘ',
+                'v': 'ᵛ', 'w': 'ʷ', 'x': 'ˣ', 'y': 'ʸ', 'z': 'ᶻ'
+            };
+            return [...text].map(c => map[c] || c).join('');
+        }
+
+        // لتحويل الأرقام والحروف إلى شكل Subscript
+        function toSub(text) {
+            const map = {
+                '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+                '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+                'a': 'ₐ', 'e': 'ₑ', 'h': 'ₕ', 'i': 'ᵢ', 'j': 'ⱼ',
+                'k': 'ₖ', 'l': 'ₗ', 'm': 'ₘ', 'n': 'ₙ', 'o': 'ₒ',
+                'p': 'ₚ', 'r': 'ᵣ', 's': 'ₛ', 't': 'ₜ', 'u': 'ᵤ',
+                'v': 'ᵥ', 'x': 'ₓ'
+            };
+            return [...text].map(c => map[c] || c).join('');
+        }
+
+        // وظيفة لتحديد وتعديل الرمز الذي تم إدخاله (مثال التفاضل أو الكسر)
+        function selectSymbolForEdit() {
+            if (!activeTextField) {
+                alert("Please focus on a text field first!");
+                return;
+            }
+
+            // استخراج النص الحالي
+            const startPos = activeTextField.selectionStart;
+            const endPos = activeTextField.selectionEnd;
+            const currentValue = activeTextField.value;
+
+            // تحديد النص المحدد ليتم تعديله
+            const selectedText = currentValue.substring(startPos, endPos);
+
+            if (selectedText) {
+                alert(`You selected: ${selectedText}`);
+
+                // إذا كان النص يحتوي على الأس كـ x<sup>2</sup>
+                if (selectedText.includes('<sup>')) {
+                    // تحويل النص من x<sup>2</sup> إلى x^2 لسهولة التعديل
+                    let exponentValue = selectedText.replace(/<\/?sup>/g, '');
+                    let newExponent = prompt('Edit the exponent value:', exponentValue);
+
+                    if (newExponent !== null) {
+                        const updatedText = `x^${newExponent}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedText + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedText.length;
+                    }
+                }
+
+                // تعديل المقام والبسط للكسر
+                else if (selectedText.includes('\\frac{')) {
+                    let newNumerator = prompt('Edit the numerator:', selectedText.split('{')[1].split('}')[0]);
+                    let newDenominator = prompt('Edit the denominator:', selectedText.split('{')[2].split('}')[0]);
+
+                    if (newNumerator !== null && newDenominator !== null) {
+                        const updatedFraction = `\\frac{${newNumerator}}{${newDenominator}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedFraction + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedFraction.length;
+                    }
+                }
+
+                // تعديل الدالة التفاضلية
+                else if (selectedText.includes('\\frac{d}{dx}')) {
+                    let newDegree = prompt('Edit the degree for differentiation:', '2');
+                    if (newDegree !== null) {
+                        const updatedDiff = `\\frac{d}{dx} x^{${newDegree}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedDiff + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedDiff.length;
+                    }
+                }
+            } else {
+                alert("No text selected!");
+            }
+        }
+
+
+
+        // وظيفة لتحديد وتعديل الرمز الذي تم إدخاله (مثال التفاضل أو الكسر)
+        function selectSymbolForEdit() {
+            if (!activeTextField) {
+                alert("Please focus on a text field first!");
+                return;
+            }
+
+            // استخراج النص الحالي
+            const startPos = activeTextField.selectionStart;
+            const endPos = activeTextField.selectionEnd;
+            const currentValue = activeTextField.value;
+
+            // تحديد النص المحدد ليتم تعديله
+            const selectedText = currentValue.substring(startPos, endPos);
+
+            if (selectedText) {
+                alert(`You selected: ${selectedText}`);
+
+                // هنا يمكن التعديل حسب الرغبة على النص المحدد
+                // مثال تعديل الأس (exponent)
+                if (selectedText.includes('<sup>')) {
+                    let newExponent = prompt('Edit the exponent value:', selectedText.replace(/<\/?sup>/g, ''));
+                    if (newExponent !== null) {
+                        const updatedText = `x<sup>${newExponent}</sup>`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedText + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedText.length;
+                    }
+                }
+
+                // مثال تعديل المقام والبسط للكسر (fraction)
+                else if (selectedText.includes('\\frac{')) {
+                    let newNumerator = prompt('Edit the numerator:', selectedText.split('{')[1].split('}')[0]);
+                    let newDenominator = prompt('Edit the denominator:', selectedText.split('{')[2].split('}')[0]);
+
+                    if (newNumerator !== null && newDenominator !== null) {
+                        const updatedFraction = `\\frac{${newNumerator}}{${newDenominator}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedFraction + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedFraction.length;
+                    }
+                }
+
+                // مثال تعديل الدالة التفاضلية
+                else if (selectedText.includes('\\frac{d}{dx}')) {
+                    let newDegree = prompt('Edit the degree for differentiation:', '2');
+                    if (newDegree !== null) {
+                        const updatedDiff = `\\frac{d}{dx} x^{${newDegree}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedDiff + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedDiff.length;
+                    }
+                }
+            } else {
+                alert("No text selected!");
+            }
+        }
+
+
+
+        function selectSymbolForEdit() {
+            if (!activeTextField) {
+                alert("Please focus on a text field first!");
+                return;
+            }
+
+            // استخراج النص الحالي
+            const startPos = activeTextField.selectionStart;
+            const endPos = activeTextField.selectionEnd;
+            const currentValue = activeTextField.value;
+
+            // تحديد النص المحدد ليتم تعديله
+            const selectedText = currentValue.substring(startPos, endPos);
+
+            if (selectedText) {
+                alert(`You selected: ${selectedText}`);
+
+                // هنا يمكن التعديل حسب الرغبة على النص المحدد
+                // مثال تعديل الأس (exponent)
+                if (selectedText.includes('<sup>')) {
+                    let newExponent = prompt('Edit the exponent value:', selectedText.replace(/<\/?sup>/g, ''));
+                    if (newExponent !== null) {
+                        const updatedText = `x<sup>${newExponent}</sup>`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedText + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedText.length;
+                    }
+                }
+
+                // مثال تعديل المقام والبسط للكسر (fraction)
+                else if (selectedText.includes('\\frac{')) {
+                    let newNumerator = prompt('Edit the numerator:', selectedText.split('{')[1].split('}')[0]);
+                    let newDenominator = prompt('Edit the denominator:', selectedText.split('{')[2].split('}')[0]);
+
+                    if (newNumerator !== null && newDenominator !== null) {
+                        const updatedFraction = `\\frac{${newNumerator}}{${newDenominator}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedFraction + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedFraction.length;
+                    }
+                }
+
+                // مثال تعديل الدالة التفاضلية
+                else if (selectedText.includes('\\frac{d}{dx}')) {
+                    let newDegree = prompt('Edit the degree for differentiation:', '2');
+                    if (newDegree !== null) {
+                        const updatedDiff = `\\frac{d}{dx} x^{${newDegree}}`;
+                        activeTextField.value = currentValue.substring(0, startPos) + updatedDiff + currentValue.substring(endPos);
+                        activeTextField.selectionStart = activeTextField.selectionEnd = startPos + updatedDiff.length;
+                    }
+                }
+            } else {
+                alert("No text selected!");
+            }
+        }
+
+
+
+        // Add multi-choice sub-question
+        function addMultiQuestion() {
+            const container = document.getElementById('multi-questions-container');
+            const questionId = Date.now(); // Unique ID for each question
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('multi-question-item', 'mb-3', 'p-3', 'border');
+            questionDiv.innerHTML = `
+                <input type="text" id="multi-sub-${questionId}" placeholder="Enter sub-question" class="multi-sub-question form-control mb-2">
+                <input type="text" id="multi-option1-${questionId}" placeholder="Answer 1" class="multi-option form-control mb-2">
+                <input type="text" id="multi-option2-${questionId}" placeholder="Answer 2" class="multi-option form-control mb-2">
+                <input type="text" id="multi-option3-${questionId}" placeholder="Answer 3" class="multi-option form-control mb-2">
+                <input type="text" id="multi-option4-${questionId}" placeholder="Answer 4" class="multi-option form-control mb-2">
+                <input type="text" id="multi-correct-${questionId}" placeholder="Correct Answer" class="multi-correct form-control mb-2">
+               
+                <button class="remove-question btn btn-danger mt-2" onclick="this.parentElement.remove()">× Remove</button>
+            `;
+            container.appendChild(questionDiv);
+
+            // Add focus event listeners to track active field
+            document.querySelectorAll(`#multi-sub-${questionId}, #multi-option1-${questionId}, #multi-option2-${questionId}, #multi-option3-${questionId}, #multi-option4-${questionId}, #multi-correct-${questionId}`)
+                .forEach(input => {
+                    input.addEventListener('focus', function () {
+                        activeTextField = this;
+                    });
+                });
+        }
+
+        // Add question to database
+        function addQuestion(type) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseName = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+            const file = urlParams.get('file');
+            let questionData = {
+                idDoctor,
+                courseName,
+                file,
+                type
+            };
+
+            if (type === "MCQ") {
+                questionData.question = document.getElementById('mcq-question').value;
+                questionData.choices = [
+                    document.getElementById('mcq-option1').value,
+                    document.getElementById('mcq-option2').value,
+                    document.getElementById('mcq-option3').value,
+                    document.getElementById('mcq-option4').value
+                ];
+                questionData.correctAnswer = document.getElementById('mcq-correct').value;
+            } else if (type === "Essay") {
+                questionData.question = document.getElementById('essay-question').value;
+            } else if (type === "Multi-Choice") {
+                questionData.paragraph = document.getElementById('multi-question').value;
+                questionData.questions = [];
+                document.querySelectorAll(".multi-question-item").forEach(item => {
+                    const questionId = item.querySelector(".multi-sub-question").id.split('-')[2];
+                    let subQuestion = {
+                        question: item.querySelector(`#multi-sub-${questionId}`).value,
+                        choices: [
+                            item.querySelector(`#multi-option1-${questionId}`).value,
+                            item.querySelector(`#multi-option2-${questionId}`).value,
+                            item.querySelector(`#multi-option3-${questionId}`).value,
+                            item.querySelector(`#multi-option4-${questionId}`).value
+                        ],
+                        correctAnswer: item.querySelector(`#multi-correct-${questionId}`).value
+                    };
+                    questionData.questions.push(subQuestion);
+                });
+            }
+
+            fetch("http://localhost:3000/Doctor/manualQuestion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(questionData)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message || "Question Added Successfully!");
+
+                    // Clear form after successful submission
+                    if (type === "MCQ") {
+                        document.getElementById('mcq-question').value = '';
+                        document.getElementById('mcq-option1').value = '';
+                        document.getElementById('mcq-option2').value = '';
+                        document.getElementById('mcq-option3').value = '';
+                        document.getElementById('mcq-option4').value = '';
+                        document.getElementById('mcq-correct').value = '';
+                    } else if (type === "Essay") {
+                        document.getElementById('essay-question').value = '';
+                    } else if (type === "Multi-Choice") {
+                        document.getElementById('multi-question').value = '';
+                        document.getElementById('multi-questions-container').innerHTML = '';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred while adding the question.");
+                });
+        }
+
+        // Ask AI for feedback
+        async function askAI(type) {
+            let questionData = {};
+            if (type === "MCQ") {
+                questionData = {
+                    question: document.getElementById('mcq-question').value.trim(),
+                    choices: [
+                        document.getElementById('mcq-option1').value.trim(),
+                        document.getElementById('mcq-option2').value.trim(),
+                        document.getElementById('mcq-option3').value.trim(),
+                        document.getElementById('mcq-option4').value.trim()
+                    ]
+                };
+            } else if (type === "Essay") {
+                questionData = {
+                    question: document.getElementById('essay-question').value.trim()
+                };
+            } else if (type === "Multi-Choice") {
+                questionData = {
+                    paragraph: document.getElementById('multi-question').value.trim(),
+                    questions: []
+                };
+                document.querySelectorAll(".multi-question-item").forEach(item => {
+                    questionData.questions.push({
+                        question: item.querySelector(".multi-sub-question").value.trim(),
+                        choices: [
+                            item.querySelectorAll(".multi-option")[0].value.trim(),
+                            item.querySelectorAll(".multi-option")[1].value.trim(),
+                            item.querySelectorAll(".multi-option")[2].value.trim(),
+                            item.querySelectorAll(".multi-option")[3].value.trim()
+                        ]
+                    });
+                });
+            }
+
+            if (!questionData.question && !questionData.paragraph) {
+                alert("الرجاء إدخال السؤال أولًا!");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:3000/Doctor/manualQuestion", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ type, ...questionData })
+                });
+                const result = await response.json();
+                console.log("AI Response from Server:", result);
+                if (!response.ok) throw new Error(result.error || "حدث خطأ في تحليل الذكاء الاصطناعي");
+                displayAIResponse(type, result.message);
+            } catch (error) {
+                console.error("Error:", error);
+                alert("حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى!");
+            }
+        }
+
+        // Display AI response
+      function displayAIResponse(type, message) {
+    let container;
+
+    // تحديد الحاوية بناءً على نوع السؤال
+    if (type === "MCQ") {
+        container = document.getElementById("mcq-result");
+    } else if (type === "Essay") {
+        container = document.getElementById("essay-result");
+    } else if (type === "Multi-Choice") {
+        container = document.getElementById("multi-result");
+    }
+
+    // التحقق من وجود الحاوية
+    if (!container) {
+        console.error("لم يتم العثور على عنصر عرض الرد!");
+        return;
+    }
+
+    // إدراج الرسالة في الحاوية
+    container.innerHTML = `<p class="ai-response"><strong>AI Response:</strong> ${message}</p>`;
+    container.style.display = "block"; // التأكد من ظهور الحاوية
+
+    // تشغيل MathJax لمعالجة المعادلات
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([container]).then(() => {
+            console.log("MathJax rendered successfully.");
+        }).catch((err) => console.error("MathJax render error:", err));
+    } else {
+        console.warn("MathJax is not loaded or incompatible version!");
+    }
+}
+
+    </script>
+
+
+
+
+
+    </script>
+</body>
+
+</html>

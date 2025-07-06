@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            width: 80%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .left-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .left-side {
+            flex: 1;
+            display: none;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+        }
+
+        h2.welcome-text {
+            font-size: 2.5rem;
+            color: rgb(34, 98, 198);
+            font-weight: bold;
+        }
+
+        .login-text {
+            color: rgba(27, 26, 85, 0.7);
+            font-size: 1rem;
+        }
+
+        .inputId, .inputPassword {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: none;
+            background-color: white;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+            border: 1px solid rgba(27, 26, 85, 0.2);
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .user-email i,
+        .user-password i {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #555;
+        }
+
+        .user-email,
+        .user-password {
+            position: relative;
+        }
+
+        .button .btn {
+            background-color: rgb(34, 98, 198);
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 10px;
+            transition: 0.3s;
+            margin-left: 25%;
+        }
+
+        .button .btn:hover {
+            background-color: rgb(40, 109, 219);
+        }
+
+        @media (min-width: 768px) {
+            .left-side {
+                display: block;
+            }
+        }
+
+        @media screen and (max-width:900px) {
+            input {
+                font-size: 15px;
+            }
+        }
+
+        @media screen and (max-width:767px) {
+            input {
+                padding: 20px;
+                padding-left: 35px;
+                height: 30px;
+            }
+
+            h2 {
+                font-size: 30px;
+            }
+        }
+
+        @media screen and (max-width:400px) {
+            input {
+                height: 35px;
+            }
+        }
+
+        @media screen and (max-width:250px) {
+            input {
+                font-size: small;
+                padding-left: 27px;
+            }
+
+            .user-email i {
+                left: 10px;
+            }
+
+            .user-password i {
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="login-container">
+
+        <div class="left-side"><img src="/images/LoginAdmin.jpg" alt="Login Background"></div>
+
+        <div class="right-side">
+            <div class="login-card">
+                <h2 class="welcome-text text-center mb-2">Welcome</h2>
+                <p class="login-text text-center mb-5">Login in your account to continue</p>
+                <form class="form-container">
+                    <div class="user-email mb-3 mt-xl-4 mt-lg-3 mt-md-2 mt-sm-1">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" placeholder="Doctor Id" required name="user-email"
+                            class="email-input w-100  inputId">
+                    </div>
+                    <div class="user-password mb-xl-5 mb-lg-4 mb-md-3 mb-sm-2 mt-3 ">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="*****************" required name="password"
+                            class="w-100 inputPassword">
+                    </div>
+                    <div class="button">
+                        <button class="btn btn-primary w-50 mt-5 But">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+    <script src="/Script/LoginAdmine.js"></script>
+</body>
+
+</html>

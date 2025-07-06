@@ -1,0 +1,141 @@
+{{!--
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Doctor</title>
+    <link rel="stylesheet" href="/css/loginAdmine.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <section>
+        <div class="container ">
+            <img src="/images/tiny-people-businessman-with-shield-protecting-data-laptop-data-privacy-information-privacy-regulation-personal-data-protection-concept.png"
+                alt="loggin">
+            <div class="welcome">
+                <h4>Welcome back!</h4>
+                <p>We're glad to see you again! please log in to access your account and continue managing your exams
+                    and results effortlessly</p>
+                <input class="inputId" type="text" placeholder="ID"><br><br>
+                <input class="inputPassword" type="password" placeholder="Password"><br><br>
+                <button class="But"><a href="#">Login</a></button>
+
+            </div> <!-- welcome -->
+        </div> <!-- container -->
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Script/doctorWorks/loginDoctor.js"></script>
+
+</body>
+
+</html>
+--}}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Doctor</title>
+    <link rel="stylesheet" href="/css/loginAdmine.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .button .btn {
+            margin-left: 25%
+        }
+
+        form {
+            display: grid;
+        }
+
+        h2 {
+            font-size: 40px;
+            color: rgba(27, 26, 85, 1);
+        }
+
+        @media screen and (max-width:900px) {
+            input {
+                font-size: 15px;
+
+            }
+        }
+
+        @media screen and (max-width:767px) {
+            input {
+                padding: 20px;
+                padding-left: 35px;
+                height: 30px;
+            }
+
+            h2 {
+                font-size: 30px;
+            }
+        }
+
+        @media screen and (max-width:400px) {
+            input {
+                height: 35px;
+            }
+        }
+
+        @media screen and (max-width:250px) {
+            input {
+                font-size: small;
+                padding-left: 27px;
+            }
+
+            .user-email i {
+                left: 10px;
+            }
+
+            .user-password i {
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+   
+    <section class="login-container">
+
+        <div class="left-side"><img src="/images/good.jpg"></div>
+
+        <div class="right-side">
+            <div class="login-card">
+                <h2 class="welcome-text text-center mb-2">Welcome</h2>
+                <p class="login-text text-center mb-5">Login in your account to continue</p>
+                <form class="form-container">
+                    <div class="user-email mb-3 mt-xl-4 mt-lg-3 mt-md-2 mt-sm-1">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" placeholder="Doctor Id" required name="user-email"
+                            class="email-input w-100  inputId">
+                    </div>
+                    <div class="user-password mb-xl-5 mb-lg-4 mb-md-3 mb-sm-2 mt-3 ">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="*****************" required name="password"
+                            class="w-100 inputPassword">
+                    </div>
+                    <div class="button">
+                        <button class="btn btn-primary w-50 mt-5 But">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+    <script src="/Script/doctorWorks/loginDoctor.js"></script>
+
+</body>
+
+</html>

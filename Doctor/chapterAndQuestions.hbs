@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChapterAndQuestions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            /* خلفية بيضاء */
+            color: #004aad;
+            /* أزرق غامق */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #004aad;
+            border-bottom: 3px solid #004aad;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #004aad, #007bff);
+            
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 74, 173, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #007bff, #004aad);
+           
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 74, 173, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="course-title">Course: </h1>
+    <div class="button-container">
+        <button class="btn1">Add previous Exams</button>
+        <button class="btn2">From Chapters</button>
+        <button onclick="location.href='showDetails.html'">Make Model from previous exam</button>
+        <button onclick="location.href='showDetails.html'">Show Details</button>
+    </div>
+    <script>
+       
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+        if (courseName) {
+            document.getElementById('course-title').textContent = `Course: ${courseName}`;
+        }
+        document.querySelector('.btn1').addEventListener('click', () => {
+            location.href = 'previousExam?course=' + courseName + '&id=' + idDoctor;
+        });
+        document.querySelector('.btn2').addEventListener('click', () => {
+            location.href = 'Chapter?course=' + courseName + '&id=' + idDoctor;
+        });
+    </script>
+</body>
+
+</html>

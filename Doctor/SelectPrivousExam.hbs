@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0d47a1;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #0d47a1;
+            text-align: left;
+        }
+
+        .question-box {
+            background: #bbdefb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .question-box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #0d47a1;
+            margin: 0;
+            flex: 1;
+        }
+
+        .circle-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #007BFF;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .circle-checkbox.selected {
+            background-color: #007BFF;
+        }
+
+        .option-box {
+            background: #e1f5fe;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border-left: 5px solid #0d47a1;
+        }
+
+        .add-button,
+        .btn {
+            margin-top: 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Exam Questions</h1>
+    <div class="container" id="questions-container"></div>
+    <button class="add-button" onclick="addToExam()">Add To My Exam</button>
+
+    <p id="summary" style="margin-top: 20px; font-size: 1.2rem; color: #0d47a1;"></p>
+
+    <script>
+        const selectedQuestions = { mcq: [], essay: [] };
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const year = urlParams.get('year');
+
+        fetch('http://localhost:3000/Doctor/SelectPrivousExam', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseName: courseName, year: year })
+        })
+            .then(response => response.text())
+            .then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (error) {
+                    console.error("Error parsing JSON:", error, "Response:", text);
+                }
+            })
+            .then((data) => {
+                if (data) displayQuestions(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        function addQuestion(container, number, text, options = null, type) {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question-box');
+
+            let optionsHtml = '';
+            if (options) {
+                optionsHtml = `<div class="option-box">` +
+                    Object.entries(options).map(([key, value]) => `<p><b>${key}:</b> ${value}</p>`).join('') +
+                    `</div>`;
+            }
+
+            questionDiv.innerHTML = `
+                <p><b>${number}.</b> ${text}</p>
+                ${optionsHtml}
+                <span class="circle-checkbox" onclick="toggleSelection(this, '${type}', '${text}', ${options ? JSON.stringify(options).replace(/"/g, '&quot;') : null})"></span>
+            `;
+
+            container.appendChild(questionDiv);
+        }
+
+        function displayQuestions(data) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            let count = 1;
+
+            if (data.multiple_choice_questions) {
+                for (const key in data.multiple_choice_questions) {
+                    const questionData = data.multiple_choice_questions[key];
+                    addQuestion(container, count++, questionData.question, questionData.options, 'mcq');
+                }
+            }
+
+            if (data.essay_questions) {
+                let questionText = '';
+                let essayCount = 1;
+
+                for (const key in data.essay_questions) {
+                    const text = data.essay_questions[key];
+                    if (/^\d+\./.test(text)) {
+                        if (questionText) {
+                            addQuestion(container, essayCount++, questionText, null, 'essay');
+                        }
+                        questionText = text;
+                    } else {
+                        questionText += ` ${text}`;
+                    }
+                }
+                if (questionText) {
+                    addQuestion(container, essayCount++, questionText, null, 'essay');
+                }
+            }
+        }
+
+        function toggleSelection(element, type, text, options) {
+            element.classList.toggle("selected");
+
+            if (element.classList.contains("selected")) {
+                selectedQuestions[type].push({ text, options });
+            } else {
+                selectedQuestions[type] = selectedQuestions[type].filter(q => q.text !== text);
+            }
+        }
+
+        function addToExam() {
+            console.log("Selected MCQs:", selectedQuestions.mcq);
+            console.log("Selected Essay Questions:", selectedQuestions.essay);
+
+            let summaryText = `Selected MCQs: ${selectedQuestions.mcq.length}\n`;
+            selectedQuestions.mcq.forEach(q => {
+                summaryText += `- ${q.text}\n  Options: ${q.options ? Object.entries(q.options).map(([key, value]) => `${key}: ${value}`).join(', ') : ''}\n`;
+            });
+            document.getElementById("summary").innerText = summaryText;
+            const urlParams = new URLSearchParams(window.location.search);
+            const modelName = urlParams.get('modelName');
+
+            fetch('http://localhost:3000/Doctor/SelectPrivousExam', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    SelectedMCQs: selectedQuestions.mcq,
+                    SelectedEssayQuestions: selectedQuestions.essay,
+                    modelName: modelName
+                })
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+
+                    // إنشاء العنصر الخاص بالتنبيه
+                    let alertBox = document.createElement("div");
+                    alertBox.innerText = "Questions added to the exam successfully!";
+                    alertBox.style.position = "fixed";
+                    alertBox.style.top = "50%";
+                    alertBox.style.left = "50%";
+                    alertBox.style.transform = "translate(-50%, -50%)";
+                    alertBox.style.background = "linear-gradient(135deg, #004aad, #007bff)";
+                    alertBox.style.color = "white";
+                    alertBox.style.padding = "20px 40px";
+                    alertBox.style.borderRadius = "10px";
+                    alertBox.style.boxShadow = "0 10px 30px rgba(0, 74, 173, 0.4)";
+                    alertBox.style.fontSize = "1.5em";
+                    alertBox.style.fontWeight = "bold";
+                    alertBox.style.textAlign = "center";
+                    alertBox.style.opacity = "0";
+                    alertBox.style.transition = "opacity 0.5s ease-in-out, transform 0.5s ease-in-out";
+
+                    document.body.appendChild(alertBox);
+
+                    // تشغيل الأنيميشن لظهور التنبيه
+                    setTimeout(() => {
+                        alertBox.style.opacity = "1";
+                        alertBox.style.transform = "translate(-50%, -50%) scale(1.1)";
+                    }, 100);
+
+                    // إخفاء التنبيه بعد 3 ثوانٍ
+                    setTimeout(() => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const courseName = urlParams.get('course');
+                        const idDoctor = urlParams.get('id');
+                        const modelName = urlParams.get('modelName');
+                        alertBox.style.opacity = "0";
+                        alertBox.style.transform = "translate(-50%, -50%) scale(0.9)";
+                        setTimeout(() => {
+                            document.body.removeChild(alertBox);
+                            window.location.href = `http://localhost:3000/Doctor/mymatrials?id=${idDoctor}&modelName=${modelName}&course=${courseName}`; // غير الرابط لصفحتك المطلوبة
+                        }, 500);
+                    }, 3000);
+                })
+
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>

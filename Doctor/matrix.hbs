@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Matrix Visualizer</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f5f9ff;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .matrix-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+
+    .matrix-box {
+      border: 2px solid #007bff;
+      border-radius: 10px;
+      background: #fff;
+      padding: 20px;
+      min-width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .matrix-box .matrix-title {
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    .matrix-box .comment {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    .operation-area {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #final-output {
+      border: 2px solid #007bff;
+      padding: 30px;
+      margin-top: 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    #tools-list {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 8px;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    label {
+      margin-top: 15px;
+      display: block;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .matrix-input-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 15px;
+      justify-content: center;
+    }
+
+    .matrix-input-cell {
+      width: 50px;
+      height: 40px;
+      text-align: center;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+
+    .tool-button {
+      background: #17a2b8;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9em;
+    }
+
+    .tool-button:hover {
+      background: #138496;
+      transform: translateY(-1px);
+    }
+
+    .option-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .rendered-equation {
+      font-size: 1.5em;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .action-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .quality-options {
+      margin-top: 15px;
+    }
+
+    .quality-options label {
+      display: inline-block;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+
+    .rendered-matrix {
+      margin: 10px 0;
+    }
+
+    .matrix-operation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .operation-result {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #007bff;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    #final-output {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .high-quality-render {
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .ultra-quality-render {
+      font-size: 32px;
+      line-height: 1.8;
+    }
+
+    .download-options {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .size-options {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .size-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .operation-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .matrix-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .matrix-chip {
+      background: #e9ecef;
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .matrix-chip button {
+      background: none;
+      border: none;
+      color: #dc3545;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .operation-steps {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .step {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Styles for the screenshot container */
+    #screenshot-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    #screenshot-preview {
+      max-width: 90%;
+      max-height: 90%;
+      border: 15px solid white;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      background: white;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    #screenshot-container.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #screenshot-container.visible #screenshot-preview {
+      transform: scale(1);
+    }
+
+    #screenshot-actions {
+      position: absolute;
+      bottom: 50px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .screenshot-btn {
+      padding: 12px 25px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #screenshot-download {
+      background: #28a745;
+      color: white;
+    }
+
+    #screenshot-cancel {
+      background: #dc3545;
+      color: white;
+    }
+
+    #selection-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      display: none;
+      cursor: crosshair;
+    }
+
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #007bff;
+      background: rgba(0, 123, 255, 0.1);
+      pointer-events: none;
+      display: none;
+    }
+
+    #selection-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      display: none;
+      text-align: center;
+    }
+
+    .selection-btn {
+      padding: 10px 20px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #capture-selection {
+      background: #28a745;
+      color: white;
+    }
+
+    #cancel-selection {
+      background: #dc3545;
+      color: white;
+    }
+
+    #quality-selector {
+      margin: 10px 0;
+    }
+
+    #quality-selector label {
+      margin: 0 10px;
+      cursor: pointer;
+    }
+
+    /* Preview Modal */
+    #preview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1002;
+      display: none;
+    }
+
+    #preview-image {
+      max-width: 90%;
+      max-height: 90%;
+      border: 15px solid white;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #preview-actions {
+      position: absolute;
+      bottom: 50px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .preview-btn {
+      padding: 12px 25px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #download-preview {
+      background: #28a745;
+      color: white;
+    }
+
+    #close-preview {
+      background: #dc3545;
+      color: white;
+    }
+
+    #selection-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+    }
+
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #fff;
+      background: rgba(255, 255, 255, 0.2);
+      display: none;
+    }
+
+    /* أضف هذه التنسيقات في قسم الـ style */
+    #selection-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+      cursor: crosshair;
+    }
+
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #fff;
+      background: rgba(255, 255, 255, 0.2);
+      display: none;
+      pointer-events: none;
+    }
+
+    #selection-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      display: none;
+      text-align: center;
+    }
+
+    #selection-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+      cursor: crosshair;
+      touch-action: none;
+      /* إضافة مهمة للشاشات التي تعمل باللمس */
+    }
+
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #fff;
+      background: rgba(255, 255, 255, 0.2);
+      display: none;
+      pointer-events: none;
+    }
+
+    #selection-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      display: none;
+      text-align: center;
+    }
+
+    .selection-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Advanced Matrix Visualizer</h1>
+    <p>Create, visualize, and perform operations on matrices with high-quality output</p>
+  </div>
+
+  <div>
+    <label>Number of Matrices:</label>
+    <input type="number" id="matrix-count" min="1" max="10" value="2">
+    <button class="btn" onclick="createMatrixInputs()">Generate Matrices</button>
+  </div>
+
+  <div id="matrix-inputs"></div>
+
+  <div id="operations-question" style="display: none; margin-top: 30px;">
+    <label>What would you like to do with these matrices?</label>
+    <div class="option-buttons">
+      <button class="btn" onclick="showOperationInput('equation')">Write Equation Only</button>
+      <button class="btn" onclick="showOperationInput('apply')">Apply Operation to Matrices</button>
+      {{!-- <button class="btn btn-secondary" onclick="showOperationInput('none')">Just Display Matrices</button> --}}
+    </div>
+  </div>
+
+  <div id="equation-area" class="operation-area" style="display: none;">
+    <h3>Equation Editor</h3>
+    <label>Write your matrix equation:</label>
+    <textarea id="matrix-equation" rows="3" placeholder="Example: A + B - C^T or A * B^{-1}"></textarea>
+
+    <div id="tools-list">
+      <strong>Matrix Operations:</strong>
+      <button class="tool-button" onclick="insertSymbol('+')">+ Addition</button>
+      <button class="tool-button" onclick="insertSymbol('-')">- Subtraction</button>
+      <button class="tool-button" onclick="insertSymbol('*')">* Multiplication</button>
+      <button class="tool-button" onclick="insertSymbol('^T')">^T Transpose</button>
+      <button class="tool-button" onclick="insertSymbol('^{-1}')">^{-1} Inverse</button>
+      <!-- <button class="tool-button" onclick="insertSymbol('\\det')">\det Determinant</button>
+      <button class="tool-button" onclick="insertSymbol('\\text{tr}')">\text{tr} Trace</button> -->
+
+      <strong>Formatting:</strong>
+      
+      <button class="tool-button" onclick="insertSymbol('=')">= Equals</button>
+      <button class="tool-button" onclick="insertSymbol('(')">( )</button>
+      <button class="tool-button" onclick="insertSymbol('[')">[ ]</button>
+    </div>
+
+    <div>
+      <label>Problem/Question Text (optional):</label>
+      <textarea id="problem-text" rows="3" placeholder="Enter your question or problem statement here"></textarea>
+    </div>
+  </div>
+
+  <div id="apply-area" class="operation-area" style="display: none;">
+    <h3>Advanced Matrix Operations</h3>
+
+    <div>
+      <label>Select operation:</label>
+      <select id="operation-select" onchange="updateOperationControls()">
+        <option value="add">Addition (A + B)</option>
+        <option value="subtract">Subtraction (A - B)</option>
+        <option value="multiply">Multiplication (A * B)</option>
+        <option value="transpose">Transpose (A^T)</option>
+        <option value="inverse">Inverse (A^{-1})</option>
+        <option value="det">Determinant (det(A))</option>
+        <option value="power">Power (A^n)</option>
+        <option value="scalar">Scalar Multiplication (k*A)</option>
+        <option value="concat">Concatenation ([A|B])</option>
+        <option value="solve">Solve System (Ax=B)</option>
+      </select>
+    </div>
+
+    <div id="operation-controls" style="margin-top: 15px;">
+      <!-- Dynamic controls will be inserted here -->
+    </div>
+
+    <div id="matrix-operands-container" style="margin-top: 15px;">
+      <label>Available Matrices:</label>
+      <div id="available-matrices" class="matrix-selector"></div>
+
+      <label>Selected for Operation:</label>
+      <div id="selected-matrices" class="matrix-selector"></div>
+    </div>
+
+    <div id="additional-params" style="margin-top: 15px; display: none;">
+      <!-- Additional parameters will be inserted here -->
+    </div>
+
+    <div id="operation-preview" class="rendered-equation" style="display: none; margin-top: 20px;"></div>
+
+    <div>
+      <label>Problem/Question Text (optional):</label>
+      <textarea id="applied-problem-text" rows="3"
+        placeholder="Enter your question or problem statement here"></textarea>
+    </div>
+
+    <div class="operation-controls">
+      <button class="btn" onclick="addOperationStep()">Add Step</button>
+      {{!-- <button class="btn btn-success" onclick="executeOperation()">Execute</button> --}}
+      <button class="btn btn-danger" onclick="clearOperation()">Clear</button>
+    </div>
+
+    <div id="operation-steps" class="operation-steps" style="display: none;">
+      <h4>Operation Steps</h4>
+      <div id="steps-container"></div>
+    </div>
+  </div>
+
+  <div class="action-section">
+    <div class="quality-options">
+      <strong>Output Quality:</strong>
+      <label><input type="radio" name="quality" value="1" checked> Standard</label>
+      <label><input type="radio" name="quality" value="2"> High</label>
+      <label><input type="radio" name="quality" value="3"> Ultra</label>
+    </div>
+    <button class="btn btn-success" onclick="displayMatrices()" style="font-size: 1.1em; padding: 15px 25px;">
+      Display Matrices
+    </button>
+  </div>
+
+  <div id="final-output"></div>
+
+  <div id="download-section" class="download-options">
+    <h3>Take the problem screen And put it as picture</h3>
+    <!-- <button class="btn" onclick="prepareScreenshot()" style="font-size: 1.1em; padding: 15px 25px;">
+      Download as Image
+    </button> -->
+  </div>
+
+  <!-- Screenshot preview modal -->
+  <div id="screenshot-container">
+    <img id="screenshot-preview" alt="Matrix Screenshot">
+    <div id="screenshot-actions">
+      <button id="screenshot-download" class="screenshot-btn" onclick="downloadScreenshot()">Download</button>
+      <button id="screenshot-cancel" class="screenshot-btn" onclick="cancelScreenshot()">Cancel</button>
+    </div>
+  </div>
+  <!-- استبدال الجزء المكرر بهذا -->
+  <div id="selection-overlay"></div>
+  <div id="selection-box"></div>
+  <div id="selection-controls" style="display: none;">
+    <div id="quality-selector">
+      <strong>اختر جودة الصورة:</strong>
+      <label><input type="radio" name="capture-quality" value="1" checked> عادية</label>
+      <label><input type="radio" name="capture-quality" value="2"> عالية</label>
+      <label><input type="radio" name="capture-quality" value="3"> فائقة</label>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button id="confirm-capture" class="selection-btn" style="background:#28a745">تأكيد</button>
+      <button id="cancel-selection" class="selection-btn" style="background:#dc3545">إلغاء</button>
+    </div>
+  </div>
+  <div id="preview-modal">
+    <img id="preview-image" alt="Screenshot Preview">
+    <div id="preview-actions">
+      <button id="download-preview" class="preview-btn">Download</button>
+      <button id="close-preview" class="preview-btn">Close</button>
+    </div>
+  </div>
+
+
+  <script>
+    let matrices = [];
+    let currentMode = 'none';
+    let operationSteps = [];
+    let selectedMatrices = [];
+    let currentScreenshotUrl = null;
+
+    function createMatrixInputs() {
+      matrices = [];
+      const count = parseInt(document.getElementById("matrix-count").value);
+      const container = document.getElementById("matrix-inputs");
+      container.innerHTML = "";
+
+      for (let i = 0; i < count; i++) {
+        const box = document.createElement("div");
+        box.className = "matrix-box";
+
+        box.innerHTML = `
+          <div class="matrix-title">Matrix ${String.fromCharCode(65 + i)}</div>
+          <label>Bracket Type:</label>
+          <select id="type-${i}">
+            <option value="bmatrix">[ ]</option>
+            <option value="pmatrix">( )</option>
+            <option value="vmatrix">| |</option>
+            <option value="Bmatrix">{ }</option>
+          </select>
+          <label>Rows:</label>
+          <input type="number" id="rows-${i}" min="1" max="10" value="2" onchange="createMatrixInputGrid(${i})">
+          <label>Columns:</label>
+          <input type="number" id="cols-${i}" min="1" max="10" value="2" onchange="createMatrixInputGrid(${i})">
+          <div id="matrix-grid-${i}" class="matrix-input-grid"></div>
+          <label>Comment:</label>
+          <input type="text" id="comment-${i}" placeholder="Description or note about this matrix">
+        `;
+
+        container.appendChild(box);
+        createMatrixInputGrid(i);
+      }
+
+      document.getElementById("operations-question").style.display = "block";
+      document.getElementById("equation-area").style.display = "none";
+      document.getElementById("apply-area").style.display = "none";
+      currentMode = 'none';
+    }
+
+    function createMatrixInputGrid(matrixIndex) {
+      const rows = parseInt(document.getElementById(`rows-${matrixIndex}`).value);
+      const cols = parseInt(document.getElementById(`cols-${matrixIndex}`).value);
+      const grid = document.getElementById(`matrix-grid-${matrixIndex}`);
+      grid.innerHTML = "";
+
+      grid.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.className = "matrix-input-cell";
+          input.id = `matrix-${matrixIndex}-${r}-${c}`;
+          input.placeholder = "0";
+          grid.appendChild(input);
+        }
+      }
+    }
+
+    function showOperationInput(mode) {
+      currentMode = mode;
+      document.getElementById("equation-area").style.display = mode === 'equation' ? "block" : "none";
+      document.getElementById("apply-area").style.display = mode === 'apply' ? "block" : "none";
+
+      if (mode === 'apply') {
+        updateAvailableMatrices();
+        updateOperationControls();
+      }
+    }
+
+    function updateAvailableMatrices() {
+      const count = parseInt(document.getElementById("matrix-count").value);
+      const container = document.getElementById("available-matrices");
+      container.innerHTML = "";
+
+      for (let i = 0; i < count; i++) {
+        const matrixName = String.fromCharCode(65 + i);
+        const btn = document.createElement("button");
+        btn.className = "tool-button";
+        btn.textContent = matrixName;
+        btn.onclick = () => selectMatrix(matrixName);
+        container.appendChild(btn);
+      }
+    }
+
+    function selectMatrix(matrixName) {
+      if (!selectedMatrices.includes(matrixName)) {
+        selectedMatrices.push(matrixName);
+        updateSelectedMatrices();
+        updateOperationPreview();
+      }
+    }
+
+    function unselectMatrix(matrixName) {
+      selectedMatrices = selectedMatrices.filter(m => m !== matrixName);
+      updateSelectedMatrices();
+      updateOperationPreview();
+    }
+
+    function updateSelectedMatrices() {
+      const container = document.getElementById("selected-matrices");
+      container.innerHTML = "";
+
+      selectedMatrices.forEach(matrixName => {
+        const chip = document.createElement("div");
+        chip.className = "matrix-chip";
+        chip.innerHTML = `
+          ${matrixName}
+          <button onclick="unselectMatrix('${matrixName}')">×</button>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function updateOperationControls() {
+      const operation = document.getElementById("operation-select").value;
+      const controlsContainer = document.getElementById("operation-controls");
+      const paramsContainer = document.getElementById("additional-params");
+
+      controlsContainer.innerHTML = "";
+      paramsContainer.innerHTML = "";
+      paramsContainer.style.display = "none";
+
+      switch (operation) {
+        case 'add':
+        case 'subtract':
+        case 'multiply':
+        case 'concat':
+          controlsContainer.innerHTML = `
+            <p>Select 2 or more matrices for ${operation} operation</p>
+          `;
+          break;
+        case 'transpose':
+        case 'inverse':
+        case 'det':
+          controlsContainer.innerHTML = `
+            <p>Select 1 matrix for ${operation} operation</p>
+          `;
+          break;
+        case 'power':
+          paramsContainer.innerHTML = `
+            <label>Power (n):</label>
+            <input type="number" id="power-value" min="1" max="10" value="2">
+          `;
+          paramsContainer.style.display = "block";
+          controlsContainer.innerHTML = `
+            <p>Select 1 matrix for power operation</p>
+          `;
+          break;
+        case 'scalar':
+          paramsContainer.innerHTML = `
+            <label>Scalar Value (k):</label>
+            <input type="number" id="scalar-value" step="0.1" value="1">
+          `;
+          paramsContainer.style.display = "block";
+          controlsContainer.innerHTML = `
+            <p>Select 1 matrix for scalar multiplication</p>
+          `;
+          break;
+        case 'solve':
+          controlsContainer.innerHTML = `
+            <p>Select 2 matrices (A and B) for solving Ax=B</p>
+          `;
+          break;
+      }
+    }
+
+    function updateOperationPreview() {
+      const operation = document.getElementById("operation-select").value;
+      const preview = document.getElementById("operation-preview");
+
+      if (selectedMatrices.length === 0) {
+        preview.style.display = "none";
+        return;
+      }
+
+      let latex = "";
+      const operationMap = {
+        'add': ' + ',
+        'subtract': ' - ',
+        'multiply': ' \\times ',
+        'concat': ' | '
+      };
+
+      switch (operation) {
+        case 'add':
+        case 'subtract':
+        case 'multiply':
+        case 'concat':
+          latex = selectedMatrices.join(operationMap[operation]);
+          break;
+        case 'transpose':
+          latex = selectedMatrices.map(m => `${m}^T`).join(', ');
+          break;
+        case 'inverse':
+          latex = selectedMatrices.map(m => `${m}^{-1}`).join(', ');
+          break;
+        case 'det':
+          latex = selectedMatrices.map(m => `\\det(${m})`).join(', ');
+          break;
+        case 'power':
+          const power = document.getElementById("power-value")?.value || 2;
+          latex = selectedMatrices.map(m => `${m}^{${power}}`).join(', ');
+          break;
+        case 'scalar':
+          const scalar = document.getElementById("scalar-value")?.value || 1;
+          latex = selectedMatrices.map(m => `${scalar} \\times ${m}`).join(', ');
+          break;
+        case 'solve':
+          if (selectedMatrices.length === 2) {
+            latex = `${selectedMatrices[0]}x = ${selectedMatrices[1]}`;
+          }
+          break;
+      }
+
+      preview.innerHTML = `\\[ ${latex} \\]`;
+      preview.style.display = "block";
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([preview]);
+      }
+    }
+
+    function addOperationStep() {
+      const operation = document.getElementById("operation-select").value;
+      const step = {
+        operation,
+        matrices: [...selectedMatrices],
+        params: {}
+      };
+
+      if (operation === 'power') {
+        step.params.power = document.getElementById("power-value").value;
+      } else if (operation === 'scalar') {
+        step.params.scalar = document.getElementById("scalar-value").value;
+      }
+
+      operationSteps.push(step);
+      updateOperationSteps();
+      selectedMatrices = [];
+      updateSelectedMatrices();
+      updateOperationPreview();
+    }
+
+    function updateOperationSteps() {
+      const container = document.getElementById("steps-container");
+      container.innerHTML = "";
+
+      operationSteps.forEach((step, index) => {
+        const stepDiv = document.createElement("div");
+        stepDiv.className = "step";
+
+        let description = "";
+        switch (step.operation) {
+          case 'add':
+            description = `Add: ${step.matrices.join(' + ')}`;
+            break;
+          case 'subtract':
+            description = `Subtract: ${step.matrices.join(' - ')}`;
+            break;
+          case 'multiply':
+            description = `Multiply: ${step.matrices.join(' × ')}`;
+            break;
+          case 'transpose':
+            description = `Transpose: ${step.matrices.join(', ')}^T`;
+            break;
+          case 'inverse':
+            description = `Inverse: ${step.matrices.join(', ')}^{-1}`;
+            break;
+          case 'det':
+            description = `Determinant: det(${step.matrices.join(', ')})`;
+            break;
+          case 'power':
+            description = `Power: ${step.matrices[0]}^${step.params.power}`;
+            break;
+          case 'scalar':
+            description = `Scalar Multiply: ${step.params.scalar} × ${step.matrices[0]}`;
+            break;
+          case 'concat':
+            description = `Concatenate: [${step.matrices.join(' | ')}]`;
+            break;
+          case 'solve':
+            description = `Solve: ${step.matrices[0]}x = ${step.matrices[1]}`;
+            break;
+        }
+
+        stepDiv.innerHTML = `
+          <div>${index + 1}. ${description}</div>
+          <button class="tool-button" onclick="removeStep(${index})">Remove</button>
+        `;
+        container.appendChild(stepDiv);
+      });
+
+      document.getElementById("operation-steps").style.display =
+        operationSteps.length > 0 ? "block" : "none";
+    }
+
+    function removeStep(index) {
+      operationSteps.splice(index, 1);
+      updateOperationSteps();
+    }
+
+    function clearOperation() {
+      operationSteps = [];
+      selectedMatrices = [];
+      updateOperationSteps();
+      updateSelectedMatrices();
+      document.getElementById("operation-preview").style.display = "none";
+    }
+
+    function executeOperation() {
+      displayMatrices();
+    }
+
+    function insertSymbol(symbol) {
+      const textarea = document.getElementById("matrix-equation");
+      const startPos = textarea.selectionStart;
+      const endPos = textarea.selectionEnd;
+      const text = textarea.value;
+
+      textarea.value = text.substring(0, startPos) + symbol + text.substring(endPos, text.length);
+      textarea.focus();
+      textarea.selectionStart = startPos + symbol.length;
+      textarea.selectionEnd = startPos + symbol.length;
+    }
+
+    async function displayMatrices() {
+      const output = document.getElementById("final-output");
+      output.innerHTML = "";
+      matrices = [];
+
+      const count = parseInt(document.getElementById("matrix-count").value);
+      const quality = parseInt(document.querySelector('input[name="quality"]:checked').value);
+
+      // Collect matrix data
+      for (let i = 0; i < count; i++) {
+        const type = document.getElementById(`type-${i}`).value;
+        const rows = parseInt(document.getElementById(`rows-${i}`).value);
+        const cols = parseInt(document.getElementById(`cols-${i}`).value);
+        const comment = document.getElementById(`comment-${i}`).value;
+
+        let matrixValues = [];
+        for (let r = 0; r < rows; r++) {
+          let rowValues = [];
+          for (let c = 0; c < cols; c++) {
+            const val = document.getElementById(`matrix-${i}-${r}-${c}`).value || "0";
+            rowValues.push(val);
+          }
+          matrixValues.push(rowValues.join(" & "));
+        }
+
+        const latex = `\\begin{${type}} ${matrixValues.join(" \\\\ ")} \\end{${type}}`;
+        matrices.push({
+          name: String.fromCharCode(65 + i),
+          latex,
+          comment,
+          rows,
+          cols
+        });
+      }
+
+      // Display problem text if provided
+      const problemText = currentMode === 'apply'
+        ? document.getElementById("applied-problem-text").value.trim()
+        : document.getElementById("problem-text").value.trim();
+
+      if (problemText) {
+        const problemDisplay = document.createElement("div");
+        problemDisplay.style.marginBottom = "20px";
+        problemDisplay.style.fontSize = quality === 2 ? "20px" : quality === 3 ? "24px" : "16px";
+        problemDisplay.innerHTML = `<p><strong>Problem:</strong> ${problemText}</p>`;
+        output.appendChild(problemDisplay);
+      }
+
+      // Display operation steps if in apply mode
+      if (currentMode === 'apply' && operationSteps.length > 0) {
+        const stepsDisplay = document.createElement("div");
+        stepsDisplay.className = "operation-steps";
+        stepsDisplay.style.marginBottom = "30px";
+
+        const stepsTitle = document.createElement("h3");
+        stepsTitle.textContent = "Operation Steps";
+        stepsDisplay.appendChild(stepsTitle);
+
+        operationSteps.forEach((step, index) => {
+          const stepDiv = document.createElement("div");
+          stepDiv.className = "step";
+          stepDiv.style.marginBottom = "15px";
+
+          let description = "";
+          switch (step.operation) {
+            case 'add':
+              description = `\\[ ${step.matrices.join(' + ')} \\]`;
+              break;
+            case 'subtract':
+              description = `\\[ ${step.matrices.join(' - ')} \\]`;
+              break;
+            case 'multiply':
+              description = `\\[ ${step.matrices.join(' \\times ')} \\]`;
+              break;
+            case 'transpose':
+              description = `\\[ ${step.matrices[0]}^T \\]`;
+              break;
+            case 'inverse':
+              description = `\\[ ${step.matrices[0]}^{-1} \\]`;
+              break;
+            case 'det':
+              description = `\\[ \\det(${step.matrices[0]}) \\]`;
+              break;
+            case 'power':
+              description = `\\[ ${step.matrices[0]}^{${step.params.power}} \\]`;
+              break;
+            case 'scalar':
+              description = `\\[ ${step.params.scalar} \\times ${step.matrices[0]} \\]`;
+              break;
+            case 'concat':
+              description = `\\[ [${step.matrices.join(' | ')}] \\]`;
+              break;
+            case 'solve':
+              description = `\\[ ${step.matrices[0]}x = ${step.matrices[1]} \\]`;
+              break;
+          }
+
+          stepDiv.innerHTML = `
+            <div style="margin-bottom: 5px;"><strong>Step ${index + 1}:</strong> ${step.operation}</div>
+            <div>${description}</div>
+          `;
+          stepsDisplay.appendChild(stepDiv);
+        });
+
+        output.appendChild(stepsDisplay);
+      }
+
+      // Display matrices
+      const matrixRow = document.createElement("div");
+      matrixRow.className = "matrix-container";
+
+      matrices.forEach(m => {
+        const wrapper = document.createElement("div");
+        wrapper.style.fontSize = quality === 2 ? "20px" : quality === 3 ? "24px" : "16px";
+        wrapper.innerHTML = `
+          <div class="rendered-matrix">\\[ ${m.latex} \\]</div>
+          ${m.comment ? `<div class="comment" style="font-size: ${quality === 2 ? '18px' : quality === 3 ? '20px' : '14px'}">${m.comment}</div>` : ''}
+        `;
+        matrixRow.appendChild(wrapper);
+      });
+
+      output.appendChild(matrixRow);
+
+      // Wait for MathJax to render
+      if (window.MathJax && MathJax.typesetPromise) {
+        await MathJax.typesetPromise([output]);
+      }
+
+      // Show download options
+      document.getElementById("download-section").style.display = "block";
+    }
+
+    async function prepareScreenshot() {
+      const output = document.getElementById("final-output");
+      const quality = parseInt(document.querySelector('input[name="quality"]:checked').value);
+
+      // Create a temporary container for the screenshot
+      const screenshotContainer = document.createElement("div");
+      screenshotContainer.style.position = "absolute";
+      screenshotContainer.style.left = "-9999px";
+      screenshotContainer.style.padding = "40px";
+      screenshotContainer.style.backgroundColor = "white";
+      screenshotContainer.style.borderRadius = "15px";
+      screenshotContainer.style.boxShadow = "0 0 20px rgba(0,0,0,0.2)";
+
+      // Clone the content with styles
+      const contentClone = output.cloneNode(true);
+      contentClone.style.width = "auto";
+      contentClone.style.height = "auto";
+      contentClone.style.padding = "30px";
+      contentClone.style.margin = "0";
+
+      // Apply quality settings
+      if (quality === 2) {
+        contentClone.classList.add('high-quality-render');
+      } else if (quality === 3) {
+        contentClone.classList.add('ultra-quality-render');
+      }
+
+      screenshotContainer.appendChild(contentClone);
+      document.body.appendChild(screenshotContainer);
+
+      // Wait for rendering
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        await MathJax.typesetPromise([contentClone]);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+      // Generate the image
+      try {
+        const dataUrl = await domtoimage.toPng(screenshotContainer, {
+          quality: 1,
+          bgcolor: 'white',
+          style: {
+            transform: 'none',
+            transformOrigin: 'top left'
+          }
+        });
+
+        // Show preview
+        showScreenshotPreview(dataUrl);
+      } catch (error) {
+        console.error('Error generating screenshot:', error);
+        alert('Error generating screenshot. Please try again.');
+      } finally {
+        document.body.removeChild(screenshotContainer);
+      }
+    }
+
+    function showScreenshotPreview(dataUrl) {
+      currentScreenshotUrl = dataUrl;
+      const preview = document.getElementById("screenshot-preview");
+      preview.src = dataUrl;
+      document.getElementById("screenshot-container").classList.add("visible");
+    }
+
+    function hideScreenshotPreview() {
+      document.getElementById("screenshot-container").classList.remove("visible");
+      if (currentScreenshotUrl) {
+        URL.revokeObjectURL(currentScreenshotUrl);
+        currentScreenshotUrl = null;
+      }
+    }
+
+    function downloadScreenshot() {
+      if (currentScreenshotUrl) {
+        const link = document.createElement("a");
+        link.download = `matrix_visualization_${new Date().getTime()}.png`;
+        link.href = currentScreenshotUrl;
+        link.click();
+        hideScreenshotPreview();
+      }
+    }
+
+    function cancelScreenshot() {
+      hideScreenshotPreview();
+    }
+    //   let isSelectingArea = false;
+    //   let selectionStartX = 0;
+    //   let selectionStartY = 0;
+    //   let currentSelection = null;
+
+    //   function prepareScreenshot() {
+    //     document.getElementById("selection-overlay").style.display = "block";
+    //     document.getElementById("selection-controls").style.display = "none";
+    //     isSelectingArea = true;
+    //     document.body.style.cursor = "crosshair";
+    //     document.body.style.overflow = "hidden";
+
+    //     // تعليمات للمستخدم
+    //     const instructions = document.createElement("div");
+    //     instructions.style.position = "fixed";
+    //     instructions.style.top = "20px";
+    //     instructions.style.left = "50%";
+    //     instructions.style.transform = "translateX(-50%)";
+    //     instructions.style.backgroundColor = "rgba(0,0,0,0.7)";
+    //     instructions.style.color = "white";
+    //     instructions.style.padding = "10px 20px";
+    //     instructions.style.borderRadius = "5px";
+    //     instructions.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+    //     instructions.style.zIndex = "1001";
+    //     instructions.id = "selection-instructions";
+    //     instructions.innerHTML = "اسحب بزر الماوس الأيسر لتحديد المنطقة المطلوبة";
+    //     document.body.appendChild(instructions);
+    //   }
+
+    //   // استخدام النقر الأيسر بدلاً من الأيمن
+    //   document.getElementById("selection-overlay").addEventListener("mousedown", function (e) {
+    //     if (e.button !== 0 || !isSelectingArea) return; // زر الماوس الأيسر فقط
+
+    //     e.preventDefault();
+    //     selectionStartX = e.clientX;
+    //     selectionStartY = e.clientY;
+
+    //     const selectionBox = document.getElementById("selection-box");
+    //     selectionBox.style.left = `${selectionStartX}px`;
+    //     selectionBox.style.top = `${selectionStartY}px`;
+    //     selectionBox.style.width = "0";
+    //     selectionBox.style.height = "0";
+    //     selectionBox.style.display = "block";
+
+    //     // إزالة التعليمات
+    //     const instructions = document.getElementById("selection-instructions");
+    //     if (instructions) instructions.remove();
+
+    //     document.addEventListener("mousemove", handleMouseMove);
+    //     document.addEventListener("mouseup", handleMouseUp);
+    //   });
+
+    //   function handleMouseMove(e) {
+    //     if (!isSelectingArea || !selectionStartX || !selectionStartY) return;
+
+    //     const selectionBox = document.getElementById("selection-box");
+    //     const currentX = e.clientX;
+    //     const currentY = e.clientY;
+
+    //     const left = Math.min(selectionStartX, currentX);
+    //     const top = Math.min(selectionStartY, currentY);
+    //     const width = Math.abs(currentX - selectionStartX);
+    //     const height = Math.abs(currentY - selectionStartY);
+
+    //     selectionBox.style.left = `${left}px`;
+    //     selectionBox.style.top = `${top}px`;
+    //     selectionBox.style.width = `${width}px`;
+    //     selectionBox.style.height = `${height}px`;
+
+    //     currentSelection = { left, top, width, height };
+    //   }
+
+    //   function handleMouseUp() {
+    //     document.removeEventListener("mousemove", handleMouseMove);
+    //     document.removeEventListener("mouseup", handleMouseUp);
+
+    //     if (currentSelection && currentSelection.width > 10 && currentSelection.height > 10) {
+    //       showQualityOptions();
+    //     } else {
+    //       resetSelection();
+    //     }
+    //   }
+
+    //   function showQualityOptions() {
+    //     const controls = document.getElementById("selection-controls");
+    //     controls.innerHTML = `
+    //   <div style="margin-bottom:15px;font-weight:bold">اختر جودة الصورة:</div>
+    //   <div id="quality-selector" style="margin-bottom:15px">
+    //       <label style="margin-right:15px">
+    //           <input type="radio" name="capture-quality" value="1" checked> عادية
+    //       </label>
+    //       <label style="margin-right:15px">
+    //           <input type="radio" name="capture-quality" value="2"> عالية
+    //       </label>
+    //       <label>
+    //           <input type="radio" name="capture-quality" value="3"> فائقة
+    //       </label>
+    //   </div>
+    //   <div style="display:flex;gap:10px;justify-content:center">
+    //       <button id="confirm-capture" class="selection-btn" style="background:#28a745">تأكيد</button>
+    //       <button id="cancel-selection" class="selection-btn" style="background:#dc3545">إلغاء</button>
+    //   </div>
+    // `;
+
+    //     controls.style.display = "block";
+
+    //     document.getElementById("confirm-capture").addEventListener("click", captureSelectedArea);
+    //     document.getElementById("cancel-selection").addEventListener("click", resetSelection);
+    //   }
+
+    //   async function captureSelectedArea() {
+    //     if (!currentSelection || currentSelection.width === 0 || currentSelection.height === 0) {
+    //       alert("الرجاء تحديد منطقة أولاً");
+    //       return;
+    //     }
+
+    //     const quality = parseInt(document.querySelector('input[name="capture-quality"]:checked').value);
+    //     const scale = quality === 1 ? 1 : quality === 2 ? 2 : 3;
+
+    //     try {
+    //       // إنشاء عنصر canvas للمنطقة المحددة
+    //       const canvas = document.createElement("canvas");
+    //       canvas.width = currentSelection.width * scale;
+    //       canvas.height = currentSelection.height * scale;
+    //       const ctx = canvas.getContext("2d");
+
+    //       // تطبيق التحجيم
+    //       ctx.scale(scale, scale);
+
+    //       // رسم الجزء المحدد من الصفحة
+    //       ctx.drawImage(
+    //         document.documentElement,
+    //         currentSelection.left,
+    //         currentSelection.top,
+    //         currentSelection.width,
+    //         currentSelection.height,
+    //         0,
+    //         0,
+    //         currentSelection.width,
+    //         currentSelection.height
+    //       );
+
+    //       // تحويل إلى صورة
+    //       const dataUrl = canvas.toDataURL("image/png");
+
+    //       // عرض المعاينة
+    //       showPreview(dataUrl);
+    //     } catch (error) {
+    //       console.error("Error capturing selection:", error);
+    //       alert("حدث خطأ أثناء محاولة التقاط الصورة. الرجاء المحاولة مرة أخرى.");
+    //     } finally {
+    //       resetSelection();
+    //     }
+    //   }
+
+    //   function resetSelection() {
+    //     isSelectingArea = false;
+    //     selectionStartX = 0;
+    //     selectionStartY = 0;
+    //     currentSelection = null;
+    //     document.getElementById("selection-overlay").style.display = "none";
+    //     document.getElementById("selection-box").style.display = "none";
+    //     document.getElementById("selection-controls").style.display = "none";
+
+    //     const instructions = document.getElementById("selection-instructions");
+    //     if (instructions) instructions.remove();
+
+    //     document.body.style.overflow = "";
+    //     document.body.style.cursor = "";
+    //   }
+
+    //   function showPreview(dataUrl) {
+    //     const previewImg = document.getElementById("preview-image");
+    //     previewImg.src = dataUrl;
+
+    //     const modal = document.getElementById("preview-modal");
+    //     modal.style.display = "flex";
+
+    //     // زر التحميل
+    //     document.getElementById("download-preview").onclick = function () {
+    //       const link = document.createElement("a");
+    //       link.download = `matrix-screenshot-${new Date().getTime()}.png`;
+    //       link.href = dataUrl;
+    //       link.click();
+    //       closePreview();
+    //     };
+
+    //     // زر الإغلاق
+    //     document.getElementById("close-preview").onclick = closePreview;
+    //   }
+
+    //   function closePreview() {
+    //     document.getElementById("preview-modal").style.display = "none";
+    //   }
+    let isSelectingArea = false;
+let selectionStartX = 0;
+let selectionStartY = 0;
+let currentSelection = null;
+
+function prepareScreenshot() {
+  // بدء التحديد التلقائي
+  simulateSelection();
+}
+
+function simulateSelection() {
+  // تحديد منطقة المصفوفات تلقائيًا
+  const outputElement = document.getElementById("final-output");
+  if (!outputElement) {
+    alert("لم يتم العثور على المحتوى المستهدف.");
+    resetSelection();
+    return;
+  }
+
+  // الحصول على موضع وحجم العنصر
+  const rect = outputElement.getBoundingClientRect();
+
+  // حساب 80% من العرض والارتفاع
+  const width = rect.width * 0.8;
+  const height = rect.height * 0.8;
+
+  // تحديد نقطة البداية (الزاوية العلوية اليسرى)
+  const left = rect.left + (rect.width - width) / 2; // توسيط أفقي
+  const top = rect.top + (rect.height - height) / 2; // توسيط عمودي
+
+  // تحديث المنطقة المحددة
+  selectionStartX = left;
+  selectionStartY = top;
+
+  // حفظ المنطقة المحددة
+  currentSelection = { left, top, width, height };
+
+  // التقاط الصورة مباشرة
+  captureSelectedArea();
+}
+
+async function captureSelectedArea() {
+  if (!currentSelection || currentSelection.width === 0 || currentSelection.height === 0) {
+    alert("لم يتم تحديد منطقة صالحة.");
+    return;
+  }
+
+  const quality = parseInt(document.querySelector('input[name="capture-quality"]:checked')?.value || 1);
+  const scale = quality === 1 ? 1 : quality === 2 ? 2 : 3;
+
+  try {
+    // إنشاء عنصر canvas للمنطقة المحددة
+    const canvas = document.createElement("canvas");
+    canvas.width = currentSelection.width * scale;
+    canvas.height = currentSelection.height * scale;
+    const ctx = canvas.getContext("2d");
+
+    // تطبيق التحجيم
+    ctx.scale(scale, scale);
+
+    // رسم الجزء المحدد من الصفحة
+    ctx.drawImage(
+      document.documentElement,
+      currentSelection.left,
+      currentSelection.top,
+      currentSelection.width,
+      currentSelection.height,
+      0,
+      0,
+      currentSelection.width,
+      currentSelection.height
+    );
+
+    // تحويل إلى صورة
+    const dataUrl = canvas.toDataURL("image/png");
+
+    // عرض المعاينة
+    showPreview(dataUrl);
+  } catch (error) {
+    console.error("حدث خطأ أثناء التقاط الصورة:", error);
+    alert("حدث خطأ أثناء محاولة التقاط الصورة. الرجاء المحاولة مرة أخرى.");
+  } finally {
+    resetSelection();
+  }
+}
+
+function resetSelection() {
+  isSelectingArea = false;
+  selectionStartX = 0;
+  selectionStartY = 0;
+  currentSelection = null;
+  document.getElementById("selection-overlay")?.style.setProperty("display", "none");
+  document.getElementById("selection-box")?.style.setProperty("display", "none");
+  document.getElementById("selection-controls")?.style.setProperty("display", "none");
+}
+
+function showPreview(dataUrl) {
+  const previewImg = document.getElementById("preview-image");
+  previewImg.src = dataUrl;
+
+  const modal = document.getElementById("preview-modal");
+  modal.style.display = "flex";
+
+  // زر التحميل
+  document.getElementById("download-preview").onclick = function () {
+    const link = document.createElement("a");
+    link.download = `matrix-screenshot-${new Date().getTime()}.png`;
+    link.href = dataUrl;
+    link.click();
+    closePreview();
+  };
+
+  // زر الإغلاق
+  document.getElementById("close-preview").onclick = closePreview;
+}
+
+function closePreview() {
+  document.getElementById("preview-modal").style.display = "none";
+}
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+</body>
+
+</html>

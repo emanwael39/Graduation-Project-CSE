@@ -1,0 +1,485 @@
+{{!-- 
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuccessCorrect</title>
+    <link rel="stylesheet" href="/css/successCorrectModelAnswer.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .custom-button {
+            background-color: rgba(34, 98, 198, 1);
+            /* Custom background color */
+            color: white;
+            /*text color*/
+            border: none;
+            border-radius: 10px;
+            /* Remove border */
+            padding: 10px 30px 10px 30px;
+        }
+
+        .custom-button:hover {
+            background-color: rgba(34, 97, 198, 0.753);
+            /* Hover color */
+            color: white;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        @media screen and (max-width:800px) {
+            .bubble-text {
+                font-size: 20px;
+            }
+        }
+
+        @media screen and (max-width:260px) {
+            .bubble-text {
+                font-size: 17px;
+            }
+
+            .correction-text {
+                font-size: 15px;
+            }
+
+            .btn {
+                padding-left: 10px;
+                padding-right: 10px;
+                font-size: 15px;
+                padding-top: 6px;
+                padding-bottom: 6px;
+            }
+        }
+
+        /* @media screen and (max-width: 780px) {
+                .bubble-text {
+                    font-size: 25px;
+                }
+            } */
+        @media screen and (max-width: 955px) {
+            .right-side .image {
+                width: 450px;
+                height: 329px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <section class="correction-container">
+        <div class="left-side">
+            <div class="ellipse"></div>
+            <div class="correction-card">
+                <h4 class="bubble-text text-start">Bubble Sheet Correction Completed</h4>
+                <p class="correction-text text-start mt-3">The bubble sheet has been successfully corrected. You can now
+                    download the students results file for review and analysis.</p>
+
+                <button id="btn" class="btn custom-button mt-4">Correct Bubble Sheet</button>
+
+            </div>
+
+        </div>
+        <div class="right-side">
+            <img src="/images/correction_image.png" class="image">
+            <div class="ellipse-1"></div>
+        </div>
+    </section>
+    <script src="/Script/doctorWorks/successCorrectModelAnswer.js"></script>
+</body>
+
+</html> --}}
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Correction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .results-container {
+            display: flex;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Results Card */
+        .results-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Bubble Sheet Image */
+        .bubble-sheet-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Big Check Mark */
+        .big-check-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .big-check {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: checkScale 0.5s ease-out forwards, fadeOut 0.5s ease-out 1.5s forwards;
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .big-check svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        @keyframes checkScale {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Check Mark Animation */
+        .check-mark {
+            position: absolute;
+            opacity: 0;
+            animation: checkPop 0.5s ease-out forwards;
+        }
+
+        @keyframes checkPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Button Styles */
+        .action-button {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+            margin-top: 2rem;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .results-container {
+                padding: 1rem;
+            }
+            
+            .results-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Big Check Mark Animation -->
+    <div class="big-check-container">
+        <div class="big-check">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 13L9 17L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <div class="results-container">
+        <div class="results-card">
+            <h1 class="results-title">Bubble Sheet Correction Completed</h1>
+            
+            <!-- Bubble Sheet Image -->
+            <svg class="bubble-sheet-image" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Paper -->
+                <rect x="50" y="30" width="500" height="340" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+                
+                <!-- Header -->
+                <rect x="70" y="50" width="120" height="8" rx="4" fill="#d1d5db"/>
+                <rect x="200" y="50" width="80" height="8" rx="4" fill="#d1d5db"/>
+                <rect x="70" y="65" width="200" height="6" rx="3" fill="#e5e7eb"/>
+                
+                <!-- Questions -->
+                <!-- Question 1 -->
+                <g transform="translate(80, 100)">
+                    <text x="0" y="15" font-family="Arial" font-size="12" fill="#374151" font-weight="bold">1.</text>
+                    <circle cx="30" cy="10" r="8" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+                    <circle cx="50" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="70" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="90" cy="10" r="8" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <text x="26" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">A</text>
+                    <text x="46" y="14" font-family="Arial" font-size="10" fill="#9ca3af">B</text>
+                    <text x="66" y="14" font-family="Arial" font-size="10" fill="#9ca3af">C</text>
+                    <text x="86" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">D</text>
+                    
+                    <!-- Check mark for correct answer -->
+                    <path class="check-mark" d="M85 5 L90 12 L95 3" stroke="#ffffff" stroke-width="2" fill="none" 
+                          style="animation-delay: 0.5s;"/>
+                </g>
+                
+                <!-- Question 2 -->
+                <g transform="translate(80, 130)">
+                    <text x="0" y="15" font-family="Arial" font-size="12" fill="#374151" font-weight="bold">2.</text>
+                    <circle cx="30" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="50" cy="10" r="8" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <circle cx="70" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="90" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <text x="26" y="14" font-family="Arial" font-size="10" fill="#9ca3af">A</text>
+                    <text x="46" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">B</text>
+                    <text x="66" y="14" font-family="Arial" font-size="10" fill="#9ca3af">C</text>
+                    <text x="86" y="14" font-family="Arial" font-size="10" fill="#9ca3af">D</text>
+                    
+                    <!-- Check mark for correct answer -->
+                    <path class="check-mark" d="M45 5 L50 12 L55 3" stroke="#ffffff" stroke-width="2" fill="none" 
+                          style="animation-delay: 1s;"/>
+                </g>
+                
+                <!-- Question 3 -->
+                <g transform="translate(80, 160)">
+                    <text x="0" y="15" font-family="Arial" font-size="12" fill="#374151" font-weight="bold">3.</text>
+                    <circle cx="30" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="50" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="70" cy="10" r="8" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <circle cx="90" cy="10" r="8" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+                    <text x="26" y="14" font-family="Arial" font-size="10" fill="#9ca3af">A</text>
+                    <text x="46" y="14" font-family="Arial" font-size="10" fill="#9ca3af">B</text>
+                    <text x="66" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">C</text>
+                    <text x="86" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">D</text>
+                    
+                    <!-- Check mark for correct answer -->
+                    <path class="check-mark" d="M65 5 L70 12 L75 3" stroke="#ffffff" stroke-width="2" fill="none" 
+                          style="animation-delay: 1.5s;"/>
+                </g>
+                
+                <!-- Question 4 -->
+                <g transform="translate(80, 190)">
+                    <text x="0" y="15" font-family="Arial" font-size="12" fill="#374151" font-weight="bold">4.</text>
+                    <circle cx="30" cy="10" r="8" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <circle cx="50" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <circle cx="70" cy="10" r="8" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+                    <circle cx="90" cy="10" r="8" fill="none" stroke="#d1d5db" stroke-width="2"/>
+                    <text x="26" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">A</text>
+                    <text x="46" y="14" font-family="Arial" font-size="10" fill="#9ca3af">B</text>
+                    <text x="66" y="14" font-family="Arial" font-size="10" fill="white" font-weight="bold">C</text>
+                    <text x="86" y="14" font-family="Arial" font-size="10" fill="#9ca3af">D</text>
+                    
+                    <!-- Check mark for correct answer -->
+                    <path class="check-mark" d="M25 5 L30 12 L35 3" stroke="#ffffff" stroke-width="2" fill="none" 
+                          style="animation-delay: 2s;"/>
+                </g>
+                
+                <!-- Legend -->
+                <g transform="translate(350, 100)">
+                    <rect x="0" y="0" width="180" height="100" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+                    <text x="15" y="20" font-family="Arial" font-size="12" fill="#374151" font-weight="bold">Legend:</text>
+                    <circle cx="15" cy="35" r="6" fill="#3b82f6"/>
+                    <text x="25" y="38" font-family="Arial" font-size="10" fill="#374151">Correct answer</text>
+                    <circle cx="15" cy="55" r="6" fill="#ef4444"/>
+                    <text x="25" y="58" font-family="Arial" font-size="10" fill="#374151">Student answer</text>
+                    <circle cx="15" cy="75" r="6" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                    <path d="M10 70 L15 77 L20 67" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                    <text x="25" y="78" font-family="Arial" font-size="10" fill="#374151">Correct with check</text>
+                </g>
+            </svg>
+            
+            <button id="btn" class="action-button">Correct Bubble Sheet for student</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Show the bubble sheet after big check animation completes
+            setTimeout(() => {
+                document.querySelector('.bubble-sheet-image').style.opacity = '1';
+                
+                // Animate check marks one by one
+                const checkMarks = document.querySelectorAll('.check-mark');
+                checkMarks.forEach((mark, index) => {
+                    setTimeout(() => {
+                        mark.style.opacity = '1';
+                    }, index * 500 + 500);
+                });
+            }, 2000); // 2 seconds delay
+        });
+    </script>
+    <script src="/Script/doctorWorks/successCorrectModelAnswer.js"></script>
+</body>
+</html>

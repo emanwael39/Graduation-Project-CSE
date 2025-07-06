@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions</title>
+    <style>
+        /* الألوان والتنسيقات */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #004085;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* صندوق الأسئلة */
+        .section {
+            background: white;
+            border: 2px solid #007bff;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 15px;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.5s forwards;
+        }
+
+        /* تأثير عند تمرير الماوس */
+        .section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        /* تأثير عند تحديد السؤال */
+        .selected {
+            background-color: #cce5ff;
+            border-color: #0056b3;
+        }
+
+        /* أنيميشن للظهور */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* زر جلب الأسئلة المحددة */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* تنسيق الاختيارات */
+        .option {
+            padding: 5px;
+            margin: 5px;
+            background: #e9f5ff;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+
+        .option:hover {
+            background: #b3daff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📘 Select Your Questions</h1>
+    <div id="questions-container"></div>
+    <button onclick="getSelectedQuestions()">Get Selected Questions</button>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const course = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+        const file = urlParams.get('chapter');
+
+        fetch('http://localhost:3000/Doctor/SelectChaptermanual', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ course, idDoctor, file })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received Data:", data);
+                renderQuestions(data);
+            })
+            .catch(error => console.error('Error:', error));
+
+        function renderQuestions(data) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            if (!data) return;
+
+            data.forEach((q, index) => {
+                let section = document.createElement('div');
+                section.classList.add('section');
+                section.dataset.type = q.type;
+                section.style.animationDelay = `${index * 0.1}s`;
+
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.classList.add('select-question');
+                checkbox.addEventListener('change', function () {
+                    section.classList.toggle('selected', this.checked);
+                });
+
+                if (q.type === "MCQ") {
+                    section.innerHTML = `<div class="question">🟢 MCQ: ${q.question}</div>`;
+                    let optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('options');
+                    q.choices.forEach(choice => {
+                        let option = document.createElement('div');
+                        option.classList.add('option');
+                        option.textContent = `🔹 ${choice}`;
+                        optionsDiv.appendChild(option);
+                    });
+                    section.appendChild(optionsDiv);
+                }
+                else if (q.type === "Essay") {
+                    section.innerHTML = `<div class="question">📝 Essay: ${q.question}</div>`;
+                }
+                else if (q.type === "Multi-Choice") {
+                    section.innerHTML = `<div class="question">📜 Paragraph: ${q.paragraph}</div>`;
+                    q.questions.forEach(subQ => {
+                        let subSection = document.createElement('div');
+                        subSection.classList.add('section');
+                        subSection.dataset.type = "Multi-Choice-Sub";
+
+                        subSection.innerHTML = `<div class="question">🔸 ${subQ.question}</div>`;
+                        let optionsDiv = document.createElement('div');
+                        optionsDiv.classList.add('options');
+                        subQ.choices.forEach(choice => {
+                            let option = document.createElement('div');
+                            option.classList.add('option');
+                            option.textContent = `🔹 ${choice}`;
+                            optionsDiv.appendChild(option);
+                        });
+                        subSection.appendChild(optionsDiv);
+                        section.appendChild(subSection);
+                    });
+                }
+
+                section.appendChild(checkbox);
+                container.appendChild(section);
+            });
+        }
+
+        function getSelectedQuestions() {
+            const selectedSections = document.querySelectorAll('.section.selected');
+
+            let formattedData = {
+                mcq: [],
+                essay: [],
+                multi: []
+            };
+
+            selectedSections.forEach(sec => {
+                let type = sec.dataset.type;
+
+                if (type === "MCQ") {
+                    let question = sec.querySelector(".question").textContent.replace("🟢 MCQ: ", "").trim();
+                    let options = [...sec.querySelectorAll(".option")].map(opt => opt.textContent.replace("🔹 ", "").trim());
+
+                    formattedData.mcq.push({ question, options });
+                }
+                else if (type === "Essay") {
+                    let question = sec.querySelector(".question").textContent.replace("📝 Essay: ", "").trim();
+                    formattedData.essay.push({ question: `📝 ${question}` });
+                }
+                else if (type === "Multi-Choice") {
+                    let passage = sec.querySelector(".question").textContent.replace("📜 Paragraph: ", "").trim();
+                    let questions = [...sec.querySelectorAll(".section .question")].map(subQ => {
+                        let subQuestion = subQ.textContent.replace("🔸 ", "").trim();
+                        let options = [...subQ.parentElement.querySelectorAll(".option")].map(opt => opt.textContent.replace("🔹 ", "").trim());
+                        return { question: subQuestion, options };
+                    });
+
+                    formattedData.multi.push({ passage, questions });
+                }
+            });
+
+            console.log("Formatted Data:", formattedData);
+            const urlParams = new URLSearchParams(window.location.search);
+            const modelName = urlParams.get('modelName');
+            const course = urlParams.get('course');
+            const idDoctor = urlParams.get('id');
+            fetch('http://localhost:3000/Doctor/SelectChaptermanual', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    SelectedMCQs: formattedData.mcq,
+                    SelectedEssayQuestions: formattedData.essay,
+                    SelectedMultiQuestions: formattedData.multi,
+                    modelName: modelName
+                })
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    console.log(data);
+                    alert("Questions added successfully")
+                    setTimeout(()=>{
+                        window.location.href=`http://localhost:3000/Doctor/mymatrials?id=${idDoctor}&modelName=${modelName}&course=${course}`
+                    })
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>

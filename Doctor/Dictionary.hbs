@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Academic Book Discovery Platform - Search and discover academic books from Open Library and Project Gutenberg">
+    <title>Academic Book Discovery Platform</title>
+    {{!-- <link rel="icon" type="image/svg+xml" href="./assets/book-icon.svg"> --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/customizedCss/dictionary.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Academic Discovery</h1>
+                        <p>Explore academic literature</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+                        <svg id="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        <svg id="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <button id="admin-btn" class="icon-btn" aria-label="Admin panel">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Filter Toggle -->
+    <button id="mobile-filter-toggle" class="mobile-filter-toggle" aria-label="Toggle filters">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"/>
+        </svg>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Sidebar -->
+                <aside id="filter-sidebar" class="sidebar">
+                    <div class="sidebar-content">
+                        <div class="sidebar-header">
+                            <h2>Filters</h2>
+                            <button id="close-sidebar" class="close-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <button id="reset-filters" class="reset-btn">Reset all filters</button>
+
+                        <!-- Source Filter -->
+                        <div class="filter-section">
+                            <button class="filter-header" data-section="source" aria-expanded="true">
+                                <h3>Source</h3>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                            <div class="filter-content" data-content="source">
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="source" value="all" checked>
+                                        <span>All Sources</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="source" value="openlibrary">
+                                        <span>Open Library</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="source" value="gutenberg">
+                                        <span>Project Gutenberg</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Language Filter -->
+                        <div class="filter-section">
+                            <button class="filter-header" data-section="language" aria-expanded="true">
+                                <h3>Language</h3>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                            <div class="filter-content" data-content="language">
+                                <select id="language-select" class="select-input">
+                                    <option value="all">All Languages</option>
+                                    <option value="eng">English</option>
+                                    <option value="spa">Spanish</option>
+                                    <option value="fre">French</option>
+                                    <option value="ger">German</option>
+                                    <option value="ita">Italian</option>
+                                    <option value="por">Portuguese</option>
+                                    <option value="rus">Russian</option>
+                                    <option value="chi">Chinese</option>
+                                    <option value="jpn">Japanese</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Year Range Filter -->
+                        <div class="filter-section">
+                            <button class="filter-header" data-section="year" aria-expanded="true">
+                                <h3>Publication Year</h3>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                            <div class="filter-content" data-content="year">
+                                <div class="year-inputs">
+                                    <input type="number" id="year-from" min="1400" max="2024" value="1400" placeholder="From">
+                                    <span>to</span>
+                                    <input type="number" id="year-to" min="1400" max="2024" value="2024" placeholder="To">
+                                </div>
+                                <div class="year-range-display">
+                                    Range: <span id="year-range-text">1400 - 2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Format Filter -->
+                        <div class="filter-section">
+                            <button class="filter-header" data-section="format" aria-expanded="true">
+                                <h3>Format</h3>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                            <div class="filter-content" data-content="format">
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="format" value="all" checked>
+                                        <span>All Formats</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="format" value="ebook">
+                                        <span>eBooks Only</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sort Filter -->
+                        <div class="filter-section">
+                            <button class="filter-header" data-section="sort" aria-expanded="true">
+                                <h3>Sort By</h3>
+                                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </button>
+                            <div class="filter-content" data-content="sort">
+                                <select id="sort-select" class="select-input">
+                                    <option value="relevance">Relevance</option>
+                                    <option value="title">Title (A-Z)</option>
+                                    <option value="year">Publication Year</option>
+                                    <option value="rating">Average Rating</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content Area -->
+                <div class="main-area">
+                    <!-- Search Section -->
+                    <div class="search-section">
+                        <div id="welcome-section" class="welcome-section">
+                            <div class="welcome-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <h2>Discover Academic Literature</h2>
+                            <p>Search through millions of academic books, papers, and publications from Open Library and Project Gutenberg. Find the perfect resources for your research and studies.</p>
+                        </div>
+
+                        <div class="search-container">
+                            <form id="search-form" class="search-form">
+                                <div class="search-input-container">
+                                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="M21 21l-4.35-4.35"/>
+                                    </svg>
+                                    <input type="text" id="search-input" placeholder="Search for academic books, authors, or topics..." autocomplete="off">
+                                    <button type="button" id="clear-search" class="clear-btn" style="display: none;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <button type="submit" id="search-btn" class="search-btn">
+                                    <span class="btn-text">Search Books</span>
+                                    <div class="btn-loading" style="display: none;">
+                                        <div class="spinner"></div>
+                                        <span>Searching...</span>
+                                    </div>
+                                </button>
+                            </form>
+
+                            <!-- Search History Dropdown -->
+                            <div id="search-history" class="search-history" style="display: none;">
+                                <div class="history-header">
+                                    <span>Recent Searches</span>
+                                    <button id="clear-history" class="clear-history-btn">Clear All</button>
+                                </div>
+                                <div id="history-list" class="history-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div id="results-section" class="results-section" style="display: none;">
+                        <div class="results-header">
+                            <div class="results-info">
+                                <h2>Search Results</h2>
+                                <p id="results-count">0 books found</p>
+                            </div>
+                            <div id="saved-count" class="saved-count" style="display: none;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                                </svg>
+                                <span id="saved-count-text">0 saved</span>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div id="loading-state" class="loading-state" style="display: none;">
+                            <div class="loading-spinner">
+                                <div class="spinner large"></div>
+                            </div>
+                            <p>Searching for books...</p>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="error-state" class="error-state" style="display: none;">
+                            <h3>Search Error</h3>
+                            <p id="error-message">An error occurred while searching.</p>
+                            <button id="retry-btn" class="retry-btn">Try Again</button>
+                        </div>
+
+                        <!-- Results Grid -->
+                        <div id="results-grid" class="results-grid"></div>
+
+                        <!-- No Results -->
+                        <div id="no-results" class="no-results" style="display: none;">
+                            <div class="no-results-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <h3>No books found</h3>
+                            <p>Try adjusting your search terms or filters to find more results.</p>
+                            <button id="reset-filters-btn" class="reset-filters-btn">Reset Filters</button>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div id="pagination" class="pagination" style="display: none;">
+                            <div class="pagination-info">
+                                <span id="pagination-text">Showing 1 to 20 of 100 results</span>
+                            </div>
+                            <div class="pagination-controls">
+                                <button id="prev-page" class="page-btn" disabled>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="15,18 9,12 15,6"/>
+                                    </svg>
+                                </button>
+                                <div id="page-numbers" class="page-numbers"></div>
+                                <button id="next-page" class="page-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9,18 15,12 9,6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features Section -->
+                    <div id="features-section" class="features-section">
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon primary">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="M21 21l-4.35-4.35"/>
+                                    </svg>
+                                </div>
+                                <h3>Advanced Search</h3>
+                                <p>Search by title, author, subject, or keywords with powerful filtering options.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon secondary">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                                    </svg>
+                                </div>
+                                <h3>Save & Organize</h3>
+                                <p>Save interesting books and generate citations in APA, MLA, or Chicago format.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="M21 21l-4.35-4.35"/>
+                                    </svg>
+                                </div>
+                                <h3>Multiple Sources</h3>
+                                <p>Access millions of books from Open Library and Project Gutenberg.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Book Details Modal -->
+    <div id="book-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book Details</h2>
+                <div class="modal-actions">
+                    <button id="save-book-btn" class="save-btn" aria-label="Save book">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
+                    <button id="close-modal" class="close-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="book-details-grid">
+                    <div class="book-cover-section">
+                        <div class="book-cover-container">
+                            <img id="modal-book-cover" src="" alt="Book cover" class="book-cover">
+                        </div>
+                        <div class="book-meta">
+                            <div id="modal-rating" class="rating" style="display: none;"></div>
+                            <div class="meta-items">
+                                <div id="modal-year" class="meta-item" style="display: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    <span></span>
+                                </div>
+                                <div id="modal-publisher" class="meta-item" style="display: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                                    </svg>
+                                    <span></span>
+                                </div>
+                                <div id="modal-language" class="meta-item" style="display: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="2" y1="12" x2="22" y2="12"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                    <span></span>
+                                </div>
+                                <div id="modal-editions" class="meta-item" style="display: none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                                    </svg>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <a id="modal-open-library-link" href="#" target="_blank" rel="noopener noreferrer" class="external-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                    <polyline points="15,3 21,3 21,9"/>
+                                    <line x1="10" y1="14" x2="21" y2="3"/>
+                                </svg>
+                                <span>View on Open Library</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="book-info-section">
+                        <div class="book-title-section">
+                            <h1 id="modal-book-title">Book Title</h1>
+                            <p id="modal-book-author">by Author Name</p>
+                            <div id="modal-subjects" class="subjects"></div>
+                        </div>
+                        <div class="book-description-section">
+                            <h3>Description</h3>
+                            <div id="modal-description-loading" class="description-loading" style="display: none;">
+                                <div class="skeleton-line"></div>
+                                <div class="skeleton-line"></div>
+                                <div class="skeleton-line short"></div>
+                            </div>
+                            <p id="modal-book-description" class="book-description">No description available for this book.</p>
+                        </div>
+                        <div class="citation-section">
+                            <h3>Citation</h3>
+                            <div class="citation-format">
+                                <label for="citation-format-select">Citation Format</label>
+                                <select id="citation-format-select" class="select-input">
+                                    <option value="apa">APA</option>
+                                    <option value="mla">MLA</option>
+                                    <option value="chicago">Chicago</option>
+                                </select>
+                            </div>
+                            <div class="citation-output">
+                                <div id="citation-text" class="citation-text"></div>
+                                <div class="citation-actions">
+                                    <button id="copy-citation" class="citation-btn" title="Copy citation">
+                                        <svg id="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                        <svg id="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                            <polyline points="20,6 9,17 4,12"/>
+                                        </svg>
+                                    </button>
+                                    <button id="download-citation" class="citation-btn" title="Download citation">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="7,10 12,15 17,10"/>
+                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="admin-modal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content large">
+            <div class="modal-header">
+                <div class="admin-header">
+                    <div class="admin-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v5h5"/>
+                            <path d="M3 21v-5h5"/>
+                            <path d="M21 3v5h-5"/>
+                            <path d="M21 21v-5h-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>Admin Dashboard</h2>
+                        <p>Platform analytics and insights</p>
+                    </div>
+                </div>
+                <button id="close-admin-modal" class="close-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p>Total Searches</p>
+                                <h3 id="total-searches">0</h3>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p>Saved Books</p>
+                                <h3 id="total-saved">0</h3>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p>This Week</p>
+                                <h3 id="week-searches">0</h3>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p>This Month</p>
+                                <h3 id="month-searches">0</h3>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-content-grid">
+                    <div class="admin-section">
+                        <h3>Popular Search Queries</h3>
+                        <div id="popular-queries" class="popular-queries">
+                            <p class="no-data">No search data available yet</p>
+                        </div>
+                    </div>
+                    <div class="admin-section">
+                        <h3>Recently Saved Books</h3>
+                        <div id="recent-saved" class="recent-saved">
+                            <p class="no-data">No saved books yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-footer">
+                    <p>Last updated: <span id="last-updated"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Script/dictionary.js"></script>
+</body>
+</html>

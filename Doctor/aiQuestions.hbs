@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome Exam Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .question-box {
+            background: white;
+            padding: 20px;
+            width: 80%;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border: 3px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .circle-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #007BFF;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .circle-checkbox.selected {
+            border-color: #0056b3;
+            background-color: #007BFF;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #007BFF;
+            outline: none;
+        }
+        textarea:focus {
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #007BFF; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);">Awesome Exam</h1>
+    
+    <div class="question-box">
+        <div>
+            <div class="question">1. What is the capital of France?</div>
+            <div class="options">
+                <label>Paris</label>
+                <label>London</label>
+                <label>Berlin</label>
+                <label>Madrid</label>
+            </div>
+        </div>
+        <span class="circle-checkbox" onclick="toggleSelection(this)"></span>
+    </div>
+    
+    <div class="question-box">
+        <div>
+            <div class="question">2. Explain the process of photosynthesis.</div>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <span class="circle-checkbox" onclick="toggleSelection(this)"></span>
+    </div>
+    
+    <div class="question-box">
+        <div>
+            <div class="question">3. Which of the following are programming languages?</div>
+            <div class="options">
+                <label>JavaScript</label>
+                <label>HTML</label>
+                <label>Python</label>
+                <label>CSS</label>
+            </div>
+        </div>
+        <span class="circle-checkbox" onclick="toggleSelection(this)"></span>
+    </div>
+
+    <script>
+        function toggleSelection(element) {
+            element.classList.toggle("selected");
+        }
+    </script>
+</body>
+</html>

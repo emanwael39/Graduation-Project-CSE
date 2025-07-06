@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .select-box {
+            background: white;
+            border: 2px solid #007BFF;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 200px;
+        }
+
+        .sidebar {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* تأثير hover */
+        button:hover {
+            background: linear-gradient(45deg, #0056b3, #003d80);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+        }
+
+        /* تأثير عند الضغط */
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+        }
+
+        /* أنيميشن موجات متحركة داخل الزر */
+        button::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.6s ease-in-out;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Previous Exams</h2>
+        <select class="select-box mySelect" id="previousExam">
+            <option value="">Previous Exams</option>
+        </select>
+
+        <h2>From Chapter</h2>
+        <select class="select-box" id="chapterSelect" onchange="showSubOptions()">
+            <option value="">Select Chapter</option>
+        </select>
+
+        <select class="select-box" id="subOptions" style="display: none;" onchange="handleSubSelection(this)">
+            <option value="">Select Mode</option>
+            <option value="ai">AI</option>
+            <option value="manual">Manual</option>
+        </select>
+        <button id="Review">ReviewExam</button>
+    </div>
+
+    <div class="container">
+        <h1 style="color: #007BFF; font-size: 36px; font-weight: bold; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);">
+            Choose question for your exam</h1>
+        <p id="result" style="font-size: 20px; color: #0056b3; margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+        const modelName = urlParams.get('modelName');
+        const select = document.querySelector('.mySelect');
+        document.getElementById("Review").addEventListener(('click'), () => {
+            setTimeout(() => {
+                window.location.href = `http://localhost:3000/Doctor/reviewExam?id=${idDoctor}&modelName=${modelName}&course=${courseName}`
+            },1000)
+        })
+
+        function showSubOptions() {
+            const chapterSelect = document.getElementById("chapterSelect");
+            const subOptions = document.getElementById("subOptions");
+
+            if (chapterSelect.value) {
+                subOptions.style.display = "block";
+            } else {
+                subOptions.style.display = "none";
+            }
+        }
+
+        function handleSubSelection(select) {
+            const selectedMode = select.value;
+            const selectedChapter = document.getElementById("chapterSelect").value;
+            if (selectedMode) {
+                const resultText = `${selectedChapter} - ${selectedMode.toUpperCase()}`;
+                document.getElementById("result").innerText = resultText;
+            }
+        }
+
+        ////////////////////////////////////////////////////
+
+
+
+        fetch('http://localhost:3000/Doctor/mymatrials', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseName: courseName })
+        })
+            .then(response => response.json())
+            .then((data) => {
+                console.log("📥 Parsed data:", data);
+
+                if (!Array.isArray(data)) {
+                    throw new Error("❌ Data format is incorrect! Expected an array.");
+                }
+
+                select.innerHTML = '<option value="" disabled selected>All Exam Added</option>';
+
+                data.forEach((item) => {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', () => {
+                    const selectedValue = select.value;
+                    if (selectedValue) {
+                        window.location.href = `http://localhost:3000/Doctor/SelectPrivousExam?id=${idDoctor}&year=${selectedValue}&course=${courseName}&modelName=${modelName}`;
+                    }
+                },1000);
+
+            })
+            .catch(error => console.error('❌ Error:', error));
+
+        ////////////////////////////////
+
+
+
+        function showSubOptions() {
+            const chapterSelect = document.getElementById("chapterSelect");
+            const subOptions = document.getElementById("subOptions");
+
+            if (chapterSelect.value) {
+                subOptions.style.display = "block";
+            } else {
+                subOptions.style.display = "none";
+            }
+        }
+
+        function handleSubSelection(select) {
+            const selectedMode = select.value;
+            const selectedChapter = document.getElementById("chapterSelect").value;
+
+            if (selectedMode) {
+                // تحويل اسم الشابتر إلى اسم ملف URL صالح
+                const chapterName = encodeURIComponent(selectedChapter);
+                const modeName = encodeURIComponent(selectedMode);
+
+                if (modeName == 'ai') {
+                    // توجيه المستخدم إلى صفحة جديدة
+                    window.location.href = `http://localhost:3000/Doctor/SelectChapter?id=${idDoctor}&mode=${modeName}&chapter=${chapterName}&modelName=${modelName}&course=${courseName}`;
+                } else if (modeName == 'manual') {
+                    // توجيه المستخدم إلى صفحة جديدة
+                    window.location.href = `http://localhost:3000/Doctor/SelectChaptermanual?id=${idDoctor}&mode=${modeName}&chapter=${chapterName}&modelName=${modelName}&course=${courseName}`;
+                }
+            }
+        }
+
+        const chapterSelect = document.getElementById("chapterSelect");
+
+        fetch('http://localhost:3000/Doctor/mymatrials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idDoctor: idDoctor, courseName: courseName })
+        })
+            .then(response => response.json())
+            .then((data) => {
+                console.log("📥 Parsed data:", data);
+
+                if (!data.success || !Array.isArray(data.pdfFiles)) {
+                    throw new Error("❌ Unexpected response format!");
+                }
+
+                // إضافة الخيارات إلى السيلكت
+                chapterSelect.innerHTML = '<option value="" disabled selected>Select Chapter</option>';
+                data.pdfFiles.forEach((pdfFile) => {
+                    const option = document.createElement('option');
+                    option.value = pdfFile;
+                    option.textContent = pdfFile;
+                    chapterSelect.appendChild(option);
+                });
+
+            })
+            .catch(error => console.error('❌ Error:', error));
+
+    </script>
+</body>
+
+</html>

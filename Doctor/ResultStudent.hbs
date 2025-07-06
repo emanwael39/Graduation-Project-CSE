@@ -1,0 +1,607 @@
+{{!-- 
+
+<html>
+<head>
+      <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #1e90ff, #f9f9f9, #87ceeb, #007bff); 
+            animation: gradientBG 10s ease infinite; 
+            background-size: 400% 400%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        } 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            height: 90%;
+            max-width: 1350px;
+            overflow-y: auto;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        h1 span {
+            color: #007bff;
+        }
+        p {
+            font-size: 14px;
+            color: #020000;
+            margin-bottom: 20px; 
+            font-weight: bold; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .btn-primary {
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .high-grade {
+            background-color: #d4edda;  
+            border: 1px solid #c3e6cb;
+        }
+        .medium-grade {
+            background-color: #fff3cd;  
+            border: 1px solid #ffeeba;
+        }
+        .low-grade {
+            background-color: #f8d7da; 
+            border: 1px solid #f5c6cb;
+        }  
+        tr:hover {
+    background-color: #fff; 
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Results Processed <span>Successfully</span></h1>
+        <p>All student results have been processed and are now available for review. Below is a detailed table displaying the students' grades for your convenience.</p>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Sitting Number</th>
+                        <th>Model</th>
+                        <th>Number of Correct Answers</th>
+                        <th>Total Grade</th>
+                        <th>Points Per Question</th>
+                        <th>Page Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary mr-2" id="prevBtn" >Previous</button>
+            <span id="pageInfo" class="align-self-center">Page 1 of 12</span>
+            <button class="btn btn-primary ml-2" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+  
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/Script/doctorWorks/ResultStudent.js"></script>
+</body>
+</html> --}}
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles - Matching your previous theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles - Matching your previous theme */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container - Matching your previous theme */
+        .results-container {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1s ease-out;
+            padding: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header styles */
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        h1 span {
+            color: #10b981;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #1e3a8a;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Table styles */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        th {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.1);
+        }
+
+        /* Grade coloring */
+        .high-grade {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+        }
+
+        .medium-grade {
+            background-color: rgba(234, 179, 8, 0.1);
+            border-left: 4px solid #eab308;
+        }
+
+        .low-grade {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Pagination styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        #pageInfo {
+            margin: 0 1.5rem;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        /* Button styles - Matching your previous theme */
+        .btn {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #93c5fd;
+            animation: none;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        /* Success indicator */
+        .success-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            padding: 10px 15px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 50px;
+            width: fit-content;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .success-indicator i {
+            color: #10b981;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .results-container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            #pageInfo {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles - Matching your previous theme -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <div class="results-container">
+        <div class="success-indicator">
+            <i class="fas fa-check-circle"></i>
+            <span>All results processed successfully</span>
+        </div>
+        
+        <h1>Student Results <span>Processed Successfully</span></h1>
+        <p>The automatic correction process has been completed. Below is the detailed results table showing each student's performance.</p>
+        
+        <div class="table-responsive">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Sitting Number</th>
+                        <th>Model</th>
+                        <th>Correct Answers</th>
+                        <th>Total Grade</th>
+                        <th>Points Per Question</th>
+                        <th>Page Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination-container">
+            <button class="btn" id="prevBtn">Previous</button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button class="btn" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate more particles dynamically - Matching your previous theme
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Main functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            const idDoctor = params.get('id');
+            const AnswerBubbleSheet = params.get('AnswerBubbleSheet');
+            const BubbleSheetStudent = params.get('BubbleSheetStudent');
+            const degree = params.get("degree");
+            const actuallyDegree = parseInt(degree, 10);
+            const Namepdf = params.get("Namepdf");
+
+            fetch('http://localhost:3000/Doctor/ResultStudent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    AnswerBubbleSheet,
+                    BubbleSheetStudent,
+                    actuallyDegree,
+                    Namepdf
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+
+                    const tableData = Array.isArray(data) ? data : data.data;
+
+                    if (!Array.isArray(tableData)) {
+                        throw new Error("Invalid data format: Expected an array");
+                    }
+
+                    const rowsPerPage = 10;
+                    let currentPage = 1;
+
+                    const totalGradesSum = tableData.reduce((sum, row) => sum + (row.TotalDegree || 0), 0);
+                    const averageGrade = totalGradesSum / tableData.length;
+                    const totalPages = Math.ceil(tableData.length / rowsPerPage);
+
+                    function renderTable(page) {
+                        const tbody = document.querySelector('#resultsTable tbody');
+                        tbody.innerHTML = '';
+                        const start = (page - 1) * rowsPerPage;
+                        const end = start + rowsPerPage;
+                        const pageData = tableData.slice(start, end);
+
+                        pageData.forEach((row) => {
+                            const tr = document.createElement('tr');
+                            
+                            // تصنيف الصفوف حسب الدرجة
+                            if (row.TotalDegree > averageGrade) {
+                                tr.className = 'high-grade';
+                            } else if (row.TotalDegree >= averageGrade - 10) {
+                                tr.className = 'medium-grade';
+                            } else {
+                                tr.className = 'low-grade';
+                            }
+
+                            // عرض البيانات داخل الصف
+                            tr.innerHTML = `
+                                <td class="bold">${row.sittingNumber || 'N/A'}</td>
+                                <td class="bold">${row.model || 'N/A'}</td>
+                                <td class="bold">${row.correctAnswersCount || 'N/A'}</td>
+                                <td class="bold">${row.TotalDegree || 'N/A'}</td>
+                                <td class="bold">${degree}</td>
+                                <td class="bold">${row.Page || 'N/A'}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+
+                        document.getElementById('pageInfo').innerText = `Page ${page} of ${totalPages}`;
+                        document.getElementById('prevBtn').disabled = page === 1;
+                        document.getElementById('nextBtn').disabled = page === totalPages;
+                    }
+
+                    function nextPage() {
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            renderTable(currentPage);
+                        }
+                    }
+
+                    function prevPage() {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            renderTable(currentPage);
+                        }
+                    }
+
+                    // إضافة الأحداث للأزرار
+                    document.getElementById('prevBtn').addEventListener('click', prevPage);
+                    document.getElementById('nextBtn').addEventListener('click', nextPage);
+
+                    // العرض الأولي للبيانات
+                    renderTable(currentPage);
+                    
+                    // تحميل ملف Excel
+                    fetch('http://localhost:3000/Doctor/ResultStudent', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            AnswerBubbleSheet,
+                            BubbleSheetStudent,
+                            actuallyDegree,
+                            Namepdf
+                        }),
+                    })
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `Bubble_Sheet_${Namepdf}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        })
+                        .catch((e) => {
+                            console.error("Error:", e.message);
+                        });   
+                })
+                .catch((e) => {
+                    console.error("Error:", e.message);
+                });
+        });
+    </script>
+</body>
+</html>

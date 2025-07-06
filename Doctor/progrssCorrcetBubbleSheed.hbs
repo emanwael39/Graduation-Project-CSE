@@ -1,0 +1,500 @@
+{{!-- 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing...</title>
+    <link rel="stylesheet" href="/css/ProcessCoreectAnswer.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #6dd5fa, #3498db);
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #start-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #status-container {
+            display: none;
+            text-align: center;
+        }
+
+        #loading-circle {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #ccc;
+            border-radius: 50%;
+            border-top-color: #28a745;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #checkmark {
+            display: none;
+            font-size: 80px;
+            color: #28a745;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+    <section class="bubble-section" id="remove">
+        <div class="content">
+            <h3>Bubble Sheet Ready for</h3>
+            <h2>Correction</h2>
+            <p>The students' bubble sheet has been fully processed and is ready for correction. Click the button below
+                to start the correction process and ensure accurate results.</p>
+            <button  id="start-button">Start Correction</button>
+        </div>
+        <img src="/images/fa37ecd1d62ca64cef3942ee6a5a0a87.jpg" alt="img">
+    </section>
+
+    <div id="status-container">
+        <div id="loading-circle"></div>
+        <div id="checkmark">✔️</div>
+    </div>
+    <script src="/Script/doctorWorks/progrssCorrcetBubbleSheed.js"></script>
+</body>
+
+</html> --}}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Correction</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .bubble-section {
+            display: flex;
+            max-width: 1000px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content {
+            padding: 3rem;
+            flex: 1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #1e3a8a;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Button Styles */
+        #start-button {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        #start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        /* Image Section */
+        .bubble-section img {
+            width: 400px;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Ready Indicator */
+        .ready-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Status Container */
+        #status-container {
+            display: none;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Loading Animation */
+        #loading-circle {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(30, 64, 175, 0.1);
+            border-radius: 50%;
+            border-top-color: #1e40af;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Checkmark Animation */
+        #checkmark {
+            display: none;
+            font-size: 4rem;
+            color: #10b981;
+            margin-bottom: 1.5rem;
+            animation: checkmarkIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+        }
+
+        @keyframes checkmarkIn {
+            0% { opacity: 0; transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .status-message {
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .bubble-section {
+                flex-direction: column;
+            }
+            
+            .bubble-section img {
+                width: 100%;
+                height: 300px;
+            }
+            
+            .content {
+                padding: 2rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+            
+            #start-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            #status-container {
+                padding: 2rem;
+            }
+
+            .ready-indicator {
+                top: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <section class="bubble-section" id="remove">
+        <div class="ready-indicator">
+            <i class="fas fa-check-circle"></i>
+            <span>Ready for Grading</span>
+        </div>
+        <div class="content">
+            <h3>Bubble Sheet Ready for</h3>
+            <h2>Correction</h2>
+            <p>The students' bubble sheet has been fully processed and is ready for correction. Click the button below
+                to start the correction process and ensure accurate results.</p>
+            <button id="start-button">Start Correction</button>
+        </div>
+        {{!-- <img src="/images/fa37ecd1d62ca64cef3942ee6a5a0a87.jpg" alt="img"> --}}
+    </section>
+
+    <div id="status-container">
+        <div id="loading-circle"></div>
+        <div id="checkmark">✓</div>
+        <p class="status-message">Processing your bubble sheet correction...</p>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Main functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            const idDoctor = params.get('id');
+            const AnswerBubbleSheet = params.get('AnswerBubbleSheet');
+            const BubbleSheetStudent = params.get('BubbleSheetStudent');
+            const pagesNumber = params.get('pagesNumber');
+            const BubbleSheetStudentBaseName = BubbleSheetStudent.replace('.pdf', '');
+            const startButton = document.getElementById('start-button');
+            const loadingCircle = document.getElementById('loading-circle');
+            const checkmark = document.getElementById('checkmark');
+            const statusContainer = document.getElementById('status-container');
+            const statusMessage = document.querySelector('.status-message');
+
+            startButton.addEventListener('click', () => {
+                // Hide the button and remove the section
+                startButton.style.display = 'none';
+                document.getElementById('remove').remove();
+                
+                // Show the status container
+                statusContainer.style.display = 'block';
+                
+                // Start the fetch process
+                fetch('http://localhost:3000/Doctor/progrssCorrcetBubbleSheed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        BubbleSheetStudentBaseName: BubbleSheetStudentBaseName, 
+                        pagesNumber: pagesNumber 
+                    }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if (data === "Completed processing all pages successfully.") {
+                        // Stop the loading animation
+                        loadingCircle.style.display = 'none';
+                        
+                        // Show the checkmark
+                        checkmark.style.display = 'block';
+                        statusMessage.textContent = 'Correction completed successfully!';
+                        
+                        // Redirect after delay
+                        setTimeout(() => {
+                            let url = new URL("http://localhost:3000/Doctor/setDegree");
+                            url.searchParams.set('id', idDoctor);
+                            url.searchParams.set('AnswerBubbleSheet', AnswerBubbleSheet);
+                            url.searchParams.set('BubbleSheetStudent', BubbleSheetStudent);
+                            window.location = url;
+                        }, 1000);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    statusMessage.textContent = 'An error occurred during correction. Please try again.';
+                    statusMessage.style.color = '#ef4444';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

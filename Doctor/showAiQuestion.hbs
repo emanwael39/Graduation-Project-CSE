@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>showAiQuestion</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            /* خلفية بيضاء فاتحة */
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1E90FF;
+            /* لون أزرق */
+        }
+
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #ffffff;
+            /* خلفية بيضاء */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1E90FF;
+            border-bottom: 2px solid #1E90FF;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mcq .option,
+        .multi .option {
+            background-color: #f0f8ff;
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #1E90FF;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mcq .option:hover,
+        .multi .option:hover {
+            background-color: #1E90FF;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .essay .question {
+            font-weight: bold;
+            color: #1E90FF;
+            margin: 15px 0;
+        }
+
+        .essay .answer {
+            margin: 10px 0 20px;
+            padding: 10px;
+            border-left: 5px solid #1E90FF;
+            background-color: #f9f9f9;
+        }
+
+        .mcq,
+        .multi,
+        .essay {
+            margin-bottom: 30px;
+        }
+
+        .section ul {
+            padding-left: 20px;
+        }
+
+        .section li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Questions</h1>
+
+        <div class="section mcq">
+            <h2>MCQ Questions</h2>
+            <ul id="mcq-questions">
+                <!-- سيتم ملؤها ديناميكيًا -->
+            </ul>
+        </div>
+
+        <div class="section multi">
+            <h2>Multi-Choice with Passages</h2>
+            <div class="passage" id="multi-questions">
+                <!-- سيتم ملؤها ديناميكيًا -->
+            </div>
+        </div>
+
+        <div class="section essay">
+            <h2>Essay Questions</h2>
+            <div id="essay-questions">
+                <!-- سيتم ملؤها ديناميكيًا -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('course');
+        const idDoctor = urlParams.get('id');
+        const file = urlParams.get('file');
+        fetch('http://localhost:3000/Doctor/showAiQuestion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idDoctor: idDoctor, courseName: courseName, file: file })
+        })
+            .then(response => response.json())
+            .then((data) => {
+                // تحقق من وجود الـ mcq قبل الطباعة
+                if (data.mcq && Array.isArray(data.mcq) && data.mcq.length > 0) {
+                    console.log('MCQ Data:', data.mcq);
+                    const mcqContainer = document.getElementById("mcq-questions");
+                    data.mcq.forEach((question, index) => {
+                        if (question && question.options && question.options.length > 0) {
+                            const li = document.createElement("li");
+                            li.classList.add("option");
+                            li.textContent = `Question ${index + 1}: ${question.question}`;
+
+                            const optionsList = document.createElement("ul");
+                            question.options.forEach((option) => {
+                                const optionItem = document.createElement("li");
+                                optionItem.textContent = option;
+                                if (option === question.answer) {
+                                    optionItem.style.fontWeight = "bold";
+                                    optionItem.style.color = "green";
+                                }
+                                optionsList.appendChild(optionItem);
+                            });
+                            li.appendChild(optionsList);
+                            mcqContainer.appendChild(li);
+                        }
+                    });
+                } else {
+                    console.log("No MCQ data available.");
+                }
+
+                // تحقق من وجود الـ multi
+                if (data.multi && Array.isArray(data.multi) && data.multi.length > 0) {
+                    console.log('Multi-Choice Data:', data.multi);
+                    const multiContainer = document.getElementById("multi-questions");
+                    data.multi.forEach((item, index) => {
+                        if (item.passage && Array.isArray(item.questions) && item.questions.length > 0) {
+                            const passageDiv = document.createElement("div");
+                            const passageText = document.createElement("p");
+                            passageText.textContent = `Passage ${index + 1}: ${item.passage}`;
+                            passageDiv.appendChild(passageText);
+
+                            item.questions.forEach((question, qIndex) => {
+                                const li = document.createElement("li");
+                                li.classList.add("option");
+                                li.textContent = `Q${qIndex + 1}: ${question.question}`;
+
+                                // عرض الإجابات الأربعة مع إبراز الإجابة الصحيحة
+                                const optionsList = document.createElement("ul");
+                                question.options.forEach((option) => {
+                                    const optionItem = document.createElement("li");
+                                    optionItem.textContent = option;
+                                    if (option === question.answer) {
+                                        optionItem.style.fontWeight = "bold";
+                                        optionItem.style.color = "green"; // الإجابة الصحيحة باللون الأخضر
+                                    }
+                                    optionsList.appendChild(optionItem);
+                                });
+
+                                li.appendChild(optionsList);
+                                passageDiv.appendChild(li);
+                            });
+                            multiContainer.appendChild(passageDiv);
+                        }
+                    });
+                } else {
+                    console.log("No Multi-Choice data available.");
+                }
+
+                // تحقق من وجود الـ essay
+                if (data.essay && Array.isArray(data.essay) && data.essay.length > 0) {
+                    console.log('Essay Data:', data.essay);
+                    const essayContainer = document.getElementById("essay-questions");
+                    data.essay.forEach((item, index) => {
+                        if (item && item.question) {
+                            const questionDiv = document.createElement("div");
+                            const questionText = document.createElement("div");
+                            questionText.classList.add("question");
+                            questionText.textContent = `Essay Question ${index + 1}: ${item.question}`;
+
+                            // إلغاء عرض الإجابة في الأسئلة المقالي
+                            questionDiv.appendChild(questionText);
+                            essayContainer.appendChild(questionDiv);
+                        }
+                    });
+                } else {
+                    console.log("No Essay data available.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+
+
+    </script>
+</body>
+
+</html>

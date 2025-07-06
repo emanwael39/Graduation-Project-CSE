@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            direction: ltr;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .question-box {
+            background-color: #ffffff;
+            border: 2px solid #007bff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            text-align: left;
+            position: relative;
+        }
+
+        .question-text,
+        .answer-input,
+        .correct-answer {
+            display: block;
+            width: 100%;
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .correct-answer {
+            border: 2px solid #28a745;
+            background-color: #e8f5e9;
+        }
+
+        .answer-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .ai-icon,
+        .check-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ai-icon {
+            color: #007bff;
+        }
+
+        .check-icon {
+            color: #28a745;
+            margin-right: 10px;
+        }
+
+        .error-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: white;
+            color: red;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .warning-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            z-index: 1000;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .warning-box button {
+            background: white;
+            color: red;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .image-upload {
+            margin-top: 10px;
+            display: block;
+        }
+
+        .image-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>📄 Exam Review</h2>
+    <div class="container" id="examContainer"></div>
+
+    <button onclick="validateAnswers()">🔍 Validate Answers</button>
+
+    <div id="errorPopup" class="error-popup">
+        <p id="errorPopupText"></p>
+        <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+    <div id="warningBox" class="warning-box">
+        <p id="warningText"></p>
+        <button onclick="hideWarning()">X</button>
+    </div>
+    <button onclick="collectAndDisplayAnswers()">MAKE EXAM</button>
+
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const modelName = urlParams.get('modelName');
+
+        fetch('http://localhost:3000/Doctor/reviewExam', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ modelName: modelName })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data || data.length === 0) {
+                    showPopup("You must choose at least one question from a previous exam or chapter.");
+                    return;
+                }
+
+                const container = document.getElementById('examContainer');
+                container.innerHTML = '';
+
+                data.forEach((question, index) => {
+                    let questionDiv = document.createElement('div');
+                    let questionNumber = `Question ${index + 1}`;
+
+                    let imageUploadHTML = `
+                <input type="file" accept="image/*" class="image-upload" data-index="${index}" onchange="previewImage(this)">
+                <div class="image-preview" id="image-preview-${index}"></div>
+            `;
+
+                    if (question.type === 'MCQ' && question.answers) {
+                        questionDiv.classList.add('question-box', 'mcq-question'); // ✅ تمييز MCQ
+                        questionDiv.innerHTML = `
+                    <h3>${questionNumber}</h3>
+                    <span class="ai-icon">🤖</span>
+                    <input class="question-text" type="text" value="${question.text}" data-index="${index}">
+                    ${question.answers.map(ans =>
+                            `<div class="answer-container mcq-answer-container">
+                            <input class="answer-input" type="text" value="${ans.value}">
+                            <span class="check-icon" onclick="setCorrectAnswer(this, '${ans.value}')">✅</span>
+                        </div>`
+                        ).join('')}
+                    <input class="correct-answer" type="text" placeholder="Correct answer..." data-index="${index}">
+                    ${imageUploadHTML}
+                `;
+                    } else if (question.type === 'Multi' && question.questions) {
+                        questionDiv.classList.add('question-box', 'multi-question'); // ✅ تمييز Multi
+                        questionDiv.innerHTML = `
+                    <h3>${questionNumber}</h3>
+                    <textarea class="question-text" rows="3" data-index="${index}">${question.passage}</textarea>
+                    ${imageUploadHTML}
+                `;
+
+                        question.questions.forEach((subQuestion, subIndex) => {
+                            let subQuestionDiv = document.createElement('div');
+                            subQuestionDiv.classList.add('question-box', 'multi-sub-question'); // ✅ تمييز السؤال الفرعي
+                            let subQuestionNumber = `Sub Question ${index + 1}.${subIndex + 1}`;
+
+                            subQuestionDiv.innerHTML = `
+                        <h4>${subQuestionNumber} <span class="ai-icon">🤖</span></h4>
+                        <input class="sub-question-text" type="text" value="${subQuestion.text}" data-index="${index}-${subIndex}">
+                        ${subQuestion.answers.map(ans =>
+                                `<div class="answer-container multi-answer-container">
+                                <input class="answer-input" type="text" value="${ans.value}">
+                                <span class="check-icon" onclick="setCorrectAnswer(this, '${ans.value}')">✅</span>
+                            </div>`
+                            ).join('')}
+                        <input class="correct-answer" type="text" placeholder="Correct answer..." data-index="${index}-${subIndex}">
+                        ${imageUploadHTML}
+                    `;
+                            questionDiv.appendChild(subQuestionDiv);
+                        });
+                    } else if (question.type === 'Essay') {
+                        questionDiv.classList.add('question-box', 'essay-question'); // ✅ تمييز Essay
+                        questionDiv.innerHTML = `
+                    <h3>${questionNumber}</h3>
+                    <textarea class="question-text" rows="3" data-index="${index}">${question.text}</textarea>
+                    ${imageUploadHTML}
+                `;
+                    }
+
+                    container.appendChild(questionDiv);
+                });
+            })
+            .catch(error => {
+                showPopup("An error occurred while fetching the questions. Please try again.");
+                console.error('Error:', error);
+            });
+
+
+        function previewImage(input) {
+            const index = input.getAttribute("data-index");
+            const previewContainer = document.getElementById(`image-preview-${index}`);
+            previewContainer.innerHTML = "";
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("uploaded-image");
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function setCorrectAnswer(element, answer) {
+            let parentDiv = element.closest('.question-box');
+            let correctAnswerInput = parentDiv.querySelector('.correct-answer');
+            correctAnswerInput.value = answer;
+        }
+
+        function validateAnswers() {
+            let questions = document.querySelectorAll('.question-box');
+            let missingWarnings = [];
+
+            questions.forEach((questionDiv, index) => {
+                let correctAnswerInput = questionDiv.querySelector('.correct-answer');
+                if (correctAnswerInput) {
+                    let correctAnswer = correctAnswerInput.value.trim();
+                    let answers = [...questionDiv.querySelectorAll('.answer-input')].map(input => input.value.trim());
+
+                    let questionNumber = questionDiv.querySelector('h3')?.innerText || `Question ${index + 1}`;
+
+                    if (!correctAnswer) {
+                        missingWarnings.push(`⚠️ ${questionNumber} is missing a correct answer!`);
+                    } else if (!answers.includes(correctAnswer)) {
+                        missingWarnings.push(`⚠️ ${questionNumber} correct answer is not listed in the choices!`);
+                    }
+                }
+            });
+
+            if (missingWarnings.length > 0) {
+                showWarning(missingWarnings.join('<br>'));
+            } else {
+                alert("✅ All correct answers are set properly!");
+            }
+        }
+
+        function showWarning(message) {
+            const warningBox = document.getElementById("warningBox");
+            const warningText = document.getElementById("warningText");
+
+            warningText.innerHTML = message;
+            warningBox.style.display = "block";
+
+            setTimeout(() => {
+                hideWarning();
+            }, 3000);
+        }
+
+        function hideWarning() {
+            document.getElementById("warningBox").style.display = "none";
+        }
+
+        function showPopup(message) {
+            document.getElementById("errorPopupText").innerHTML = message;
+            document.getElementById("errorPopup").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("errorPopup").style.display = "none";
+        }
+        const AI_API_KEY = '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';
+        const AI_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+
+        // دالة عرض التنبيه السماوي المتحرك
+        function showAlert(message) {
+            let alertBox = document.createElement("div");
+            alertBox.innerHTML = message;
+            alertBox.style.position = "fixed";
+            alertBox.style.top = "-60px";
+            alertBox.style.left = "50%";
+            alertBox.style.transform = "translateX(-50%)";
+            alertBox.style.backgroundColor = "#007BFF";
+            alertBox.style.color = "white";
+            alertBox.style.padding = "15px 25px";
+            alertBox.style.borderRadius = "10px";
+            alertBox.style.fontSize = "18px";
+            alertBox.style.fontWeight = "bold";
+            alertBox.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+            alertBox.style.transition = "top 0.5s ease-in-out";
+            alertBox.style.zIndex = "1000";
+
+            document.body.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.style.top = "20px";
+            }, 100);
+
+            setTimeout(() => {
+                alertBox.style.top = "-60px";
+                setTimeout(() => alertBox.remove(), 500);
+            }, 3000);
+        }
+
+        // دالة جلب الإجابة الصحيحة من الذكاء الاصطناعي
+        async function getCorrectAnswer(question, answers, correctInput) {
+            console.log("📩 جاري إرسال السؤال للذكاء الاصطناعي...");
+            console.log("📝 السؤال:", question);
+            console.log("🔹 الخيارات:", answers);
+
+            try {
+                const prompt = `
+السؤال: "${question}"
+الخيارات:
+1. ${answers[0]}
+2. ${answers[1]}
+3. ${answers[2]}
+4. ${answers[3]}
+اختر الإجابة الصحيحة فقط:
+`;
+
+                const response = await fetch(AI_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4-turbo",
+                        messages: [{ role: "user", content: prompt }],
+                        max_tokens: 50
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error("❌ API Request Failed:", response.statusText);
+                    showAlert('⚠️ حدث خطأ أثناء جلب الإجابة، حاول مرة أخرى.');
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("📩 رد الذكاء الاصطناعي:", data);
+
+                let answerText = data?.choices?.[0]?.message?.content?.trim();
+                if (!answerText) {
+                    showAlert("⚠️ لم يتمكن الذكاء الاصطناعي من تحديد الإجابة.");
+                    return;
+                }
+
+                // إزالة أي أرقام أو رموز إضافية من الإجابة
+                answerText = answerText.replace(/^\d+\.\s*/, "").trim();
+                console.log("✅ الإجابة الصحيحة:", answerText);
+
+                // البحث عن الإجابة الصحيحة داخل الإدخالات وتلوينها بناءً على التشابه
+                let answerInputs = correctInput.closest('.question-box').querySelectorAll('.answer-input');
+                let found = false;
+
+                answerInputs.forEach(input => {
+                    let inputText = input.value.trim();
+                    if (isSimilar(inputText, answerText)) {
+                        input.style.backgroundColor = 'lightgreen';
+                        found = true;
+                    } else {
+                        input.style.backgroundColor = ''; // إعادة التهيئة
+                    }
+                });
+
+                if (found) {
+                    showAlert(`✅ الإجابة الصحيحة: ${answerText}`);
+                } else {
+                    showAlert("⚠️ لم يتم العثور على الإجابة الصحيحة داخل الاختيارات!");
+                }
+
+            } catch (error) {
+                console.error('❌ Error fetching AI response:', error);
+                showAlert('⚠️ حدث خطأ أثناء جلب الإجابة، حاول مرة أخرى.');
+            }
+        }
+
+        // دالة التحقق من التشابه بين النصوص
+        function isSimilar(str1, str2) {
+            return str1.includes(str2) || str2.includes(str1);
+        }
+
+        // دالة استدعاء جلب الإجابة عند الضغط على الأيقونة
+        function fetchCorrectAnswer(iconElement) {
+            let questionBox = iconElement.closest('.question-box');
+            let questionTextElement = questionBox.querySelector('.question-text');
+            let subQuestionTextElement = questionBox.querySelector('input.sub-question-text'); // ✅ تم التعديل هنا
+
+            let questionText = '';
+
+            if (subQuestionTextElement) {
+                questionText = subQuestionTextElement.value.trim(); // ✅ استخدم .value بدل .innerText
+            } else if (questionTextElement) {
+                questionText = questionTextElement.value.trim();
+            } else {
+                console.error("❌ خطأ: لا يوجد عنصر 'question-text' أو 'sub-question-text' داخل السؤال!");
+                showAlert("⚠️ لم يتم العثور على نص السؤال.");
+                return;
+            }
+
+            let answerInputs = [...questionBox.querySelectorAll('.answer-input')].map(input => input.value.trim());
+            let correctAnswerInput = questionBox.querySelector('.correct-answer');
+
+            console.log("🖱️ تم الضغط على الأيقونة 🤖");
+            console.log("📌 السؤال:", questionText);
+            console.log("🔹 الاختيارات:", answerInputs);
+            console.log("✅ حقل الإجابة الصحيحة:", correctAnswerInput);
+
+            if (!correctAnswerInput) {
+                console.error("❌ خطأ: لا يوجد عنصر '.correct-answer' داخل السؤال!");
+                showAlert("⚠️ لم يتم العثور على حقل الإجابة الصحيحة.");
+                return;
+            }
+
+            if (questionText && answerInputs.length === 4 && answerInputs.every(ans => ans !== "")) {
+                getCorrectAnswer(questionText, answerInputs, correctAnswerInput);
+            } else {
+                showAlert("⚠️ تأكد من إدخال السؤال وجميع الاختيارات الأربعة.");
+            }
+        }
+
+
+        // ربط الأيقونات بالفانكشن بعد تحميل الصفحة
+        document.getElementById("examContainer").addEventListener("click", function (event) {
+            if (event.target.classList.contains("ai-icon")) {
+                fetchCorrectAnswer(event.target);
+            }
+        });
+        function collectAndDisplayAnswers() {
+            let formData = new FormData();
+            let collectedQuestions = [];
+
+            // استخراج أسئلة MCQ
+            document.querySelectorAll('.mcq-question').forEach((questionDiv, index) => {
+                let question = {
+                    type: 'MCQ',
+                    text: questionDiv.querySelector('.question-text')?.value.trim() || '',
+                    answers: [],
+                    correct_answer: questionDiv.querySelector('.correct-answer')?.value.trim() || '',
+                };
+
+                questionDiv.querySelectorAll('.answer-input').forEach(input => {
+                    question.answers.push(input.value.trim());
+                });
+
+                let imageInput = questionDiv.querySelector('.image-upload');
+                let imageFile = imageInput?.files[0];
+                if (imageFile) {
+                    formData.append(`images`, imageFile);
+                    question.image = imageFile.name;
+                }
+
+                collectedQuestions.push(question);
+            });
+
+            // استخراج أسئلة Multi
+            document.querySelectorAll('.multi-question').forEach((questionDiv, index) => {
+                let multiQuestion = {
+                    type: 'Multi',
+                    passage: questionDiv.querySelector('.question-text')?.value.trim() || '',
+                    questions: []
+                };
+
+                questionDiv.querySelectorAll('.multi-sub-question').forEach((subQuestionDiv, subIndex) => {
+                    let subQuestion = {
+                        text: subQuestionDiv.querySelector('.sub-question-text')?.value.trim() || '',
+                        answers: [],
+                        correct_answer: subQuestionDiv.querySelector('.correct-answer')?.value.trim() || '',
+                    };
+
+                    subQuestionDiv.querySelectorAll('.answer-input').forEach(input => {
+                        subQuestion.answers.push(input.value.trim());
+                    });
+
+                    let subImageInput = subQuestionDiv.querySelector('.image-upload');
+                    let subImageFile = subImageInput?.files[0];
+                    if (subImageFile) {
+                        formData.append(`images`, subImageFile);
+                        subQuestion.image = subImageFile.name;
+                    }
+
+                    multiQuestion.questions.push(subQuestion);
+                });
+
+                collectedQuestions.push(multiQuestion);
+            });
+
+            // استخراج أسئلة Essay
+            document.querySelectorAll('.essay-question').forEach((questionDiv, index) => {
+                let essayQuestion = {
+                    type: 'Essay',
+                    text: questionDiv.querySelector('.question-text')?.value.trim() || '',
+                };
+
+                let imageInput = questionDiv.querySelector('.image-upload');
+                let imageFile = imageInput?.files[0];
+                if (imageFile) {
+                    formData.append(`images`, imageFile);
+                    essayQuestion.image = imageFile.name;
+                }
+
+                collectedQuestions.push(essayQuestion);
+            });
+
+            // ✅ تحويل `collectedQuestions` إلى JSON وإضافته لـ `formData`
+            formData.append('examData', JSON.stringify({ questions: collectedQuestions }));
+
+            // ✅ استخراج `modelName` من الـ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const modelName = urlParams.get('modelName');
+             const idDoctor= urlParams.get('id');
+            formData.append('modelName', modelName);
+            formData.forEach((value, key) => {
+                console.log(`${key}:`, value);
+            });
+
+            // ✅ إرسال البيانات للباك
+            fetch('http://localhost:3000/Doctor/reviewExam', {
+                method: 'PATCH',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ تم الحفظ بنجاح:", data);
+                    alert("✔️ تم إرسال الأسئلة بنجاح!");
+                    setTimeout(() => {
+                window.location.href = `http://localhost:3000/Doctor/DownloadArchive?id=${idDoctor}&modelName=${modelName}`
+            })
+                })
+                .catch(error => {
+                    console.error("❌ خطأ أثناء الإرسال:", error);
+                    alert("⚠️ حدث خطأ أثناء إرسال البيانات.");
+                });
+        }
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

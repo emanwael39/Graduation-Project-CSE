@@ -1,0 +1,350 @@
+{{!-- 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check All Pages</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     <link rel="stylesheet" href="/css/checkForUpload.css" />
+   
+</head>
+
+<body>
+    <button id="btn1">Start to Correct Student Bubble Sheet</button>
+    <script>
+        setInterval(() => {
+            location.reload(); // يعيد تحميل الصفحة
+        }, 10000);
+    </script>
+    <script src="/Script/doctorWorks/checkForUpload.js"></script>
+</body>
+
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check All Pages</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .check-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status Card */
+        .status-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-message {
+            font-size: 1.1rem;
+            color: #1e3a8a;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Message Styles */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-weight: 600;
+            display: inline-block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .loading {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Button Styles */
+        #btn1 {
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        #btn1:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            font-size: 2rem;
+            margin: 1rem 0;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .status-card {
+                padding: 2rem;
+            }
+            
+            .status-title {
+                font-size: 1.5rem;
+            }
+            
+            .status-message {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .check-container {
+                padding: 1.5rem;
+            }
+            
+            .status-card {
+                padding: 1.5rem;
+            }
+            
+            #btn1 {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    </div>
+
+    <div class="check-container">
+        <div class="status-card">
+            <h2 class="status-title">Checking All Pages</h2>
+            <p class="status-message">
+                We're verifying all uploaded pages to ensure they meet the requirements for accurate bubble sheet correction.
+            </p>
+            
+            <!-- Messages will be inserted here by JavaScript -->
+            <div id="message-container"></div>
+            
+            <!-- Loading spinner will be inserted here by JavaScript -->
+            <div id="spinner-container"></div>
+        </div>
+        
+        <button id="btn1">Start to Correct Student Bubble Sheet</button>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Auto-refresh the page every 10 seconds
+        setInterval(() => {
+            location.reload();
+        }, 10000);
+
+        // Main functionality (same as original script)
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            const button = document.querySelector("#btn1");
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            const BubbleSheetStudent = params.get("BubbleSheetStudent");
+            const messageContainer = document.getElementById("message-container");
+            const spinnerContainer = document.getElementById("spinner-container");
+
+            fetch("http://localhost:3000/Doctor/checkForUpload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ BubbleSheetStudent: BubbleSheetStudent }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const compelte = data.message;
+                    const count = data.totalPages;
+                    console.log(count);
+
+                    if (compelte === "All pages are complete!") {
+                        const successMessage = document.createElement("div");
+                        successMessage.innerText = "🎉 Congratulations! All pages are complete!";
+                        successMessage.classList.add("message", "success");
+                        messageContainer.appendChild(successMessage);
+
+                        button.style.display = "inline-block";
+                        button.addEventListener("click", () => {
+                            const idDoctor = params.get("id");
+                            const AnswerBubbleSheet = params.get("AnswerBubbleSheet");
+                            const BubbleSheetStudent = params.get("BubbleSheetStudent");
+                            setTimeout(() => {
+                                let url = new URL(
+                                    "http://localhost:3000/Doctor/progrssCorrcetBubbleSheed"
+                                );
+
+                                url.searchParams.set("id", idDoctor);
+                                url.searchParams.set("AnswerBubbleSheet", AnswerBubbleSheet);
+                                url.searchParams.set("BubbleSheetStudent", BubbleSheetStudent);
+                                url.searchParams.set("pagesNumber", count);
+
+                                window.location = url;
+                            }, 1000);
+                        });
+                    } else {
+                        const loadingMessage = document.createElement("div");
+                        loadingMessage.innerText = "⏳ Waiting for all pages to download...";
+                        loadingMessage.classList.add("message", "loading");
+                        messageContainer.appendChild(loadingMessage);
+
+                        const loadingSpinner = document.createElement("div");
+                        loadingSpinner.innerHTML = '<i class="fas fa-spinner"></i>';
+                        loadingSpinner.classList.add("spinner");
+                        spinnerContainer.appendChild(loadingSpinner);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    const errorMessage = document.createElement("div");
+                    errorMessage.innerText = "⚠️ An error occurred while checking pages";
+                    errorMessage.classList.add("message");
+                    messageContainer.appendChild(errorMessage);
+                });
+        });
+    </script>
+</body>
+</html>

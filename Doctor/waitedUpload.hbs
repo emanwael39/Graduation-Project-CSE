@@ -1,0 +1,388 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Answer Sheets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1a56db, #ffffff, #93c5fd, #1e40af);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: gradientBG 15s ease infinite;
+            color: #1e3a8a;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Content Container */
+        .processing-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            animation: containerFadeIn 1s ease-out;
+        }
+
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Text Styles */
+        .p1 {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            line-height: 1.6;
+            animation: textSlideIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes textSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Animation */
+        .loading-circle {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(30, 64, 175, 0.2);
+            border-top: 8px solid #1e40af;
+            border-radius: 50%;
+            margin: 2rem auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .upload-success {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            margin: 2rem 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 5;
+            stroke: #1e40af;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0 0 0 rgba(30, 64, 175, 0.4);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 5;
+            stroke-miterlimit: 10;
+            stroke: #1e40af;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+
+        @keyframes fill {
+            100% { box-shadow: inset 0 0 0 60px rgba(255, 255, 255, 0.1); }
+        }
+
+        .upload-success h2 {
+            font-size: 2rem;
+            color: #1e40af;
+            margin: 1.5rem 0 1rem;
+            font-weight: 700;
+        }
+
+        .upload-success p {
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Button Styles */
+        .next-button {
+            background: linear-gradient(45deg, #1e40af, #3b82f6, #60a5fa);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+            animation: buttonGradient 3s ease infinite;
+            letter-spacing: 0.5px;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .next-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.6);
+        }
+
+        .next-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            margin: 2rem auto;
+            overflow: hidden;
+            height: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1e40af, #3b82f6);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: width 0.5s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .processing-container {
+                padding: 2rem;
+            }
+            
+            .p1 {
+                font-size: 1.2rem;
+            }
+            
+            .upload-success h2 {
+                font-size: 1.5rem;
+            }
+            
+            .upload-success p {
+                font-size: 1rem;
+            }
+            
+            .next-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .processing-container {
+                padding: 1.5rem;
+            }
+            
+            .p1 {
+                font-size: 1.1rem;
+            }
+            
+            .checkmark {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating particles -->
+    <div class="particles-container">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 16s;"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="processing-container">
+        <p class="p1">
+            Please wait while your model answer is being uploaded and processed.
+        </p>
+        <div class="loading-circle"></div>
+        
+        <div class="upload-success checkmarks" style="display: none;">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h2>Upload Successful!</h2>
+            <p>The file has been successfully uploaded and is ready for processing.</p>
+            <div class="image-placeholder"></div>
+            <div class="ellipse"></div>
+        </div>
+        
+        <button id="button1" class="next-button">Start Correction Model Answer</button>
+        <div class="progress-bar-container">
+            <div class="progress-bar">0%</div>
+        </div>
+    </div>
+
+    <script>
+        // Generate more particles dynamically
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = (Math.random() * 6 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Simulate processing (replace with your actual processing logic)
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Simulate file processing
+            setTimeout(() => {
+                document.querySelector('.loading-circle').style.display = 'none';
+                document.querySelector('.upload-success').style.display = 'block';
+                document.getElementById('button1').style.display = 'inline-block';
+                document.querySelector('.progress-bar-container').style.display = 'block';
+                
+                // Animate progress bar
+                let progress = 0;
+                const progressBar = document.querySelector('.progress-bar');
+                const interval = setInterval(() => {
+                    progress += 1;
+                    progressBar.style.width = progress + '%';
+                    progressBar.textContent = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                    }
+                }, 50);
+            }, 3000);
+        });
+    </script>
+     <script src="/Script/doctorWorks/waitedupload.js"></script>
+</body>
+</html>

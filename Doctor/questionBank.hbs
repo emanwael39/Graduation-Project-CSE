@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+     <link rel="shortcut icon" href="/images/OIP.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestionBank</title>
+    <style>
+          body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background-color: #fff; /* خلفية بيضاء */
+        color: #004aad; /* أزرق غامق */
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #004aad;
+        border-bottom: 3px solid #004aad;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .quote {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #004aad;
+        padding: 20px;
+        background: rgba(0, 74, 173, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 74, 173, 0.5);
+        width: 60%;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .quote:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(0, 74, 173, 0.8);
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: center;
+    }
+
+    li {
+        margin: 10px 0;
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #004aad;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    li:hover {
+        transform: scale(1.1);
+    }
+
+    li a {
+        text-decoration: none;
+        color: #004aad;
+        padding: 10px 15px;
+        border-radius: 10px;
+        transition: background 0.3s, color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    li a:hover {
+        background-color: #004aad;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 74, 173, 0.5);
+        transform: translateY(-3px);
+    }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h1>Your matrical according to your list</h1>
+        <ul id="course-list">
+            <!-- سيتم إضافة العناصر هنا ديناميكيًا -->
+        </ul>
+    </div>
+
+    <div class="quote">
+        "Success is not the key to happiness. Happiness is the key to success."
+    </div>
+    <script>
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        const idDoctor = params.get('id');
+        console.log("id doctor is " + idDoctor);
+
+        fetch("http://localhost:3000/Doctor/questionBank", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idDoctor: idDoctor })
+        }).then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                const courseList = document.getElementById('course-list');
+                if (Array.isArray(data.documents)) {
+                    data.documents.forEach(course => {
+                        const listItem = document.createElement('li');
+                        const link = document.createElement('a');
+
+                        link.textContent = course.CourseName;
+                        link.href = `http://localhost:3000/Doctor/chapterAndQuestions?id=${idDoctor}&course=${course.CourseName}`;
+                        listItem.appendChild(link);
+                        courseList.appendChild(listItem);
+                    });
+                } else {
+                    console.error("Data is not an array:", data);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    </script>
+</body>
+
+</html>
